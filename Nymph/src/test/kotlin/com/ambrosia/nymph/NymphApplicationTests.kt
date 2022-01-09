@@ -1,10 +1,10 @@
-package com.ambrosia.Ambrosia
+package com.ambrosia.nymph
 
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.context.SpringBootTest
 
 @SpringBootTest
-class AmbrosiaApplicationTests {
+class NymphApplicationTests {
 
 	@Test
 	fun contextLoads() {
