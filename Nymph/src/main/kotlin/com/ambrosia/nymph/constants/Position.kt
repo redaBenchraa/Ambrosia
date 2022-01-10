@@ -1,5 +1,5 @@
 package com.ambrosia.nymph.constants
 
 enum class Position {
-    MANAGER
+    MANAGER, WAITER
 }

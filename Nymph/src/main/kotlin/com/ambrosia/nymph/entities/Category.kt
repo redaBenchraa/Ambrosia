@@ -38,8 +38,8 @@ class Category(
     var updatedAt: LocalDateTime = LocalDateTime.now(),
     var archivedAt: LocalDateTime? = null,
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "businessId", nullable = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JoinColumn(name = "business_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.NO_ACTION)
     @JsonManagedReference
     var business: Business,
 )

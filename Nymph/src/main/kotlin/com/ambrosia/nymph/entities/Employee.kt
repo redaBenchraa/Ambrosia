@@ -1,6 +1,5 @@
 package com.ambrosia.nymph.entities
 
-import com.ambrosia.nymph.constants.Constants
 import com.ambrosia.nymph.constants.Constants.Companion.NAME_MAX_SIZE
 import com.ambrosia.nymph.constants.Constants.Companion.NOW
 import com.ambrosia.nymph.constants.Position
@@ -33,7 +32,6 @@ class Employee(
     var lastName: String,
     @Column(nullable = false)
     @NotNull(message = "error.employee.position.null")
-    @ColumnDefault(Constants.MANAGER)
     var position: Position = Position.MANAGER,
     @Column(nullable = false)
     @CreatedDate
@@ -45,8 +43,8 @@ class Employee(
     var updatedAt: LocalDateTime = LocalDateTime.now(),
     var archivedAt: LocalDateTime? = null,
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "businessId", nullable = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JoinColumn(name = "business_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.NO_ACTION)
     @JsonManagedReference
     var business: Business,
 )

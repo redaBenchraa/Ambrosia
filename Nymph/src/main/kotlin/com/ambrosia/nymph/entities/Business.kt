@@ -1,7 +1,6 @@
 package com.ambrosia.nymph.entities
 
 import com.ambrosia.nymph.constants.Constants.Companion.EMAIL_MAX_SIZE
-import com.ambrosia.nymph.constants.Constants.Companion.EUR
 import com.ambrosia.nymph.constants.Constants.Companion.NAME_MAX_SIZE
 import com.ambrosia.nymph.constants.Constants.Companion.NOW
 import com.ambrosia.nymph.constants.Currency
@@ -43,7 +42,6 @@ class Business(
     var logo: String?,
     var location: String?,
     @Column(nullable = false)
-    @ColumnDefault(EUR)
     var currency: String = Currency.EUR.name,
     @Column(nullable = false)
     var isAvailable: Boolean = true,
@@ -97,6 +95,6 @@ class Business(
         mappedBy = "business"
     )
     @JsonBackReference
-    var orders: Set<Order>,
+    var sessions: Set<Session>,
 )
 
