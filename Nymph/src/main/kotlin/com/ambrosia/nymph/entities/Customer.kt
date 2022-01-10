@@ -1,6 +1,7 @@
 package com.ambrosia.nymph.entities
 
 import com.ambrosia.nymph.constants.Constants
+import com.fasterxml.jackson.annotation.JsonBackReference
 import org.hibernate.annotations.ColumnDefault
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedDate
@@ -27,4 +28,18 @@ class Customer(
     @ColumnDefault(Constants.NOW)
     var updatedAt: LocalDateTime = LocalDateTime.now(),
     var archivedAt: LocalDateTime? = null,
+    @OneToMany(
+        cascade = [CascadeType.ALL],
+        fetch = FetchType.LAZY,
+        mappedBy = "customer"
+    )
+    @JsonBackReference
+    var orders: Set<Order>,
+    @OneToMany(
+        cascade = [CascadeType.ALL],
+        fetch = FetchType.LAZY,
+        mappedBy = "customer"
+    )
+    @JsonBackReference
+    var bills: Set<Bill>,
 )

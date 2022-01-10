@@ -3,6 +3,7 @@ package com.ambrosia.nymph.entities
 import com.ambrosia.nymph.constants.Constants.Companion.NAME_MAX_SIZE
 import com.ambrosia.nymph.constants.Constants.Companion.NOW
 import com.ambrosia.nymph.constants.Constants.Companion.PRICE_MIN
+import com.fasterxml.jackson.annotation.JsonBackReference
 import com.fasterxml.jackson.annotation.JsonManagedReference
 import org.hibernate.annotations.ColumnDefault
 import org.hibernate.annotations.OnDelete
@@ -44,8 +45,15 @@ class Menu(
     var updatedAt: LocalDateTime = LocalDateTime.now(),
     var archivedAt: LocalDateTime? = null,
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "businessId", nullable = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JoinColumn(name = "business_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.NO_ACTION)
     @JsonManagedReference
     var business: Business,
+    @OneToMany(
+        cascade = [CascadeType.ALL],
+        fetch = FetchType.LAZY,
+        mappedBy = "menu"
+    )
+    @JsonBackReference
+    var menuItems: Set<MenuItem>,
 )

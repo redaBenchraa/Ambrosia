@@ -6,11 +6,10 @@ class Constants private constructor() {
     }
 
     companion object {
+        const val EXTRA_MIN: Long = 0L
         const val PRICE_MIN: Long = 0L
         const val NAME_MAX_SIZE = 48
         const val EMAIL_MAX_SIZE = 254
-        const val EUR = "EUR"
-        const val NOW = "now"
-        const val MANAGER = "MANAGER"
+        const val NOW = "now()"
     }
 }
