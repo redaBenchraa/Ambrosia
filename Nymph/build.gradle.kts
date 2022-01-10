@@ -60,7 +60,7 @@ dependencies {
     implementation("org.keycloak.bom:keycloak-adapter-bom")
     implementation("org.keycloak:keycloak-admin-client:16.1.0")
     implementation("org.zalando:problem-spring-web:0.27.0")
-
+    implementation("org.apache.commons:commons-collections4:4.4")
 }
 
 tasks.withType<KotlinCompile> {
