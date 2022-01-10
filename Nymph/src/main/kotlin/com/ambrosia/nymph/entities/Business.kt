@@ -5,6 +5,7 @@ import com.ambrosia.nymph.constants.Constants.Companion.EUR
 import com.ambrosia.nymph.constants.Constants.Companion.NAME_MAX_SIZE
 import com.ambrosia.nymph.constants.Constants.Companion.NOW
 import com.ambrosia.nymph.constants.Currency
+import com.fasterxml.jackson.annotation.JsonBackReference
 import org.hibernate.annotations.ColumnDefault
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedDate
@@ -36,6 +37,7 @@ class Business(
     @Email(message = "error.business.email.invalidFormat")
     @Size(max = EMAIL_MAX_SIZE, message = "error.business.email.invalidSize")
     var email: String,
+    @Column(columnDefinition = "text")
     var description: String?,
     var slogan: String?,
     var logo: String?,
@@ -54,5 +56,47 @@ class Business(
     @ColumnDefault(NOW)
     var updatedAt: LocalDateTime = LocalDateTime.now(),
     var archivedAt: LocalDateTime? = null,
+    @OneToMany(
+        cascade = [CascadeType.ALL],
+        fetch = FetchType.LAZY,
+        mappedBy = "business"
+    )
+    @JsonBackReference
+    var categories: Set<Category>,
+    @OneToMany(
+        cascade = [CascadeType.ALL],
+        fetch = FetchType.LAZY,
+        mappedBy = "business"
+    )
+    @JsonBackReference
+    var employees: Set<Employee>,
+    @OneToMany(
+        cascade = [CascadeType.ALL],
+        fetch = FetchType.LAZY,
+        mappedBy = "business"
+    )
+    @JsonBackReference
+    var tables: Set<Table>,
+    @OneToMany(
+        cascade = [CascadeType.ALL],
+        fetch = FetchType.LAZY,
+        mappedBy = "business"
+    )
+    @JsonBackReference
+    var items: Set<Item>,
+    @OneToMany(
+        cascade = [CascadeType.ALL],
+        fetch = FetchType.LAZY,
+        mappedBy = "business"
+    )
+    @JsonBackReference
+    var menus: Set<Menu>,
+    @OneToMany(
+        cascade = [CascadeType.ALL],
+        fetch = FetchType.LAZY,
+        mappedBy = "business"
+    )
+    @JsonBackReference
+    var orders: Set<Order>,
 )
 
