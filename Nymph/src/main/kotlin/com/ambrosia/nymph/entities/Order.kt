@@ -31,12 +31,12 @@ class Order(
     var updatedAt: LocalDateTime = LocalDateTime.now(),
     var archivedAt: LocalDateTime? = null,
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "session__id", nullable = false)
+    @JoinColumn(name = "session_id", nullable = false)
     @OnDelete(action = OnDeleteAction.NO_ACTION)
     @JsonManagedReference
     var session: Session,
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "customer__id", nullable = false)
+    @JoinColumn(name = "customer_id", nullable = false)
     @OnDelete(action = OnDeleteAction.NO_ACTION)
     @JsonManagedReference
     var customer: Customer,
