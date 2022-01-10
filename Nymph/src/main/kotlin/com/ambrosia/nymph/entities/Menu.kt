@@ -3,7 +3,10 @@ package com.ambrosia.nymph.entities
 import com.ambrosia.nymph.constants.Constants.Companion.NAME_MAX_SIZE
 import com.ambrosia.nymph.constants.Constants.Companion.NOW
 import com.ambrosia.nymph.constants.Constants.Companion.PRICE_MIN
+import com.fasterxml.jackson.annotation.JsonManagedReference
 import org.hibernate.annotations.ColumnDefault
+import org.hibernate.annotations.OnDelete
+import org.hibernate.annotations.OnDeleteAction
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedDate
 import java.time.LocalDateTime
@@ -25,6 +28,7 @@ class Menu(
     @Size(max = NAME_MAX_SIZE, message = "error.menu.name.invalidSize")
     @Column(nullable = false)
     var name: String,
+    @Column(columnDefinition = "text")
     var description: String?,
     var image: String?,
     @NotNull(message = "error.menu.price.null")
@@ -39,4 +43,9 @@ class Menu(
     @ColumnDefault(NOW)
     var updatedAt: LocalDateTime = LocalDateTime.now(),
     var archivedAt: LocalDateTime? = null,
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "businessId", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonManagedReference
+    var business: Business,
 )
