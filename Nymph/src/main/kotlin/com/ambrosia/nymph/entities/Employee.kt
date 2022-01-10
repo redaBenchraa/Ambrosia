@@ -2,7 +2,7 @@ package com.ambrosia.nymph.entities
 
 import com.ambrosia.nymph.constants.Constants.Companion.NAME_MAX_SIZE
 import com.ambrosia.nymph.constants.Constants.Companion.NOW
-import com.ambrosia.nymph.constants.Position
+import com.ambrosia.nymph.constants.Role
 import com.fasterxml.jackson.annotation.JsonManagedReference
 import org.hibernate.annotations.ColumnDefault
 import org.hibernate.annotations.OnDelete
@@ -32,7 +32,7 @@ class Employee(
 	var lastName: String,
 	@Column(nullable = false)
 	@NotNull(message = "error.employee.position.null")
-	var position: Position = Position.MANAGER,
+	var position: Role = Role.MANAGER,
 	@Column(nullable = false)
 	@CreatedDate
 	@ColumnDefault(NOW)
