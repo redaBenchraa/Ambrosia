@@ -1,0 +1,42 @@
+server:
+  port: 8888
+spring:
+  liquibase:
+    change-log: classpath:db/changelog/liquibase-changeLog.xml
+    enabled: true
+  datasource:
+    continue-on-error: false
+    password: ${POSTGRES_PASSWORD:postgres}
+    url: jdbc:postgresql://${POSTGRES_URL:localhost:5432/postgres}
+    username: ${POSTGRES_USERNAME:postgres}
+    driverClassName=: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+      show-sql: true
+keycloak:
+  realm: ${KEYCLOCK_REALM:athena}
+  resource: ${KEYCLOCK_RESOURCE:core}
+  auth-server-url: ${KEYCLOCK_URL:http://localhost:8080/auth}
+  credentials:
+    secret: ${KEYCLOCK_CREDENTIALS_SECRET:306a8281-542c-4e95-a6a9-678d6a2234b2}
+  bearer-only: true
+  public-client: true
+  enabled: true
+
+logging:
+  level:
+    org:
+      keycloak: TRACE
+      hibernate:
+        SQL: debug
+        type:
+          descriptor:
+            sql: trace
+
+realm-manager-username: ${REALM_MANAGER_USERNAME:admin}
+realm-manager-password: ${REALM_MANAGER_PASSWPRD:password}
