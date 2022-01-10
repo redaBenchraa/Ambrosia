@@ -6,7 +6,7 @@ services:
     environment:
       POSTGRES_USER: ${POSTGRES_USER:-postgres}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
-      POSTGRES_DB: ${POSTGRES_DB-postgres}
+      POSTGRES_DB: ${POSTGRES_DB:-postgres}
       PGDATA: /data/postgres
     volumes:
       - postgres:/data/postgres
@@ -36,10 +36,8 @@ services:
 #  Nymph:
 #    image: com.ambrosia.nymph:0.0.1-SNAPSHOT
 #    restart: on-failure
-#    depends_on:
-#      - discovery
 #    ports:
-#      - 8762:8762
+#      - 8888:8888
 
 networks:
   database:
@@ -47,4 +45,3 @@ networks:
 
 volumes:
   postgres:
-  mongo:
