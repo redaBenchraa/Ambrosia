@@ -8,6 +8,20 @@ plugins {
     kotlin("plugin.spring") version "1.6.10"
     kotlin("plugin.jpa") version "1.6.10"
     id("org.springframework.experimental.aot") version "0.11.1"
+    id("org.liquibase.gradle") version "2.0.3"
+}
+
+liquibase {
+    activities.register("main") {
+        this.arguments = mapOf(
+            "logLevel" to "info",
+            "changeLogFile" to "src/main/resources/db/changelog/liquibase-changeLog.xml",
+            "url" to "jdbc:postgresql://localhost:5432/postgres",
+            "username" to "postgres",
+            "password" to "postgres",
+        )
+    }
+    runList = "main"
 }
 
 group = "com.ambrosia"
@@ -23,6 +37,7 @@ configurations {
 repositories {
     maven { url = uri("https://repo.spring.io/release") }
     mavenCentral()
+    jcenter()
 }
 
 dependencies {
@@ -38,6 +53,9 @@ dependencies {
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.security:spring-security-test")
+    liquibaseRuntime("org.postgresql:postgresql")
+    liquibaseRuntime("org.liquibase:liquibase-core:4.4.3")
+    liquibaseRuntime("org.yaml:snakeyaml:1.29")
 }
 
 tasks.withType<KotlinCompile> {
