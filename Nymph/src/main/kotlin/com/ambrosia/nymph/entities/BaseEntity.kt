@@ -5,20 +5,15 @@ import org.hibernate.annotations.ColumnDefault
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedDate
 import java.time.LocalDateTime
-import javax.persistence.*
-import javax.validation.constraints.NotNull
+import javax.persistence.Column
+import javax.persistence.GeneratedValue
+import javax.persistence.GenerationType
+import javax.persistence.Id
 
-@Entity
-class Table(
-    @Id
-    @Column(nullable = false)
-    @NotNull(message = "error.table.id.null")
+open class BaseEntity(
+    @Id @Column(nullable = false)
     @GeneratedValue(strategy = GenerationType.AUTO)
     var id: String,
-    @NotNull(message = "error.table.isFree.null")
-    var isFree: Boolean = true,
-    @NotNull(message = "error.table.number.null")
-    var number: Int,
     @Column(nullable = false)
     @CreatedDate
     @ColumnDefault(NOW)
