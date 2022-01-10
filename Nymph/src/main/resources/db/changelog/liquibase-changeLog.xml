@@ -1,0 +1,556 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+    <changeSet author="Alexander" id="1641823948673-1">
+        <createTable tableName="bill">
+            <column name="id" type="VARCHAR(255)">
+                <constraints nullable="false" primaryKey="true"
+                             primaryKeyName="bill_pkey"/>
+            </column>
+            <column name="archived_at" type="TIMESTAMP"/>
+            <column defaultValueComputed="now()" name="created_at"
+                    type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueComputed="now()" name="updated_at"
+                    type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="customer_id" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="employee_id" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="session_id" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Alexander" id="1641823948673-2">
+        <createTable tableName="business">
+            <column name="id" type="VARCHAR(255)">
+                <constraints nullable="false" primaryKey="true"
+                             primaryKeyName="business_pkey"/>
+            </column>
+            <column name="archived_at" type="TIMESTAMP"/>
+            <column defaultValueComputed="now()" name="created_at"
+                    type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="currency" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="TEXT"/>
+            <column name="email" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="is_available" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="location" type="VARCHAR(255)"/>
+            <column name="logo" type="VARCHAR(255)"/>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="phone_number" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="slogan" type="VARCHAR(255)"/>
+            <column defaultValueComputed="now()" name="updated_at"
+                    type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Alexander" id="1641823948673-3">
+        <createTable tableName="category">
+            <column name="id" type="VARCHAR(255)">
+                <constraints nullable="false" primaryKey="true"
+                             primaryKeyName="category_pkey"/>
+            </column>
+            <column name="archived_at" type="TIMESTAMP"/>
+            <column defaultValueComputed="now()" name="created_at"
+                    type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="TEXT"/>
+            <column name="image" type="VARCHAR(255)"/>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueComputed="now()" name="updated_at"
+                    type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="business_id" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Alexander" id="1641823948673-4">
+        <createTable tableName="customer">
+            <column name="id" type="VARCHAR(255)">
+                <constraints nullable="false" primaryKey="true"
+                             primaryKeyName="customer_pkey"/>
+            </column>
+            <column name="age" type="VARCHAR(255)"/>
+            <column name="archived_at" type="TIMESTAMP"/>
+            <column defaultValueComputed="now()" name="created_at"
+                    type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="first_name" type="VARCHAR(255)"/>
+            <column name="last_name" type="VARCHAR(255)"/>
+            <column defaultValueComputed="now()" name="updated_at"
+                    type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Alexander" id="1641823948673-5">
+        <createTable tableName="employee">
+            <column name="id" type="VARCHAR(255)">
+                <constraints nullable="false" primaryKey="true"
+                             primaryKeyName="employee_pkey"/>
+            </column>
+            <column name="archived_at" type="TIMESTAMP"/>
+            <column defaultValueComputed="now()" name="created_at"
+                    type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="first_name" type="VARCHAR(255)"/>
+            <column name="last_name" type="VARCHAR(255)"/>
+            <column name="position" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueComputed="now()" name="updated_at"
+                    type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="business_id" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Alexander" id="1641823948673-6">
+        <createTable tableName="item">
+            <column name="id" type="VARCHAR(255)">
+                <constraints nullable="false" primaryKey="true"
+                             primaryKeyName="item_pkey"/>
+            </column>
+            <column name="archived_at" type="TIMESTAMP"/>
+            <column defaultValueComputed="now()" name="created_at"
+                    type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="TEXT"/>
+            <column name="image" type="VARCHAR(255)"/>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="only_for_menu" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="price" type="FLOAT8">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueComputed="now()" name="updated_at"
+                    type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="business_id" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Alexander" id="1641823948673-7">
+        <createTable tableName="menu">
+            <column name="id" type="VARCHAR(255)">
+                <constraints nullable="false" primaryKey="true"
+                             primaryKeyName="menu_pkey"/>
+            </column>
+            <column name="archived_at" type="TIMESTAMP"/>
+            <column defaultValueComputed="now()" name="created_at"
+                    type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="TEXT"/>
+            <column name="image" type="VARCHAR(255)"/>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="price" type="FLOAT8">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueComputed="now()" name="updated_at"
+                    type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="business_id" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Alexander" id="1641823948673-8">
+        <createTable tableName="menu_item">
+            <column name="id" type="VARCHAR(255)">
+                <constraints nullable="false" primaryKey="true"
+                             primaryKeyName="menu_item_pkey"/>
+            </column>
+            <column name="archived_at" type="TIMESTAMP"/>
+            <column defaultValueComputed="now()" name="created_at"
+                    type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="extra" type="FLOAT8">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueComputed="now()" name="updated_at"
+                    type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="category_id" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="item_id" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="menu_id" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Alexander" id="1641823948673-9">
+        <createTable tableName="ordered_item">
+            <column name="id" type="VARCHAR(255)">
+                <constraints nullable="false" primaryKey="true"
+                             primaryKeyName="ordered_item_pkey"/>
+            </column>
+            <column name="archived_at" type="TIMESTAMP"/>
+            <column defaultValueComputed="now()" name="created_at"
+                    type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="TEXT"/>
+            <column name="extra" type="FLOAT8">
+                <constraints nullable="false"/>
+            </column>
+            <column name="image" type="VARCHAR(255)"/>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueComputed="now()" name="updated_at"
+                    type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="item_id" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="order_id" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Alexander" id="1641823948673-10">
+        <createTable tableName="session">
+            <column name="id" type="VARCHAR(255)">
+                <constraints nullable="false" primaryKey="true"
+                             primaryKeyName="session_pkey"/>
+            </column>
+            <column name="archived_at" type="TIMESTAMP"/>
+            <column defaultValueComputed="now()" name="created_at"
+                    type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="is_approved" type="BOOLEAN" defaultValue="false">
+                <constraints nullable="false"/>
+            </column>
+            <column name="is_paid" type="BOOLEAN" defaultValue="false">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueComputed="now()" name="updated_at"
+                    type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="business_id" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="employee_id" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="table_id" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Alexander" id="1641823948673-11">
+        <createTable tableName="tables">
+            <column name="id" type="VARCHAR(255)">
+                <constraints nullable="false" primaryKey="true"
+                             primaryKeyName="tables_pkey"/>
+            </column>
+            <column name="archived_at" type="TIMESTAMP"/>
+            <column defaultValueComputed="now()" name="created_at"
+                    type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="is_available" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="number" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueComputed="now()" name="updated_at"
+                    type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="business_id" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Alexander" id="1641823948673-12">
+        <createTable tableName="orders">
+            <column name="id" type="VARCHAR(255)">
+                <constraints nullable="false" primaryKey="true"
+                             primaryKeyName="orders_pkey"/>
+            </column>
+            <column name="archived_at" type="TIMESTAMP"/>
+            <column defaultValueComputed="now()" name="created_at"
+                    type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueComputed="now()" name="updated_at"
+                    type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="customer_id" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="session_id" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="customer__id" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="session__id" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Alexander" id="1641823948673-13">
+        <addForeignKeyConstraint baseColumnNames="customer_id"
+                                 baseTableName="bill"
+                                 constraintName="fkcdveik90g4pvk7m249scu73pg"
+                                 deferrable="false" initiallyDeferred="false"
+                                 onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id"
+                                 referencedTableName="customer"
+                                 validate="true"/>
+    </changeSet>
+    <changeSet author="Alexander" id="1641823948673-14">
+        <addForeignKeyConstraint baseColumnNames="employee_id"
+                                 baseTableName="bill"
+                                 constraintName="fkle28mnhpamru2e2o22d5u78bu"
+                                 deferrable="false" initiallyDeferred="false"
+                                 onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id"
+                                 referencedTableName="employee"
+                                 validate="true"/>
+    </changeSet>
+    <changeSet author="Alexander" id="1641823948673-15">
+        <addForeignKeyConstraint baseColumnNames="session_id"
+                                 baseTableName="bill"
+                                 constraintName="fknpdke1pihy8cr0lddxntf4hl2"
+                                 deferrable="false" initiallyDeferred="false"
+                                 onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id"
+                                 referencedTableName="session" validate="true"/>
+    </changeSet>
+    <changeSet author="Alexander" id="1641823948673-16">
+        <addForeignKeyConstraint baseColumnNames="business_id"
+                                 baseTableName="item"
+                                 constraintName="fk344xwdic1t2vqof9eue0dytk"
+                                 deferrable="false" initiallyDeferred="false"
+                                 onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id"
+                                 referencedTableName="business"
+                                 validate="true"/>
+    </changeSet>
+    <changeSet author="Alexander" id="1641823948673-17">
+        <addForeignKeyConstraint baseColumnNames="business_id"
+                                 baseTableName="category"
+                                 constraintName="fk71sn7wx2leomxa1d3caf9ldi"
+                                 deferrable="false" initiallyDeferred="false"
+                                 onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id"
+                                 referencedTableName="business"
+                                 validate="true"/>
+    </changeSet>
+    <changeSet author="Alexander" id="1641823948673-18">
+        <addForeignKeyConstraint baseColumnNames="business_id"
+                                 baseTableName="session"
+                                 constraintName="fk9ccgssjqgalh3j5hef0wo80pp"
+                                 deferrable="false" initiallyDeferred="false"
+                                 onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id"
+                                 referencedTableName="business"
+                                 validate="true"/>
+    </changeSet>
+    <changeSet author="Alexander" id="1641823948673-19">
+        <addForeignKeyConstraint baseColumnNames="business_id"
+                                 baseTableName="employee"
+                                 constraintName="fkby2mxoe9cvixkcsckxqom6wft"
+                                 deferrable="false" initiallyDeferred="false"
+                                 onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id"
+                                 referencedTableName="business"
+                                 validate="true"/>
+    </changeSet>
+    <changeSet author="Alexander" id="1641823948673-20">
+        <addForeignKeyConstraint baseColumnNames="business_id"
+                                 baseTableName="tables"
+                                 constraintName="fki3ycn9q584hvcxt5pxi18ay8j"
+                                 deferrable="false" initiallyDeferred="false"
+                                 onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id"
+                                 referencedTableName="business"
+                                 validate="true"/>
+    </changeSet>
+    <changeSet author="Alexander" id="1641823948673-21">
+        <addForeignKeyConstraint baseColumnNames="business_id"
+                                 baseTableName="menu"
+                                 constraintName="fkni8a5ckufsaltw6t8bhpexwnk"
+                                 deferrable="false" initiallyDeferred="false"
+                                 onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id"
+                                 referencedTableName="business"
+                                 validate="true"/>
+    </changeSet>
+    <changeSet author="Alexander" id="1641823948673-22">
+        <addUniqueConstraint columnNames="phone_number"
+                             constraintName="uk_5pgig1fq5p135ccwc37fbvumn"
+                             tableName="business"/>
+    </changeSet>
+    <changeSet author="Alexander" id="1641823948673-23">
+        <addUniqueConstraint columnNames="email"
+                             constraintName="uk_ktb1t97n9aeupitfjsdpjcmuq"
+                             tableName="business"/>
+    </changeSet>
+    <changeSet author="Alexander" id="1641823948673-24">
+        <addForeignKeyConstraint baseColumnNames="category_id"
+                                 baseTableName="menu_item"
+                                 constraintName="fkfmgn0386uxf8sqtilegkufxk0"
+                                 deferrable="false" initiallyDeferred="false"
+                                 onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id"
+                                 referencedTableName="category"
+                                 validate="true"/>
+    </changeSet>
+    <changeSet author="Alexander" id="1641823948673-25">
+        <addForeignKeyConstraint baseColumnNames="customer__id"
+                                 baseTableName="orders"
+                                 constraintName="fk38w3h6dumm9obrffjgluftomf"
+                                 deferrable="false" initiallyDeferred="false"
+                                 onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id"
+                                 referencedTableName="customer"
+                                 validate="true"/>
+    </changeSet>
+    <changeSet author="Alexander" id="1641823948673-26">
+        <addForeignKeyConstraint baseColumnNames="customer_id"
+                                 baseTableName="orders"
+                                 constraintName="fk624gtjin3po807j3vix093tlf"
+                                 deferrable="false" initiallyDeferred="false"
+                                 onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id"
+                                 referencedTableName="customer"
+                                 validate="true"/>
+    </changeSet>
+    <changeSet author="Alexander" id="1641823948673-27">
+        <addForeignKeyConstraint baseColumnNames="employee_id"
+                                 baseTableName="session"
+                                 constraintName="fkqy0tb5v64cqm00ve1a59c8efr"
+                                 deferrable="false" initiallyDeferred="false"
+                                 onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id"
+                                 referencedTableName="employee"
+                                 validate="true"/>
+    </changeSet>
+    <changeSet author="Alexander" id="1641823948673-28">
+        <addForeignKeyConstraint baseColumnNames="item_id"
+                                 baseTableName="ordered_item"
+                                 constraintName="fkkbrrod7023f1asceduw3mxdx4"
+                                 deferrable="false" initiallyDeferred="false"
+                                 onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id"
+                                 referencedTableName="item" validate="true"/>
+    </changeSet>
+    <changeSet author="Alexander" id="1641823948673-29">
+        <addForeignKeyConstraint baseColumnNames="item_id"
+                                 baseTableName="menu_item"
+                                 constraintName="fkp1cweu84wcebrd0xbjnkvob5f"
+                                 deferrable="false" initiallyDeferred="false"
+                                 onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id"
+                                 referencedTableName="item" validate="true"/>
+    </changeSet>
+    <changeSet author="Alexander" id="1641823948673-30">
+        <addForeignKeyConstraint baseColumnNames="menu_id"
+                                 baseTableName="menu_item"
+                                 constraintName="fkcdkmv42yhn6udah6ug8rsymfl"
+                                 deferrable="false" initiallyDeferred="false"
+                                 onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id"
+                                 referencedTableName="menu" validate="true"/>
+    </changeSet>
+    <changeSet author="Alexander" id="1641823948673-31">
+        <addForeignKeyConstraint baseColumnNames="order_id"
+                                 baseTableName="ordered_item"
+                                 constraintName="fk51dj38kcdahtjcx8h2be767sr"
+                                 deferrable="false" initiallyDeferred="false"
+                                 onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id"
+                                 referencedTableName="orders" validate="true"/>
+    </changeSet>
+    <changeSet author="Alexander" id="1641823948673-32">
+        <addUniqueConstraint columnNames="item_id"
+                             constraintName="uk_ig5yr45hrggk6ga98wk7p6iex"
+                             tableName="ordered_item"/>
+    </changeSet>
+    <changeSet author="Alexander" id="1641823948673-33">
+        <addForeignKeyConstraint baseColumnNames="table_id"
+                                 baseTableName="session"
+                                 constraintName="fk1i1ggruvk5n8crddrswq9hsus"
+                                 deferrable="false" initiallyDeferred="false"
+                                 onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id"
+                                 referencedTableName="tables" validate="true"/>
+    </changeSet>
+    <changeSet author="Alexander" id="1641823948673-34">
+        <addForeignKeyConstraint baseColumnNames="session__id"
+                                 baseTableName="orders"
+                                 constraintName="fkj9s587lg4v02kb917q1g7ucj3"
+                                 deferrable="false" initiallyDeferred="false"
+                                 onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id"
+                                 referencedTableName="session" validate="true"/>
+    </changeSet>
+    <changeSet author="Alexander" id="1641823948673-35">
+        <addForeignKeyConstraint baseColumnNames="session_id"
+                                 baseTableName="orders"
+                                 constraintName="fkmglefk4r3jewx4sc3f23gt47p"
+                                 deferrable="false" initiallyDeferred="false"
+                                 onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id"
+                                 referencedTableName="session" validate="true"/>
+    </changeSet>
+    <changeSet author="Alexander" id="1641823948673-36">
+        <createSequence cacheSize="1" cycle="false" dataType="bigint"
+                        incrementBy="1" maxValue="9223372036854775807"
+                        minValue="1" sequenceName="hibernate_sequence"
+                        startValue="1"/>
+    </changeSet>
+</databaseChangeLog>
