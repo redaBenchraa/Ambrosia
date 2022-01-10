@@ -56,6 +56,11 @@ dependencies {
     liquibaseRuntime("org.postgresql:postgresql")
     liquibaseRuntime("org.liquibase:liquibase-core:4.4.3")
     liquibaseRuntime("org.yaml:snakeyaml:1.29")
+    implementation("org.keycloak:keycloak-spring-boot-starter:16.1.0")
+    implementation("org.keycloak.bom:keycloak-adapter-bom")
+    implementation("org.keycloak:keycloak-admin-client:16.1.0")
+    implementation("org.zalando:problem-spring-web:0.27.0")
+
 }
 
 tasks.withType<KotlinCompile> {
