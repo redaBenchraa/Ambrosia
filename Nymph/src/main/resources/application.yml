@@ -3,7 +3,7 @@ server:
 spring:
   liquibase:
     change-log: classpath:db/changelog/liquibase-changeLog.xml
-    enabled: false
+    enabled: true
   datasource:
     continue-on-error: false
     password: ${POSTGRES_PASSWORD:postgres}
@@ -12,7 +12,7 @@ spring:
     driverClassName=: org.postgresql.Driver
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: validate
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
