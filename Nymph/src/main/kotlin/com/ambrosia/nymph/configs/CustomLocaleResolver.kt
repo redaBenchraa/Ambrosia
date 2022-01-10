@@ -11,27 +11,27 @@ import javax.servlet.http.HttpServletRequest
 
 @Configuration
 class CustomLocaleResolver : AcceptHeaderLocaleResolver(), WebMvcConfigurer {
-    var locales = listOf(
-        Locale("en"),
-        Locale("fr")
-    )
+	var locales = listOf(
+		Locale("en"),
+		Locale("fr")
+	)
 
-    @Nonnull
-    override fun resolveLocale(request: HttpServletRequest): Locale {
-        val headerLang = request.getHeader("Accept-Language")
-        return if (Objects.isNull(headerLang) || headerLang.isEmpty())
-            Locale.getDefault()
-        else Locale.lookup(
-            Locale.LanguageRange.parse(headerLang), locales
-        )
-    }
+	@Nonnull
+	override fun resolveLocale(request: HttpServletRequest): Locale {
+		val headerLang = request.getHeader("Accept-Language")
+		return if (Objects.isNull(headerLang) || headerLang.isEmpty())
+			Locale.getDefault()
+		else Locale.lookup(
+			Locale.LanguageRange.parse(headerLang), locales
+		)
+	}
 
-    @Bean
-    fun messageSource(): ResourceBundleMessageSource {
-        val rs = ResourceBundleMessageSource()
-        rs.setBasename("messages")
-        rs.setDefaultEncoding("windows-1252")
-        rs.setUseCodeAsDefaultMessage(true)
-        return rs
-    }
+	@Bean
+	fun messageSource(): ResourceBundleMessageSource {
+		val rs = ResourceBundleMessageSource()
+		rs.setBasename("messages")
+		rs.setDefaultEncoding("windows-1252")
+		rs.setUseCodeAsDefaultMessage(true)
+		return rs
+	}
 }

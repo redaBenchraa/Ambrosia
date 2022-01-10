@@ -16,35 +16,35 @@ import javax.validation.constraints.NotNull
 @Entity
 @Table(name = "orders")
 class Order(
-    @Id
-    @Column(nullable = false)
-    @NotNull(message = "error.order.id.null")
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    var id: String,
-    @Column(nullable = false)
-    @CreatedDate
-    @ColumnDefault(NOW)
-    var createdAt: LocalDateTime = LocalDateTime.now(),
-    @Column(nullable = false)
-    @LastModifiedDate
-    @ColumnDefault(NOW)
-    var updatedAt: LocalDateTime = LocalDateTime.now(),
-    var archivedAt: LocalDateTime? = null,
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "session_id", nullable = false)
-    @OnDelete(action = OnDeleteAction.NO_ACTION)
-    @JsonManagedReference
-    var session: Session,
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "customer_id", nullable = false)
-    @OnDelete(action = OnDeleteAction.NO_ACTION)
-    @JsonManagedReference
-    var customer: Customer,
-    @OneToMany(
-        cascade = [CascadeType.ALL],
-        fetch = FetchType.LAZY,
-        mappedBy = "order"
-    )
-    @JsonBackReference
-    var orderedItem: Set<OrderedItem>,
+	@Id
+	@Column(nullable = false)
+	@NotNull(message = "error.order.id.null")
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	var id: String,
+	@Column(nullable = false)
+	@CreatedDate
+	@ColumnDefault(NOW)
+	var createdAt: LocalDateTime = LocalDateTime.now(),
+	@Column(nullable = false)
+	@LastModifiedDate
+	@ColumnDefault(NOW)
+	var updatedAt: LocalDateTime = LocalDateTime.now(),
+	var archivedAt: LocalDateTime? = null,
+	@ManyToOne(fetch = FetchType.LAZY, optional = false)
+	@JoinColumn(name = "session_id", nullable = false)
+	@OnDelete(action = OnDeleteAction.NO_ACTION)
+	@JsonManagedReference
+	var session: Session,
+	@ManyToOne(fetch = FetchType.LAZY, optional = false)
+	@JoinColumn(name = "customer_id", nullable = false)
+	@OnDelete(action = OnDeleteAction.NO_ACTION)
+	@JsonManagedReference
+	var customer: Customer,
+	@OneToMany(
+		cascade = [CascadeType.ALL],
+		fetch = FetchType.LAZY,
+		mappedBy = "order"
+	)
+	@JsonBackReference
+	var orderedItem: Set<OrderedItem>,
 )

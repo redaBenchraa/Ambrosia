@@ -8,11 +8,11 @@ import org.zalando.problem.violations.ConstraintViolationProblemModule
 
 @Configuration
 class ObjectMapperConfiguration {
-    @Bean
-    fun objectMapper(): ObjectMapper {
-        return ObjectMapper().registerModules(
-            ProblemModule().withStackTraces(false),
-            ConstraintViolationProblemModule()
-        )
-    }
+	@Bean
+	fun objectMapper(): ObjectMapper {
+		return ObjectMapper().registerModules(
+			ProblemModule().withStackTraces(false),
+			ConstraintViolationProblemModule()
+		)
+	}
 }
