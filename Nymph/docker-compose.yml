@@ -1,7 +1,7 @@
 version: '3.0'
 services:
   postgres:
-    container_name: postgres_container
+    container_name: Postgres
     image: postgres
     environment:
       POSTGRES_USER: ${POSTGRES_USER:-postgres}
@@ -9,32 +9,31 @@ services:
       POSTGRES_DB: ${POSTGRES_DB:-postgres}
       PGDATA: /data/postgres
     volumes:
-      - postgres:/data/postgres
+      - postgres:/var/lib/postgresql/data
     ports:
       - "5432:5432"
-    networks:
-      - database
     restart: unless-stopped
 
-  adminer:
-    container_name: adminer_container
-    image: adminer
-    restart: always
-    ports:
-      - "9000:9000"
-    networks:
-      - database
-
   authentication:
-    image: quay.io/keycloak/keycloak:11.0.3
+    image: quay.io/keycloak/keycloak:latest
+    container_name: Keyclock
     environment:
+      DB_VENDOR: POSTGRES
+      DB_ADDR: postgres
+      DB_DATABASE: postgres
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      DB_SCHEMA: public
       KEYCLOAK_USER: ${KEYCLOAK_USER:-admin}
       KEYCLOAK_PASSWORD: ${KEYCLOAK_PASSWORD:-admin}
     ports:
       - "8080:8080"
+    depends_on:
+      - postgres
 
 #  Nymph:
 #    image: com.ambrosia.nymph:0.0.1-SNAPSHOT
+#    name: Nymph
 #    restart: on-failure
 #    ports:
 #      - 8888:8888
