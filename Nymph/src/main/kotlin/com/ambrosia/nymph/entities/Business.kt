@@ -1,5 +1,9 @@
 package com.ambrosia.nymph.entities
 
+import com.ambrosia.nymph.constants.Constants.Companion.EMAIL_MAX_SIZE
+import com.ambrosia.nymph.constants.Constants.Companion.EUR
+import com.ambrosia.nymph.constants.Constants.Companion.NAME_MAX_SIZE
+import com.ambrosia.nymph.constants.Constants.Companion.NOW
 import com.ambrosia.nymph.constants.Currency
 import org.hibernate.annotations.ColumnDefault
 import org.springframework.data.annotation.CreatedDate
@@ -20,7 +24,7 @@ class Business(
     var id: String,
     @NotNull(message = "error.business.name.null")
     @NotBlank(message = "error.business.name.blank")
-    @Size(max = 24, message = "error.business.name.invalidSize")
+    @Size(max = NAME_MAX_SIZE, message = "error.business.name.invalidSize")
     @Column(nullable = false)
     var name: String,
     @NotNull
@@ -30,24 +34,24 @@ class Business(
     @Column(nullable = false, unique = true)
     @NotBlank(message = "error.business.email.blank")
     @Email(message = "error.business.email.invalidFormat")
-    @Size(max = 254, message = "error.business.email.invalidSize")
+    @Size(max = EMAIL_MAX_SIZE, message = "error.business.email.invalidSize")
     var email: String,
     var description: String?,
     var slogan: String?,
     var logo: String?,
     var location: String?,
     @Column(nullable = false)
-    @ColumnDefault("EUR")
+    @ColumnDefault(EUR)
     var currency: String = Currency.EUR.name,
     @Column(nullable = false)
     var isAvailable: Boolean = true,
     @Column(nullable = false)
     @CreatedDate
-    @ColumnDefault("now")
+    @ColumnDefault(NOW)
     var createdAt: LocalDateTime = LocalDateTime.now(),
     @Column(nullable = false)
     @LastModifiedDate
-    @ColumnDefault("now")
+    @ColumnDefault(NOW)
     var updatedAt: LocalDateTime = LocalDateTime.now(),
     var archivedAt: LocalDateTime? = null,
 )
