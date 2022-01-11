@@ -28,23 +28,15 @@ class RuntimeExceptionHandler : ProblemHandling, SecurityAdviceTrait {
 	lateinit var translator: Translator
 
 
-	override fun defaultConstraintViolationType(): URI {
-		return URI.create(Urls.VIOLATIONS)
-	}
+	override fun defaultConstraintViolationType(): URI = URI.create(Urls.VIOLATIONS)
 
-	override fun isCausalChainsEnabled(): Boolean {
-		return true
-	}
+	override fun isCausalChainsEnabled(): Boolean = true
 
-	override fun createViolation(error: FieldError): Violation {
-		val fieldName = formatFieldName(error.field)
-		return Violation(fieldName, translator.toLocale(error.defaultMessage))
-	}
+	override fun createViolation(error: FieldError): Violation =
+		Violation(formatFieldName(error.field), translator.toLocale(error.defaultMessage))
 
-	override fun createViolation(error: ObjectError): Violation {
-		val fieldName = formatFieldName(error.objectName)
-		return Violation(fieldName, translator.toLocale(error.defaultMessage))
-	}
+	override fun createViolation(error: ObjectError): Violation =
+		Violation(formatFieldName(error.objectName), translator.toLocale(error.defaultMessage))
 
 	@ExceptionHandler(EntityNotFoundException::class)
 	@ResponseStatus(value = HttpStatus.NOT_FOUND)
