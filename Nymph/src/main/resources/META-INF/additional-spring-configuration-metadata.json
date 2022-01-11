@@ -1,0 +1,14 @@
+{
+  "properties": [
+    {
+      "name": "realm-manager-username",
+      "type": "java.lang.String",
+      "description": "Description for realm-manager-username."
+    },
+    {
+      "name": "realm-manager-password",
+      "type": "java.lang.String",
+      "description": "Description for realm-manager-username."
+    }
+  ]
+}

@@ -7,6 +7,6 @@ import org.springframework.boot.runApplication
 class NymphApplication
 
 fun main(args: Array<String>) {
-    runApplication<NymphApplication>(*args)
+	runApplication<NymphApplication>(*args)
 }
 
