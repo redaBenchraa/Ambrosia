@@ -9,9 +9,10 @@ import java.util.*
 import javax.annotation.Nonnull
 import javax.servlet.http.HttpServletRequest
 
+
 @Configuration
 class CustomLocaleResolver : AcceptHeaderLocaleResolver(), WebMvcConfigurer {
-	var locales = listOf(
+	final var locales = listOf(
 		Locale("en"),
 		Locale("fr")
 	)

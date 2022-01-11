@@ -1,7 +1,5 @@
 package com.ambrosia.nymph.configs
 
-import org.keycloak.adapters.KeycloakConfigResolver
-import org.keycloak.adapters.springboot.KeycloakSpringBootConfigResolver
 import org.keycloak.adapters.springsecurity.authentication.KeycloakAuthenticationProvider
 import org.keycloak.adapters.springsecurity.config.KeycloakWebSecurityConfigurerAdapter
 import org.springframework.beans.factory.annotation.Autowired
@@ -20,9 +18,7 @@ import org.zalando.problem.spring.web.advice.security.SecurityProblemSupport
 
 @Configuration
 @EnableWebSecurity
-@Import(
-	SecurityProblemSupport::class
-)
+@Import(SecurityProblemSupport::class)
 @EnableGlobalMethodSecurity(jsr250Enabled = true, prePostEnabled = true, securedEnabled = true)
 class KeycloakSecurityConfig(problemSupport: SecurityProblemSupport) : KeycloakWebSecurityConfigurerAdapter() {
 
@@ -58,10 +54,5 @@ class KeycloakSecurityConfig(problemSupport: SecurityProblemSupport) : KeycloakW
 	@Bean
 	override fun sessionAuthenticationStrategy(): SessionAuthenticationStrategy {
 		return RegisterSessionAuthenticationStrategy(SessionRegistryImpl())
-	}
-
-	@Bean
-	fun keycloakConfigResolver(): KeycloakConfigResolver {
-		return KeycloakSpringBootConfigResolver()
 	}
 }
