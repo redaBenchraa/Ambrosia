@@ -1,6 +1,6 @@
 <?xml version="1.1" encoding="UTF-8" standalone="no"?>
-<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
-                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
     <changeSet author="Alexander" id="1641823948673-1">
         <createTable tableName="bill">
@@ -332,12 +332,6 @@
             <column name="session_id" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
-            <column name="customer__id" type="VARCHAR(255)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="session__id" type="VARCHAR(255)">
-                <constraints nullable="false"/>
-            </column>
         </createTable>
     </changeSet>
     <changeSet author="Alexander" id="1641823948673-13">
@@ -449,16 +443,6 @@
                                  referencedTableName="category"
                                  validate="true"/>
     </changeSet>
-    <changeSet author="Alexander" id="1641823948673-25">
-        <addForeignKeyConstraint baseColumnNames="customer__id"
-                                 baseTableName="orders"
-                                 constraintName="fk38w3h6dumm9obrffjgluftomf"
-                                 deferrable="false" initiallyDeferred="false"
-                                 onDelete="NO ACTION" onUpdate="NO ACTION"
-                                 referencedColumnNames="id"
-                                 referencedTableName="customer"
-                                 validate="true"/>
-    </changeSet>
     <changeSet author="Alexander" id="1641823948673-26">
         <addForeignKeyConstraint baseColumnNames="customer_id"
                                  baseTableName="orders"
@@ -528,15 +512,6 @@
                                  onDelete="NO ACTION" onUpdate="NO ACTION"
                                  referencedColumnNames="id"
                                  referencedTableName="tables" validate="true"/>
-    </changeSet>
-    <changeSet author="Alexander" id="1641823948673-34">
-        <addForeignKeyConstraint baseColumnNames="session__id"
-                                 baseTableName="orders"
-                                 constraintName="fkj9s587lg4v02kb917q1g7ucj3"
-                                 deferrable="false" initiallyDeferred="false"
-                                 onDelete="NO ACTION" onUpdate="NO ACTION"
-                                 referencedColumnNames="id"
-                                 referencedTableName="session" validate="true"/>
     </changeSet>
     <changeSet author="Alexander" id="1641823948673-35">
         <addForeignKeyConstraint baseColumnNames="session_id"

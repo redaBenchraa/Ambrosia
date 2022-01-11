@@ -13,33 +13,33 @@ import javax.validation.constraints.NotNull
 
 @Entity
 class Bill(
-    @Id
-    @Column(nullable = false)
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @NotNull(message = "error.bill.id.null")
-    var id: String,
-    @Column(nullable = false)
-    @CreatedDate
-    @ColumnDefault(NOW)
-    var createdAt: LocalDateTime = LocalDateTime.now(),
-    @Column(nullable = false)
-    @LastModifiedDate
-    @ColumnDefault(NOW)
-    var updatedAt: LocalDateTime = LocalDateTime.now(),
-    var archivedAt: LocalDateTime? = null,
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "customer_id", nullable = true)
-    @OnDelete(action = OnDeleteAction.NO_ACTION)
-    @JsonManagedReference
-    var customer: Customer?,
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "employee_id", nullable = true)
-    @OnDelete(action = OnDeleteAction.NO_ACTION)
-    @JsonManagedReference
-    var employee: Employee?,
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "session_id", nullable = false)
-    @OnDelete(action = OnDeleteAction.NO_ACTION)
-    @JsonManagedReference
-    var session: Session,
+	@Id
+	@Column(nullable = false)
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	@NotNull(message = "error.bill.id.null")
+	var id: String,
+	@Column(nullable = false)
+	@CreatedDate
+	@ColumnDefault(NOW)
+	var createdAt: LocalDateTime = LocalDateTime.now(),
+	@Column(nullable = false)
+	@LastModifiedDate
+	@ColumnDefault(NOW)
+	var updatedAt: LocalDateTime = LocalDateTime.now(),
+	var archivedAt: LocalDateTime? = null,
+	@ManyToOne(fetch = FetchType.LAZY, optional = false)
+	@JoinColumn(name = "customer_id", nullable = true)
+	@OnDelete(action = OnDeleteAction.NO_ACTION)
+	@JsonManagedReference
+	var customer: Customer?,
+	@ManyToOne(fetch = FetchType.LAZY, optional = false)
+	@JoinColumn(name = "employee_id", nullable = true)
+	@OnDelete(action = OnDeleteAction.NO_ACTION)
+	@JsonManagedReference
+	var employee: Employee?,
+	@ManyToOne(fetch = FetchType.LAZY, optional = false)
+	@JoinColumn(name = "session_id", nullable = false)
+	@OnDelete(action = OnDeleteAction.NO_ACTION)
+	@JsonManagedReference
+	var session: Session,
 )

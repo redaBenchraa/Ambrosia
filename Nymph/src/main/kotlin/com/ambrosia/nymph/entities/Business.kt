@@ -17,84 +17,84 @@ import javax.validation.constraints.Size
 
 @Entity
 class Business(
-    @Id
-    @Column(nullable = false)
-    @NotNull(message = "error.business.id.null")
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    var id: String,
-    @NotNull(message = "error.business.name.null")
-    @NotBlank(message = "error.business.name.blank")
-    @Size(max = NAME_MAX_SIZE, message = "error.business.name.invalidSize")
-    @Column(nullable = false)
-    var name: String,
-    @NotNull
-    @NotBlank(message = "error.business.phoneNumber.blank")
-    @Column(nullable = false, unique = true)
-    var phoneNumber: String,
-    @Column(nullable = false, unique = true)
-    @NotBlank(message = "error.business.email.blank")
-    @Email(message = "error.business.email.invalidFormat")
-    @Size(max = EMAIL_MAX_SIZE, message = "error.business.email.invalidSize")
-    var email: String,
-    @Column(columnDefinition = "text")
-    var description: String?,
-    var slogan: String?,
-    var logo: String?,
-    var location: String?,
-    @Column(nullable = false)
-    var currency: String = Currency.EUR.name,
-    @Column(nullable = false)
-    var isAvailable: Boolean = true,
-    @Column(nullable = false)
-    @CreatedDate
-    @ColumnDefault(NOW)
-    var createdAt: LocalDateTime = LocalDateTime.now(),
-    @Column(nullable = false)
-    @LastModifiedDate
-    @ColumnDefault(NOW)
-    var updatedAt: LocalDateTime = LocalDateTime.now(),
-    var archivedAt: LocalDateTime? = null,
-    @OneToMany(
-        cascade = [CascadeType.ALL],
-        fetch = FetchType.LAZY,
-        mappedBy = "business"
-    )
-    @JsonBackReference
-    var categories: Set<Category>,
-    @OneToMany(
-        cascade = [CascadeType.ALL],
-        fetch = FetchType.LAZY,
-        mappedBy = "business"
-    )
-    @JsonBackReference
-    var employees: Set<Employee>,
-    @OneToMany(
-        cascade = [CascadeType.ALL],
-        fetch = FetchType.LAZY,
-        mappedBy = "business"
-    )
-    @JsonBackReference
-    var tables: Set<Table>,
-    @OneToMany(
-        cascade = [CascadeType.ALL],
-        fetch = FetchType.LAZY,
-        mappedBy = "business"
-    )
-    @JsonBackReference
-    var items: Set<Item>,
-    @OneToMany(
-        cascade = [CascadeType.ALL],
-        fetch = FetchType.LAZY,
-        mappedBy = "business"
-    )
-    @JsonBackReference
-    var menus: Set<Menu>,
-    @OneToMany(
-        cascade = [CascadeType.ALL],
-        fetch = FetchType.LAZY,
-        mappedBy = "business"
-    )
-    @JsonBackReference
-    var sessions: Set<Session>,
+	@Id
+	@Column(nullable = false)
+	@NotNull(message = "error.business.id.null")
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	var id: String,
+	@NotNull(message = "error.business.name.null")
+	@NotBlank(message = "error.business.name.blank")
+	@Size(max = NAME_MAX_SIZE, message = "error.business.name.invalidSize")
+	@Column(nullable = false)
+	var name: String,
+	@NotNull
+	@NotBlank(message = "error.business.phoneNumber.blank")
+	@Column(nullable = false, unique = true)
+	var phoneNumber: String,
+	@Column(nullable = false, unique = true)
+	@NotBlank(message = "error.business.email.blank")
+	@Email(message = "error.business.email.invalidFormat")
+	@Size(max = EMAIL_MAX_SIZE, message = "error.business.email.invalidSize")
+	var email: String,
+	@Column(columnDefinition = "text")
+	var description: String?,
+	var slogan: String?,
+	var logo: String?,
+	var location: String?,
+	@Column(nullable = false)
+	var currency: String = Currency.EUR.name,
+	@Column(nullable = false)
+	var isAvailable: Boolean = true,
+	@Column(nullable = false)
+	@CreatedDate
+	@ColumnDefault(NOW)
+	var createdAt: LocalDateTime = LocalDateTime.now(),
+	@Column(nullable = false)
+	@LastModifiedDate
+	@ColumnDefault(NOW)
+	var updatedAt: LocalDateTime = LocalDateTime.now(),
+	var archivedAt: LocalDateTime? = null,
+	@OneToMany(
+		cascade = [CascadeType.ALL],
+		fetch = FetchType.LAZY,
+		mappedBy = "business"
+	)
+	@JsonBackReference
+	var categories: Set<Category>,
+	@OneToMany(
+		cascade = [CascadeType.ALL],
+		fetch = FetchType.LAZY,
+		mappedBy = "business"
+	)
+	@JsonBackReference
+	var employees: Set<Employee>,
+	@OneToMany(
+		cascade = [CascadeType.ALL],
+		fetch = FetchType.LAZY,
+		mappedBy = "business"
+	)
+	@JsonBackReference
+	var tables: Set<Table>,
+	@OneToMany(
+		cascade = [CascadeType.ALL],
+		fetch = FetchType.LAZY,
+		mappedBy = "business"
+	)
+	@JsonBackReference
+	var items: Set<Item>,
+	@OneToMany(
+		cascade = [CascadeType.ALL],
+		fetch = FetchType.LAZY,
+		mappedBy = "business"
+	)
+	@JsonBackReference
+	var menus: Set<Menu>,
+	@OneToMany(
+		cascade = [CascadeType.ALL],
+		fetch = FetchType.LAZY,
+		mappedBy = "business"
+	)
+	@JsonBackReference
+	var sessions: Set<Session>,
 )
 
