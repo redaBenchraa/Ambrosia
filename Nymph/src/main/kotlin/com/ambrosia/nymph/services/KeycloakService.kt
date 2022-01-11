@@ -30,8 +30,7 @@ class KeycloakService {
 		userRepresentation.lastName = user.lastName
 		userRepresentation.email = user.email
 		userRepresentation.realmRoles = user.roles
-		userRepresentation.credentials =
-			listOf(getPasswordRepresentation(user.password))
+		userRepresentation.credentials = listOf(getPasswordRepresentation(user.password))
 		return userRepresentation
 	}
 

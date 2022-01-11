@@ -4,11 +4,11 @@ import java.util.stream.IntStream
 
 
 abstract class EntityException(
-	private val entityClass: Class<*>, vararg searchParamsMap: Any
+	val entityClass: Class<*>, vararg searchParamsMap: Any
 ) :
 	RuntimeException() {
 	@Transient
-	private val parameters: Map<String, Any>
+	val parameters: Map<String, Any>
 
 	init {
 		parameters = toMap(searchParamsMap)
@@ -21,12 +21,8 @@ abstract class EntityException(
 				.map { i: Int -> i * 2 }
 				.collect(
 					{ HashMap() },
-					{ m: HashMap<String, Any>, i: Int ->
-						m[entries[i] as String] = entries[i + 1]
-					}
-				) { obj: HashMap<String, Any>, m: HashMap<String, Any> ->
-					obj.putAll(m)
-				}
+					{ m: HashMap<String, Any>, i: Int -> m[entries[i] as String] = entries[i + 1] }
+				) { obj: HashMap<String, Any>, m: HashMap<String, Any> -> obj.putAll(m) }
 		}
 	}
 }
