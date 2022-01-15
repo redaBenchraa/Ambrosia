@@ -50,22 +50,24 @@ dependencies {
 	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 	implementation("org.liquibase:liquibase-core")
 	implementation("org.postgresql:postgresql")
-	testImplementation("org.springframework.boot:spring-boot-starter-test")
-	testImplementation("org.springframework.security:spring-security-test")
-	annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
-	liquibaseRuntime("org.postgresql:postgresql")
-	liquibaseRuntime("org.liquibase:liquibase-core:4.4.3")
-	liquibaseRuntime("org.yaml:snakeyaml:1.29")
 	implementation("org.keycloak:keycloak-spring-boot-starter:16.1.0")
 	implementation("org.keycloak:keycloak-admin-client:16.1.0")
 	implementation("org.zalando:problem-spring-web:0.27.0")
 	implementation("org.apache.commons:commons-collections4:4.4")
+	implementation("junit:junit:4.13.2")
+	annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
+	liquibaseRuntime("org.postgresql:postgresql")
+	liquibaseRuntime("org.liquibase:liquibase-core:4.4.3")
+	liquibaseRuntime("org.yaml:snakeyaml:1.29")
+	testImplementation("org.springframework.boot:spring-boot-starter-test")
+	testImplementation("org.springframework.security:spring-security-test")
+	testImplementation("com.h2database:h2:1.3.148")
 }
 
 tasks.withType<KotlinCompile> {
 	kotlinOptions {
 		freeCompilerArgs = listOf("-Xjsr305=strict")
-		jvmTarget = "11"
+		jvmTarget = "17"
 	}
 }
 
