@@ -42,7 +42,8 @@ class Table(
 	@OneToMany(
 		cascade = [CascadeType.ALL],
 		fetch = FetchType.LAZY,
-		mappedBy = "table"
+		mappedBy = "table",
+		targetEntity = Session::class
 	)
 	@JsonBackReference
 	var sessions: Set<Session>,

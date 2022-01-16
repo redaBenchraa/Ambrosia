@@ -16,10 +16,8 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("users")
-class UserController {
+class UserController(@Autowired private val userService: UserService) {
 
-	@Autowired
-	lateinit var userService: UserService
 
 	@GetMapping(value = ["/me"])
 	@PreAuthorize("hasRole('ADMIN')")

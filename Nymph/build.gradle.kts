@@ -9,6 +9,13 @@ plugins {
 	kotlin("plugin.jpa") version "1.6.10"
 	id("org.springframework.experimental.aot") version "0.11.1"
 	id("org.liquibase.gradle") version "2.0.3"
+	kotlin("plugin.allopen") version "1.4.32"
+}
+
+allOpen {
+	annotation("javax.persistence.Entity")
+	annotation("javax.persistence.Embeddable")
+	annotation("javax.persistence.MappedSuperclass")
 }
 
 liquibase {
@@ -61,7 +68,9 @@ dependencies {
 	liquibaseRuntime("org.yaml:snakeyaml:1.29")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("org.springframework.security:spring-security-test")
-	testImplementation("com.h2database:h2:1.3.148")
+	testImplementation("com.h2database:h2:2.0.206")
+	testImplementation("io.mockk:mockk:1.12.2")
+	runtimeOnly("com.h2database:h2")
 }
 
 tasks.withType<KotlinCompile> {

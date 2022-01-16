@@ -17,14 +17,14 @@ import java.util.Objects.isNull
 import java.util.stream.Collectors
 
 @Service
-class UserService {
+class UserService(
+	@Autowired
+	private val keycloakService: KeycloakService,
+	@Autowired
+	private val environmentProperties: EnvironmentProperties
+) {
 	val logger: Logger = LoggerFactory.getLogger(UserService::class.java)
 
-	@Autowired
-	lateinit var keycloakService: KeycloakService
-
-	@Autowired
-	lateinit var environmentProperties: EnvironmentProperties
 
 	fun createKeycloakUser(user: KeycloakUser) {
 		val realmResource = realmResource
