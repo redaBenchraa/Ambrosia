@@ -11,7 +11,8 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("business")
 class BusinessController(@Autowired private val businessService: BusinessService) {
-	@PostMapping
+
+	@PostMapping("/register")
 	fun createBusiness(@RequestBody business: BusinessRegistrationDto): BusinessRegistrationDto {
 		return businessService.createBusiness(business)
 	}

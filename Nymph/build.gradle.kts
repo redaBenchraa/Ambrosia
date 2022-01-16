@@ -1,14 +1,12 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-import org.springframework.boot.gradle.tasks.bundling.BootBuildImage
 
 plugins {
 	id("org.springframework.boot") version "2.6.2"
 	id("io.spring.dependency-management") version "1.0.11.RELEASE"
+	id("org.liquibase.gradle") version "2.0.3"
 	kotlin("jvm") version "1.6.10"
 	kotlin("plugin.spring") version "1.6.10"
 	kotlin("plugin.jpa") version "1.6.10"
-	id("org.springframework.experimental.aot") version "0.11.1"
-	id("org.liquibase.gradle") version "2.0.3"
 	kotlin("plugin.allopen") version "1.4.32"
 }
 
@@ -61,15 +59,19 @@ dependencies {
 	implementation("org.keycloak:keycloak-admin-client:16.1.0")
 	implementation("org.zalando:problem-spring-web:0.27.0")
 	implementation("org.apache.commons:commons-collections4:4.4")
-	implementation("junit:junit:4.13.2")
 	annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
 	liquibaseRuntime("org.postgresql:postgresql")
 	liquibaseRuntime("org.liquibase:liquibase-core:4.4.3")
 	liquibaseRuntime("org.yaml:snakeyaml:1.29")
-	testImplementation("org.springframework.boot:spring-boot-starter-test")
+	testImplementation("org.springframework.boot:spring-boot-starter-test") {
+		exclude(module = "junit")
+		exclude(module = "mockito-core")
+	}
 	testImplementation("org.springframework.security:spring-security-test")
 	testImplementation("com.h2database:h2:2.0.206")
-	testImplementation("io.mockk:mockk:1.12.2")
+	testImplementation("com.ninja-squad:springmockk:3.1.0")
+	testImplementation("org.junit.jupiter:junit-jupiter-api")
+	testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
 	runtimeOnly("com.h2database:h2")
 }
 
@@ -82,9 +84,4 @@ tasks.withType<KotlinCompile> {
 
 tasks.withType<Test> {
 	useJUnitPlatform()
-}
-
-tasks.withType<BootBuildImage> {
-	builder = "paketobuildpacks/builder:tiny"
-	environment = mapOf("BP_NATIVE_IMAGE" to "true")
 }

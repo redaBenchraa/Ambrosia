@@ -7,7 +7,7 @@ import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotNull
 import javax.validation.constraints.Size
 
-class BusinessRegistrationDto(
+data class BusinessRegistrationDto(
 	var id: String?,
 	@NotNull(message = "error.business.name.null")
 	@NotBlank(message = "error.business.name.blank")
