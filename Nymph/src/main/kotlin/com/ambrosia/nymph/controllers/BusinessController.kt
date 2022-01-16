@@ -10,12 +10,9 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("business")
-class BusinessController {
-	@Autowired
-	lateinit var businessService: BusinessService
-
+class BusinessController(@Autowired private val businessService: BusinessService) {
 	@PostMapping
-	fun createBusiness(@RequestBody business: BusinessRegistrationDto) {
+	fun createBusiness(@RequestBody business: BusinessRegistrationDto): BusinessRegistrationDto {
 		return businessService.createBusiness(business)
 	}
 }

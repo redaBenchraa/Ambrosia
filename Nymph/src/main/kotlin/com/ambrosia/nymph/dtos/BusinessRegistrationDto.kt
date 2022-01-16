@@ -25,5 +25,5 @@ class BusinessRegistrationDto(
 	var logo: String?,
 	var location: String?,
 	var currency: String = Currency.EUR.name,
-	var employee: EmployeeDto,
+	var employee: EmployeeDto? = null,
 )

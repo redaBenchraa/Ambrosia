@@ -52,7 +52,8 @@ class Menu(
 	@OneToMany(
 		cascade = [CascadeType.ALL],
 		fetch = FetchType.LAZY,
-		mappedBy = "menu"
+		mappedBy = "menu",
+		targetEntity = MenuItem::class
 	)
 	@JsonBackReference
 	var menuItems: Set<MenuItem>,

@@ -18,5 +18,5 @@ class EmployeeDto(
 	var lastName: String,
 	@NotNull(message = "error.employee.position.null")
 	var position: Role = Role.MANAGER,
-	var password: String,
+	var password: String? = null,
 )

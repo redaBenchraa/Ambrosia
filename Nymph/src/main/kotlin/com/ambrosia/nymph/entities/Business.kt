@@ -21,7 +21,7 @@ class Business(
 	@Column(nullable = false)
 	@NotNull(message = "error.business.id.null")
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	var id: String,
+	var id: String?,
 	@NotNull(message = "error.business.name.null")
 	@NotBlank(message = "error.business.name.blank")
 	@Size(max = NAME_MAX_SIZE, message = "error.business.name.invalidSize")
@@ -57,44 +57,50 @@ class Business(
 	@OneToMany(
 		cascade = [CascadeType.ALL],
 		fetch = FetchType.LAZY,
-		mappedBy = "business"
+		mappedBy = "business",
+		targetEntity = Category::class
 	)
 	@JsonBackReference
-	var categories: Set<Category>,
+	var categories: Set<Category> = HashSet(),
 	@OneToMany(
 		cascade = [CascadeType.ALL],
 		fetch = FetchType.LAZY,
-		mappedBy = "business"
+		mappedBy = "business",
+		targetEntity = Employee::class
 	)
 	@JsonBackReference
-	var employees: Set<Employee>,
+	var employees: Set<Employee> = HashSet(),
 	@OneToMany(
 		cascade = [CascadeType.ALL],
 		fetch = FetchType.LAZY,
-		mappedBy = "business"
+		mappedBy = "business",
+		targetEntity = Table::class
 	)
 	@JsonBackReference
-	var tables: Set<Table>,
+	var tables: Set<Table> = HashSet(),
 	@OneToMany(
 		cascade = [CascadeType.ALL],
 		fetch = FetchType.LAZY,
-		mappedBy = "business"
+		mappedBy = "business",
+		targetEntity = Item::class
 	)
 	@JsonBackReference
-	var items: Set<Item>,
+	var items: Set<Item> = HashSet(),
 	@OneToMany(
 		cascade = [CascadeType.ALL],
 		fetch = FetchType.LAZY,
-		mappedBy = "business"
+		mappedBy = "business",
+		targetEntity = Menu::class
 	)
 	@JsonBackReference
-	var menus: Set<Menu>,
+	var menus: Set<Menu> = HashSet(),
 	@OneToMany(
 		cascade = [CascadeType.ALL],
 		fetch = FetchType.LAZY,
-		mappedBy = "business"
+		mappedBy = "business",
+		targetEntity = Session::class
 	)
 	@JsonBackReference
-	var sessions: Set<Session>,
+	var sessions: Set<Session> = HashSet(),
 )
 

@@ -31,14 +31,16 @@ class Customer(
 	@OneToMany(
 		cascade = [CascadeType.ALL],
 		fetch = FetchType.LAZY,
-		mappedBy = "customer"
+		mappedBy = "customer",
+		targetEntity = Order::class
 	)
 	@JsonBackReference
 	var orders: Set<Order>,
 	@OneToMany(
 		cascade = [CascadeType.ALL],
 		fetch = FetchType.LAZY,
-		mappedBy = "customer"
+		mappedBy = "customer",
+		targetEntity = Bill::class
 	)
 	@JsonBackReference
 	var bills: Set<Bill>,

@@ -21,7 +21,7 @@ class Employee(
 	@Column(nullable = false)
 	@NotNull(message = "error.employee.id.null")
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	var id: String,
+	var id: String?,
 	@NotNull(message = "error.employee.firstName.null")
 	@NotBlank(message = "error.employee.firstName.blank")
 	@Size(max = NAME_MAX_SIZE, message = "error.employee.firstName.invalidSize")
@@ -46,5 +46,5 @@ class Employee(
 	@JoinColumn(name = "business_id", nullable = false)
 	@OnDelete(action = OnDeleteAction.NO_ACTION)
 	@JsonManagedReference
-	var business: Business,
+	var business: Business? = null,
 )

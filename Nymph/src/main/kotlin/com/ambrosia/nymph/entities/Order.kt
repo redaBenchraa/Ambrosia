@@ -43,8 +43,9 @@ class Order(
 	@OneToMany(
 		cascade = [CascadeType.ALL],
 		fetch = FetchType.LAZY,
-		mappedBy = "order"
+		mappedBy = "order",
+		targetEntity = OrderedItem::class
 	)
 	@JsonBackReference
-	var orderedItem: Set<OrderedItem>,
+	var orderedItem: Set<OrderedItem> = HashSet(),
 )

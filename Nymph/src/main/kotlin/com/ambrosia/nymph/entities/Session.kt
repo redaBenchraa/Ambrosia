@@ -52,14 +52,16 @@ class Session(
 	@OneToMany(
 		cascade = [CascadeType.ALL],
 		fetch = FetchType.LAZY,
-		mappedBy = "session"
+		mappedBy = "session",
+		targetEntity = Order::class
 	)
 	@JsonBackReference
 	var orders: Set<Order>,
 	@OneToMany(
 		cascade = [CascadeType.ALL],
 		fetch = FetchType.LAZY,
-		mappedBy = "session"
+		mappedBy = "session",
+		targetEntity = Bill::class
 	)
 	@JsonBackReference
 	var bills: Set<Bill>,
