@@ -15,8 +15,8 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.http.HttpStatus
-import org.springframework.http.MediaType
+import org.springframework.http.HttpStatus.CONFLICT
+import org.springframework.http.MediaType.APPLICATION_JSON
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
@@ -43,32 +43,31 @@ class BusinessControllerTest {
 	private lateinit var businessService: BusinessService
 
 	@Test
-	fun `Should create a new business with a manager`() {
+	fun `Create a new business with a manager`() {
 		val businessRegistrationDto = getBusinessRegistrationDto()
 		every { businessService.createBusiness(any()) } returns getBusinessRegistrationDto()
 		mockMvc.perform(
-			post(BASE_URL + "register").contentType(MediaType.APPLICATION_JSON)
+			post(BASE_URL + "register").contentType(APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(businessRegistrationDto))
 		)
 			.andExpect(status().isOk)
-			.andExpect(content().contentType(MediaType.APPLICATION_JSON))
+			.andExpect(content().contentType(APPLICATION_JSON))
 			.andExpect(content().json(objectMapper.writeValueAsString(businessRegistrationDto)))
 	}
 
 	@Test
-	@Throws(Exception::class)
-	fun `When register throws entity already exist exception`() {
+	fun `Register throws entity already exist exception`() {
 		val businessRegistrationDto = getBusinessRegistrationDto()
 		val exception = EntityAlreadyExistsException(Business::class.java, "email", "email@gmail.com")
 		val expected = runtimeExceptionHandler.handleEntityAlreadyExistsException(exception)
 		every { businessService.createBusiness(any()) } throws exception
 		mockMvc.perform(
 			post(BASE_URL + "register")
-				.contentType(MediaType.APPLICATION_JSON)
+				.contentType(APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(businessRegistrationDto))
 		)
-			.andExpect(status().`is`(HttpStatus.CONFLICT.value()))
-			.andExpect(content().contentType(MediaType.APPLICATION_JSON))
+			.andExpect(status().`is`(CONFLICT.value()))
+			.andExpect(content().contentType(APPLICATION_JSON))
 			.andExpect(content().json(objectMapper.writeValueAsString(expected.body)))
 	}
 
