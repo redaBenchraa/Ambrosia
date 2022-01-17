@@ -16,10 +16,10 @@ class BusinessService(
 ) {
 	@Transactional
 	fun createBusiness(businessRegistrationDto: BusinessRegistrationDto): BusinessRegistrationDto {
-		val employee = businessRegistrationDto.employee?.toEntity()!!
 		val saveBusiness = businessRepository.save(businessRegistrationDto.toEntity())
 		val result = saveBusiness.toDto()
 		if (businessRegistrationDto.employee != null) {
+			val employee = businessRegistrationDto.employee?.toEntity()!!
 			employee.business = saveBusiness
 			val savedEmployee = employeeRepository.save(employee)
 			result.employee = savedEmployee.toDto()
