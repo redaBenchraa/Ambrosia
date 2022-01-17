@@ -2,6 +2,7 @@ package com.ambrosia.nymph.controllers
 
 import com.ambrosia.nymph.dtos.BusinessRegistrationDto
 import com.ambrosia.nymph.dtos.EmployeeDto
+import com.ambrosia.nymph.dtos.EmployeeRegistrationDto
 import com.ambrosia.nymph.services.BusinessService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
@@ -17,12 +18,15 @@ class BusinessController(@Autowired private val businessService: BusinessService
 	}
 
 	@PostMapping("/{id}/employees")
-	fun addEmployee(@PathVariable("id") businessId: Long, @Valid @RequestBody employee: EmployeeDto): EmployeeDto {
+	fun addEmployee(
+		@PathVariable("id") businessId: Long,
+		@Valid @RequestBody employee: EmployeeRegistrationDto
+	): EmployeeDto {
 		return businessService.addEmployee(businessId, employee)
 	}
 
-	@DeleteMapping("/{id}/employees")
-	fun deleteEmployee(@PathVariable("id") businessId: Long, @Valid @RequestBody employee: EmployeeDto) {
-		businessService.deleteEmployee(businessId, employee)
+	@DeleteMapping("/{businessId}/employees/{employeeId}")
+	fun deleteEmployee(@PathVariable("businessId") businessId: Long, @PathVariable("employeeId") employeeId: Long) {
+		businessService.deleteEmployee(businessId, employeeId)
 	}
 }

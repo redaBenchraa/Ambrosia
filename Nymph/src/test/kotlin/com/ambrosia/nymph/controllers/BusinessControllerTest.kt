@@ -2,7 +2,7 @@ package com.ambrosia.nymph.controllers
 
 import com.ambrosia.nymph.constants.Role
 import com.ambrosia.nymph.dtos.BusinessRegistrationDto
-import com.ambrosia.nymph.dtos.EmployeeDto
+import com.ambrosia.nymph.dtos.EmployeeRegistrationDto
 import com.ambrosia.nymph.entities.Business
 import com.ambrosia.nymph.entities.Employee
 import com.ambrosia.nymph.exceptions.EntityAlreadyExistsException
@@ -78,17 +78,18 @@ class BusinessControllerTest {
 			logo = "logo",
 			slogan = "slogan",
 			id = null,
-			employee = EmployeeDto(
+			employee = EmployeeRegistrationDto(
 				firstName = "firstName",
 				lastName = "lastName",
 				password = "password",
 				position = Role.MANAGER,
-				id = null,
+				email = "email@email.com",
 			),
 		)
 	}
 
 	private fun getBusiness(): Business = Business(
+		id = 1,
 		name = "name",
 		currency = "EUR",
 		description = "desc",
@@ -97,13 +98,13 @@ class BusinessControllerTest {
 		location = "location",
 		logo = "logo",
 		slogan = "slogan",
-		id = 1,
 	)
 
 	private fun getEmployee(): Employee = Employee(
+		id = 1,
 		firstName = "firstName",
 		lastName = "lastName",
 		position = Role.MANAGER,
-		id = 1,
+		email = "email@email.com"
 	)
 }

@@ -18,9 +18,9 @@ fun Business.toDto(): BusinessRegistrationDto = BusinessRegistrationDto(
 
 fun BusinessRegistrationDto.toEntity(): Business = Business(
 	id = id,
-	name = name,
-	phoneNumber = phoneNumber,
-	email = email,
+	name = name!!,
+	phoneNumber = phoneNumber!!,
+	email = email!!,
 	description = description,
 	slogan = slogan,
 	logo = logo,

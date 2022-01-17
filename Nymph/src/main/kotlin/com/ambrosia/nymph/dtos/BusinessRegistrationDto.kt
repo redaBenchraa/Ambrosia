@@ -8,14 +8,14 @@ import javax.validation.constraints.NotNull
 import javax.validation.constraints.Size
 
 data class BusinessRegistrationDto(
-	var id: Long?,
+	var id: Long? = null,
 	@NotNull(message = "error.business.name.null")
 	@NotBlank(message = "error.business.name.blank")
 	@Size(max = Constants.NAME_MAX_SIZE, message = "error.business.name.size.invalid")
-	var name: String,
+	var name: String?,
 	@NotNull(message = "error.business.phoneNumber.null")
 	@NotBlank(message = "error.business.phoneNumber.blank")
-	var phoneNumber: String,
+	var phoneNumber: String?,
 	@NotNull(message = "error.business.email.null")
 	@NotBlank(message = "error.business.email.blank")
 	@Email(message = "error.business.email.format.invalid")
