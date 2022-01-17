@@ -1,12 +1,9 @@
 package com.ambrosia.nymph.services
 
 import com.ambrosia.nymph.dtos.BusinessRegistrationDto
-import com.ambrosia.nymph.dtos.EmployeeDto
 import com.ambrosia.nymph.dtos.EmployeeRegistrationDto
-import com.ambrosia.nymph.entities.Business
 import com.ambrosia.nymph.entities.Employee
 import com.ambrosia.nymph.exceptions.EntityAlreadyExistsException
-import com.ambrosia.nymph.exceptions.EntityNotFoundException
 import com.ambrosia.nymph.mappers.toDto
 import com.ambrosia.nymph.mappers.toEntity
 import com.ambrosia.nymph.mappers.toRegistrationEmployeeDto
@@ -22,7 +19,7 @@ import javax.transaction.Transactional
 @Service
 class BusinessService(
 	@Autowired private val businessRepository: BusinessRepository,
-	@Autowired private val employeeRepository: EmployeeRepository
+	@Autowired private val employeeRepository: EmployeeRepository,
 ) {
 
 	@PersistenceContext
@@ -47,25 +44,5 @@ class BusinessService(
 			.ifPresent {
 				throw EntityAlreadyExistsException(Employee::class.java, "email", employeeDto.email!!)
 			}
-	}
-
-	@Transactional
-	fun addEmployee(businessId: Long, employeeDto: EmployeeRegistrationDto): EmployeeDto {
-		val business = businessRepository.findById(businessId)
-			.orElseThrow { EntityNotFoundException(Business::class.java, "id", businessId) }
-		verifyIfEmployeeExists(employeeDto)
-		val employee = employeeDto.toEntity()
-		employee.business = business
-		return employeeRepository.save(employee).toDto()
-	}
-
-	@Transactional
-	@Throws(EntityNotFoundException::class)
-	fun deleteEmployee(businessId: Long, employeeId: Long) {
-		businessRepository.findById(businessId)
-			.orElseThrow { EntityNotFoundException(Business::class.java, "id", businessId) }
-		val employee = employeeRepository.findById(employeeId)
-			.orElseThrow { EntityNotFoundException(Employee::class.java, "id", employeeId) }
-		employeeRepository.delete(employee)
 	}
 }
