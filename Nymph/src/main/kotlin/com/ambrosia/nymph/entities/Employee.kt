@@ -24,7 +24,7 @@ class Employee(
 	@Column(nullable = false)
 	@NotNull(message = "error.employee.id.null")
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	var id: Long?,
+	var id: Long? = null,
 	@NotNull(message = "error.employee.firstName.null")
 	@NotBlank(message = "error.employee.firstName.blank")
 	@Size(max = NAME_MAX_SIZE, message = "error.employee.firstName.size.invalid")

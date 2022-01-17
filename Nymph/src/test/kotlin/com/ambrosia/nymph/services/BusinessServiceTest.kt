@@ -2,7 +2,7 @@ package com.ambrosia.nymph.services
 
 import com.ambrosia.nymph.constants.Role
 import com.ambrosia.nymph.dtos.BusinessRegistrationDto
-import com.ambrosia.nymph.dtos.EmployeeDto
+import com.ambrosia.nymph.dtos.EmployeeRegistrationDto
 import com.ambrosia.nymph.entities.Business
 import com.ambrosia.nymph.entities.Employee
 import com.ambrosia.nymph.exceptions.EntityNotFoundException
@@ -42,7 +42,7 @@ class BusinessServiceTest {
 	fun `Add an employee to a business`() {
 		every { businessRepository.findById(any()) } returns Optional.of(getBusiness())
 		every { employeeRepository.save(any()) } returns getEmployee()
-		val result = businessService.addEmployee(1, getEmployeeDto())
+		val result = businessService.addEmployee(1, getEmployeeRegistrationDto())
 		verify {
 			businessRepository.findById(any())
 			employeeRepository.save(any())
@@ -53,7 +53,7 @@ class BusinessServiceTest {
 	@Test
 	fun `Add employee to a non existing business`() {
 		every { businessRepository.findById(any()) } returns Optional.empty()
-		assertThrows<EntityNotFoundException> { businessService.addEmployee(1, getEmployeeDto()) }
+		assertThrows<EntityNotFoundException> { businessService.addEmployee(1, getEmployeeRegistrationDto()) }
 	}
 
 	@Test
@@ -61,20 +61,14 @@ class BusinessServiceTest {
 		every { businessRepository.findById(any()) } returns Optional.of(getBusiness())
 		every { employeeRepository.findById(any()) } returns Optional.of(getEmployee())
 		every { employeeRepository.delete(any()) } returns Unit
-		businessService.deleteEmployee(1, getEmployeeDto())
+		businessService.deleteEmployee(1, 1)
 		verify { employeeRepository.delete(any()) }
 	}
 
 	@Test
 	fun `Remove an employee from a non existing business`() {
 		every { businessRepository.findById(any()) } returns Optional.empty()
-		assertThrows<EntityNotFoundException> { businessService.deleteEmployee(1, getEmployeeDto()) }
-	}
-
-	@Test
-	fun `Remove an employee with a null id`() {
-		every { businessRepository.findById(any()) } returns Optional.of(getBusiness())
-		assertThrows<EntityNotFoundException> { businessService.deleteEmployee(1, getEmployeeDto().copy(id = null)) }
+		assertThrows<EntityNotFoundException> { businessService.deleteEmployee(1, 1) }
 	}
 
 	private fun getBusinessRegistrationDto(): BusinessRegistrationDto {
@@ -87,18 +81,16 @@ class BusinessServiceTest {
 			location = "location",
 			logo = "logo",
 			slogan = "slogan",
-			id = null,
-			employee = getEmployeeDto()
+			employee = getEmployeeRegistrationDto()
 		)
 	}
 
-	private fun getEmployeeDto(): EmployeeDto = EmployeeDto(
+	private fun getEmployeeRegistrationDto(): EmployeeRegistrationDto = EmployeeRegistrationDto(
 		firstName = "firstName",
 		lastName = "lastName",
 		password = "password",
+		email = "email@email.com",
 		position = Role.MANAGER,
-		id = 1,
-		email = "email@email.com"
 	)
 
 	private fun getBusiness(): Business = Business(

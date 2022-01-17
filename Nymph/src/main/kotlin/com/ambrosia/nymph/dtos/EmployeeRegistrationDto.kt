@@ -10,7 +10,7 @@ import javax.validation.constraints.NotNull
 import javax.validation.constraints.Size
 
 data class EmployeeRegistrationDto(
-	var id: Long?,
+	var id: Long? = null,
 	@NotNull(message = "error.employee.firstName.null")
 	@NotBlank(message = "error.employee.firstName.blank")
 	@Size(max = NAME_MAX_SIZE, message = "error.employee.firstName.size.invalid")

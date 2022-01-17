@@ -24,19 +24,16 @@ fun EmployeeDto.toEntity(): Employee = Employee(
 )
 
 fun Employee.toRegistrationEmployeeDto(): EmployeeRegistrationDto = EmployeeRegistrationDto(
-	id = id,
 	firstName = firstName,
 	lastName = lastName,
 	position = position,
-	deleted = deleted,
-	email = email
+	email = email,
+	id = id
 )
 
 fun EmployeeRegistrationDto.toEntity(): Employee = Employee(
-	id = id,
 	firstName = firstName!!,
 	lastName = lastName!!,
 	email = email!!,
-	position = position,
-	deleted = deleted,
+	position = position
 )
