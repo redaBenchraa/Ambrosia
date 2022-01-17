@@ -19,18 +19,18 @@ import javax.validation.constraints.Size
 class Item(
 	@Id
 	@Column(nullable = false)
-	@NotNull(message = "error.item.id.null")
+	@field:NotNull(message = "error.item.id.null")
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	var id: String,
-	@NotNull(message = "error.item.name.null")
-	@NotBlank(message = "error.item.name.blank")
-	@Size(max = NAME_MAX_SIZE, message = "error.item.name.invalidSize")
+	var id: Long?,
+	@field:NotNull(message = "error.item.name.null")
+	@field:NotBlank(message = "error.item.name.blank")
+	@field:Size(max = NAME_MAX_SIZE, message = "error.item.name.size.invalid")
 	@Column(nullable = false)
 	var name: String,
 	@Column(columnDefinition = "text")
 	var description: String?,
 	var image: String?,
-	@NotNull(message = "error.item.price.null")
+	@field:NotNull(message = "error.item.price.null")
 	@Min(0, message = "error.item.price.negative")
 	var price: Double,
 	var onlyForMenu: Boolean = false,
@@ -42,7 +42,7 @@ class Item(
 	@LastModifiedDate
 	@ColumnDefault(Constants.NOW)
 	var updatedAt: LocalDateTime = LocalDateTime.now(),
-	var archivedAt: LocalDateTime? = null,
+	var deleted: Boolean = false,
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	@JoinColumn(name = "business_id", nullable = false)
 	@OnDelete(action = OnDeleteAction.NO_ACTION)

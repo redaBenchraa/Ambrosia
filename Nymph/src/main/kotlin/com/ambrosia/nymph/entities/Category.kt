@@ -1,6 +1,7 @@
 package com.ambrosia.nymph.entities
 
 import com.ambrosia.nymph.constants.Constants
+import com.ambrosia.nymph.constants.Constants.Companion.NAME_MAX_SIZE
 import com.fasterxml.jackson.annotation.JsonManagedReference
 import org.hibernate.annotations.ColumnDefault
 import org.hibernate.annotations.OnDelete
@@ -17,12 +18,12 @@ import javax.validation.constraints.Size
 class Category(
 	@Id
 	@Column(nullable = false)
-	@NotNull(message = "error.category.id.null")
+	@field:NotNull(message = "error.category.id.null")
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	var id: String,
-	@NotNull(message = "error.item.category.null")
-	@NotBlank(message = "error.item.category.blank")
-	@Size(max = 128, message = "error.item.category.invalidSize")
+	var id: Long?,
+	@field:NotNull(message = "error.item.category.null")
+	@field:NotBlank(message = "error.item.category.blank")
+	@field:Size(max = NAME_MAX_SIZE, message = "error.item.category.size.invalid")
 	@Column(nullable = false)
 	var name: String,
 	@Column(columnDefinition = "text")
@@ -36,7 +37,7 @@ class Category(
 	@LastModifiedDate
 	@ColumnDefault(Constants.NOW)
 	var updatedAt: LocalDateTime = LocalDateTime.now(),
-	var archivedAt: LocalDateTime? = null,
+	var deleted: Boolean = false,
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	@JoinColumn(name = "business_id", nullable = false)
 	@OnDelete(action = OnDeleteAction.NO_ACTION)

@@ -19,17 +19,17 @@ import javax.validation.constraints.Size
 class OrderedItem(
 	@Id
 	@Column(nullable = false)
-	@NotNull(message = "error.orderedItem.id.null")
+	@field:NotNull(message = "error.orderedItem.id.null")
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	var id: String,
-	@NotNull(message = "error.orderedItem.name.null")
-	@NotBlank(message = "error.orderedItem.name.blank")
-	@Size(max = NAME_MAX_SIZE, message = "error.orderedItem.name.invalidSize")
+	var id: Long?,
+	@field:NotNull(message = "error.orderedItem.name.null")
+	@field:NotBlank(message = "error.orderedItem.name.blank")
+	@field:Size(max = NAME_MAX_SIZE, message = "error.orderedItem.name.size.invalid")
 	@Column(nullable = false)
 	var name: String,
 	@Column(columnDefinition = "text")
 	var description: String?,
-	@NotNull(message = "error.orderedItem.price.null")
+	@field:NotNull(message = "error.orderedItem.price.null")
 	@Min(0, message = "error.orderedItem.price.negative")
 	var price: Double,
 	@Column(nullable = false)
@@ -40,7 +40,7 @@ class OrderedItem(
 	@LastModifiedDate
 	@ColumnDefault(Constants.NOW)
 	var updatedAt: LocalDateTime = LocalDateTime.now(),
-	var archivedAt: LocalDateTime? = null,
+	var deleted: Boolean = false,
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	@JoinColumn(name = "order_id", nullable = false)
 	@OnDelete(action = OnDeleteAction.NO_ACTION)

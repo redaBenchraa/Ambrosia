@@ -17,14 +17,14 @@ import java.util.Objects.isNull
 import java.util.stream.Collectors
 
 @Service
-class UserService {
+class UserService(
+	@Autowired
+	private val keycloakService: KeycloakService,
+	@Autowired
+	private val environmentProperties: EnvironmentProperties
+) {
 	val logger: Logger = LoggerFactory.getLogger(UserService::class.java)
 
-	@Autowired
-	lateinit var keycloakService: KeycloakService
-
-	@Autowired
-	lateinit var environmentProperties: EnvironmentProperties
 
 	fun createKeycloakUser(user: KeycloakUser) {
 		val realmResource = realmResource
@@ -33,11 +33,11 @@ class UserService {
 		try {
 			usersResource.create(userRepresentation).use { response ->
 				if (response.status != 201) {
-					throw KeycloakException("error.keycloak.create_user")
+					throw KeycloakException("error.keycloak.createUser")
 				}
 			}
 		} catch (e: Exception) {
-			throw KeycloakException("error.keycloak.create_user")
+			throw KeycloakException("error.keycloak.createUser")
 		}
 	}
 
@@ -47,7 +47,7 @@ class UserService {
 		val currentUser = usersResource.search(user.username)
 			.stream()
 			.findFirst()
-			.orElseThrow { KeycloakException("error.keycloak.user_not_found") }
+			.orElseThrow { KeycloakException("error.keycloak.userNotFound") }
 		val realmRoles = realmResource.roles()
 			.list()
 		val currentRoles = usersResource[currentUser.id]
@@ -96,7 +96,7 @@ class UserService {
 			}
 		} catch (e: Exception) {
 			logger.info(e.message)
-			throw KeycloakException("error.keycloak.attribute_roles")
+			throw KeycloakException("error.keycloak.attributeRoles")
 		}
 	}
 
@@ -117,7 +117,7 @@ class UserService {
 			val realmResource: RealmResource = keycloakService.realmManager
 				.realm(environmentProperties.realm())
 			if (isNull(realmResource)) {
-				throw KeycloakException("error.keycloak.retrieve_realm")
+				throw KeycloakException("error.keycloak.retrieveRealm")
 			}
 			return realmResource
 		}
@@ -125,7 +125,7 @@ class UserService {
 	private fun getUsersResource(realmResource: RealmResource): UsersResource {
 		val usersResource = realmResource.users()
 		if (isNull(usersResource)) {
-			throw KeycloakException("error.keycloak.retrieve_user_resource")
+			throw KeycloakException("error.keycloak.retrieveUserResource")
 		}
 		return usersResource
 	}
