@@ -82,7 +82,7 @@ class BusinessControllerTest {
 	}
 
 	@Test
-	fun createExceptionSizeViolation() {
+	fun `Create business with blank name`() {
 		val invalidBusinessDto = getBusinessRegistrationDto().apply { name = "" }
 		every { businessService.createBusiness(any()) } returns getBusinessRegistrationDto()
 		mockMvc.perform(
@@ -104,6 +104,16 @@ class BusinessControllerTest {
 			)
 	}
 
+//	@Test
+//	fun `Add an employee to a business`() {
+//		every { employeeService.addEmployee(any(), any()) } returns getEmployee().toDto()
+//		val content = objectMapper.writeValueAsString(getEmployee())
+//		mockMvc.perform(post("$baseUrl/employees").contentType(APPLICATION_JSON).content(content))
+//			.andExpect(status().isOk)
+//			.andExpect(content().contentType(APPLICATION_JSON))
+//			.andExpect(content().json(objectMapper.writeValueAsString(getBusinessRegistrationDto())))
+//	}
+
 
 	private fun getBusinessRegistrationDto(): BusinessRegistrationDto {
 		return BusinessRegistrationDto(
@@ -114,6 +124,7 @@ class BusinessControllerTest {
 			phoneNumber = "phoneNumber",
 			location = "location",
 			logo = "logo",
+
 			slogan = "slogan",
 			employee = EmployeeRegistrationDto(
 				firstName = "firstName",
@@ -130,7 +141,7 @@ class BusinessControllerTest {
 		name = "name",
 		currency = "EUR",
 		description = "desc",
-		email = "email",
+		email = "email@email.com",
 		phoneNumber = "phoneNumber",
 		location = "location",
 		logo = "logo",
