@@ -9,6 +9,8 @@ import com.ambrosia.nymph.entities.Employee
 import com.ambrosia.nymph.exceptions.EntityAlreadyExistsException
 import com.ambrosia.nymph.handlers.RuntimeExceptionHandler
 import com.ambrosia.nymph.services.BusinessService
+import com.ambrosia.nymph.services.CategoryService
+import com.ambrosia.nymph.services.EmployeeService
 import com.ambrosia.nymph.utils.Translator
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.ninjasquad.springmockk.MockkBean
@@ -46,6 +48,12 @@ class BusinessControllerTest {
 
 	@MockkBean
 	private lateinit var businessService: BusinessService
+
+	@MockkBean
+	private lateinit var employeeService: EmployeeService
+
+	@MockkBean
+	private lateinit var categoryService: CategoryService
 
 	@Test
 	fun `Create a new business with a manager`() {
@@ -102,18 +110,17 @@ class BusinessControllerTest {
 			name = "name",
 			currency = "EUR",
 			description = "desc",
-			email = "email",
+			email = "email@email.com",
 			phoneNumber = "phoneNumber",
 			location = "location",
 			logo = "logo",
 			slogan = "slogan",
-			id = null,
 			employee = EmployeeRegistrationDto(
 				firstName = "firstName",
 				lastName = "lastName",
 				password = "password",
 				position = Role.MANAGER,
-				email = "email@field:Email.com",
+				email = "email@email.com",
 			),
 		)
 	}
@@ -135,6 +142,6 @@ class BusinessControllerTest {
 		firstName = "firstName",
 		lastName = "lastName",
 		position = Role.MANAGER,
-		email = "email@field:Email.com"
+		email = "email@email.com"
 	)
 }

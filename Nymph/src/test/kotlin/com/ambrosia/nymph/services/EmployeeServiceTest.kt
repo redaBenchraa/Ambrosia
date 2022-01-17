@@ -5,36 +5,64 @@ import com.ambrosia.nymph.dtos.BusinessRegistrationDto
 import com.ambrosia.nymph.dtos.EmployeeRegistrationDto
 import com.ambrosia.nymph.entities.Business
 import com.ambrosia.nymph.entities.Employee
+import com.ambrosia.nymph.exceptions.EntityAlreadyExistsException
+import com.ambrosia.nymph.exceptions.EntityNotFoundException
 import com.ambrosia.nymph.repositories.BusinessRepository
 import com.ambrosia.nymph.repositories.EmployeeRepository
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import java.util.*
 
-class BusinessServiceTest {
+class EmployeeServiceTest {
 
 	private val businessRepository: BusinessRepository = mockk()
 	private val employeeRepository: EmployeeRepository = mockk()
 
-	private val businessService: BusinessService = BusinessService(businessRepository, employeeRepository)
+	private val employeeService = EmployeeService(businessRepository, employeeRepository)
 
 	@Test
-	fun `Register a business with an employee`() {
-		every { businessRepository.save(any()) } returns getBusiness()
+	fun `Add an employee to a business`() {
+		every { businessRepository.findById(any()) } returns Optional.of(getBusiness())
 		every { employeeRepository.save(any()) } returns getEmployee()
 		every { employeeRepository.findByEmail(any()) } returns Optional.empty()
-		val result = businessService.createBusiness(getBusinessRegistrationDto())
+		val result = employeeService.addEmployee(1, getEmployeeRegistrationDto())
 		verify {
-			businessRepository.save(any())
+			businessRepository.findById(any())
 			employeeRepository.save(any())
 		}
 		assertEquals(1, result.id)
-		assertNotNull(result.employee)
-		assertEquals(1, result.employee?.id)
+	}
+
+	@Test
+	fun `Add an employee to a business with an existing email`() {
+		every { businessRepository.findById(any()) } returns Optional.of(getBusiness())
+		every { employeeRepository.findByEmail(any()) } returns Optional.of(getEmployee())
+		assertThrows<EntityAlreadyExistsException> { employeeService.addEmployee(1, getEmployeeRegistrationDto()) }
+	}
+
+	@Test
+	fun `Add employee to a non existing business`() {
+		every { businessRepository.findById(any()) } returns Optional.empty()
+		assertThrows<EntityNotFoundException> { employeeService.addEmployee(1, getEmployeeRegistrationDto()) }
+	}
+
+	@Test
+	fun `Remove an employee`() {
+		every { businessRepository.findById(any()) } returns Optional.of(getBusiness())
+		every { employeeRepository.findById(any()) } returns Optional.of(getEmployee())
+		every { employeeRepository.delete(any()) } returns Unit
+		employeeService.deleteEmployee(1, 1)
+		verify { employeeRepository.delete(any()) }
+	}
+
+	@Test
+	fun `Remove an employee from a non existing business`() {
+		every { businessRepository.findById(any()) } returns Optional.empty()
+		assertThrows<EntityNotFoundException> { employeeService.deleteEmployee(1, 1) }
 	}
 
 	private fun getBusinessRegistrationDto(): BusinessRegistrationDto {
