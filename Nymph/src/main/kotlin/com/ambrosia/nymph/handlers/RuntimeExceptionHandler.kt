@@ -68,8 +68,8 @@ class RuntimeExceptionHandler : ProblemHandling, SecurityAdviceTrait {
 					.withStatus(Status.CONFLICT)
 					.withDetail(
 						String.format(
-							translator.toLocale("entity_already_exists_details"),
-							ex.entityClass.simpleName, ex.parameters.toString()
+							translator.toLocale("error.entity_already_exists_details"),
+							ex.entityClass.simpleName, ex.parameters
 						)
 					)
 					.build()
