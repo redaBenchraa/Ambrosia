@@ -26,9 +26,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 @AutoConfigureMockMvc(addFilters = false)
 class BusinessControllerTest {
 
-	companion object {
-		const val BASE_URL = "/business/"
-	}
+	val baseUrl = "/business"
 
 	@Autowired
 	private lateinit var mockMvc: MockMvc
@@ -44,27 +42,24 @@ class BusinessControllerTest {
 
 	@Test
 	fun `Create a new business with a manager`() {
-		val businessRegistrationDto = getBusinessRegistrationDto()
 		every { businessService.createBusiness(any()) } returns getBusinessRegistrationDto()
-		mockMvc.perform(
-			post(BASE_URL + "register").contentType(APPLICATION_JSON)
-				.content(objectMapper.writeValueAsString(businessRegistrationDto))
-		)
+		val content = objectMapper.writeValueAsString(getBusinessRegistrationDto())
+		mockMvc.perform(post("$baseUrl/register").contentType(APPLICATION_JSON).content(content))
 			.andExpect(status().isOk)
 			.andExpect(content().contentType(APPLICATION_JSON))
-			.andExpect(content().json(objectMapper.writeValueAsString(businessRegistrationDto)))
+			.andExpect(content().json(objectMapper.writeValueAsString(getBusinessRegistrationDto())))
 	}
 
 	@Test
 	fun `Register throws entity already exist exception`() {
-		val businessRegistrationDto = getBusinessRegistrationDto()
 		val exception = EntityAlreadyExistsException(Business::class.java, "email", "email@gmail.com")
 		val expected = runtimeExceptionHandler.handleEntityAlreadyExistsException(exception)
 		every { businessService.createBusiness(any()) } throws exception
+		val content = objectMapper.writeValueAsString(getBusinessRegistrationDto())
 		mockMvc.perform(
-			post(BASE_URL + "register")
+			post("$baseUrl/register")
 				.contentType(APPLICATION_JSON)
-				.content(objectMapper.writeValueAsString(businessRegistrationDto))
+				.content(content)
 		)
 			.andExpect(status().`is`(CONFLICT.value()))
 			.andExpect(content().contentType(APPLICATION_JSON))
@@ -102,13 +97,13 @@ class BusinessControllerTest {
 		location = "location",
 		logo = "logo",
 		slogan = "slogan",
-		id = "1",
+		id = 1,
 	)
 
 	private fun getEmployee(): Employee = Employee(
 		firstName = "firstName",
 		lastName = "lastName",
 		position = Role.MANAGER,
-		id = "1",
+		id = 1,
 	)
 }

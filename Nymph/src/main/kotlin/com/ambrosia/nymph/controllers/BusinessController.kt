@@ -17,12 +17,12 @@ class BusinessController(@Autowired private val businessService: BusinessService
 	}
 
 	@PostMapping("/{id}/employees")
-	fun addEmployee(@PathVariable("id") businessId: String, @Valid @RequestBody employee: EmployeeDto): EmployeeDto {
+	fun addEmployee(@PathVariable("id") businessId: Long, @Valid @RequestBody employee: EmployeeDto): EmployeeDto {
 		return businessService.addEmployee(businessId, employee)
 	}
 
 	@DeleteMapping("/{id}/employees")
-	fun deleteEmployee(@PathVariable("id") businessId: String, @Valid @RequestBody employee: EmployeeDto) {
+	fun deleteEmployee(@PathVariable("id") businessId: Long, @Valid @RequestBody employee: EmployeeDto) {
 		businessService.deleteEmployee(businessId, employee)
 	}
 }

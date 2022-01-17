@@ -8,6 +8,7 @@ import com.ambrosia.nymph.entities.Employee
 import com.ambrosia.nymph.exceptions.EntityNotFoundException
 import com.ambrosia.nymph.mappers.toDto
 import com.ambrosia.nymph.mappers.toEntity
+import com.ambrosia.nymph.mappers.toRegistrationEmployeeDto
 import com.ambrosia.nymph.repositories.BusinessRepository
 import com.ambrosia.nymph.repositories.EmployeeRepository
 import org.springframework.beans.factory.annotation.Autowired
@@ -34,13 +35,17 @@ class BusinessService(
 			val employee = businessRegistrationDto.employee?.toEntity()!!
 			employee.business = saveBusiness
 			val savedEmployee = employeeRepository.save(employee)
-			result.employee = savedEmployee.toDto()
+			result.employee = savedEmployee.toRegistrationEmployeeDto()
 		}
 		return result
 	}
 
+	fun verifyIfEmployeeExists(employeeDto: EmployeeDto) {
+		employeeRepository.findByEmail(employeeDto.email)
+	}
+
 	@Transactional
-	fun addEmployee(businessId: String, employeeDto: EmployeeDto): EmployeeDto {
+	fun addEmployee(businessId: Long, employeeDto: EmployeeDto): EmployeeDto {
 		val business = businessRepository.findById(businessId)
 			.orElseThrow { EntityNotFoundException(Business::class.java, "id", businessId) }
 		val employee = employeeDto.toEntity()
@@ -50,7 +55,7 @@ class BusinessService(
 
 	@Transactional
 	@Throws(EntityNotFoundException::class)
-	fun deleteEmployee(businessId: String, employeeDto: EmployeeDto) {
+	fun deleteEmployee(businessId: Long, employeeDto: EmployeeDto) {
 		businessRepository.findById(businessId)
 			.orElseThrow { EntityNotFoundException(Business::class.java, "id", businessId) }
 		val employee = employeeDto.id?.let {

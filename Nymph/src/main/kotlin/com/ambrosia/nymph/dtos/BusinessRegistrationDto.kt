@@ -8,22 +8,23 @@ import javax.validation.constraints.NotNull
 import javax.validation.constraints.Size
 
 data class BusinessRegistrationDto(
-	var id: String?,
+	var id: Long?,
 	@NotNull(message = "error.business.name.null")
 	@NotBlank(message = "error.business.name.blank")
-	@Size(max = Constants.NAME_MAX_SIZE, message = "error.business.name.invalidSize")
+	@Size(max = Constants.NAME_MAX_SIZE, message = "error.business.name.size.invalid")
 	var name: String,
-	@NotNull
+	@NotNull(message = "error.business.phoneNumber.null")
 	@NotBlank(message = "error.business.phoneNumber.blank")
 	var phoneNumber: String,
+	@NotNull(message = "error.business.email.null")
 	@NotBlank(message = "error.business.email.blank")
-	@Email(message = "error.business.email.invalidFormat")
-	@Size(max = Constants.EMAIL_MAX_SIZE, message = "error.business.email.invalidSize")
-	var email: String,
+	@Email(message = "error.business.email.format.invalid")
+	@Size(max = Constants.EMAIL_MAX_SIZE, message = "error.business.email.size.invalid")
+	var email: String?,
 	var description: String?,
 	var slogan: String?,
 	var logo: String?,
 	var location: String?,
 	var currency: String = Currency.EUR.name,
-	var employee: EmployeeDto? = null,
+	var employee: EmployeeRegistrationDto? = null,
 )

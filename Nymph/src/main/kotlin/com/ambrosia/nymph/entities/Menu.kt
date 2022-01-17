@@ -23,10 +23,10 @@ class Menu(
 	@Column(nullable = false)
 	@NotNull(message = "error.menu.id.null")
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	var id: String,
+	var id: Long?,
 	@NotNull(message = "error.menu.name.null")
 	@NotBlank(message = "error.menu.name.blank")
-	@Size(max = NAME_MAX_SIZE, message = "error.menu.name.invalidSize")
+	@Size(max = NAME_MAX_SIZE, message = "error.menu.name.size.invalid")
 	@Column(nullable = false)
 	var name: String,
 	@Column(columnDefinition = "text")

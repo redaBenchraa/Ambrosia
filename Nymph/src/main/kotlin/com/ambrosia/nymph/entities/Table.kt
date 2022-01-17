@@ -20,7 +20,7 @@ class Table(
 	@Column(nullable = false)
 	@NotNull(message = "error.table.id.null")
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	var id: String,
+	var id: Long?,
 	@NotNull(message = "error.table.isAvailable.null")
 	var isAvailable: Boolean = true,
 	@NotNull(message = "error.table.number.null")

@@ -17,7 +17,7 @@ class Bill(
 	@Column(nullable = false)
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@NotNull(message = "error.bill.id.null")
-	var id: String,
+	var id: Long?,
 	@Column(nullable = false)
 	@CreatedDate
 	@ColumnDefault(NOW)

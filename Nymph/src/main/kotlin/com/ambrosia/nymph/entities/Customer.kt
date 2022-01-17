@@ -15,7 +15,7 @@ class Customer(
 	@Column(nullable = false)
 	@NotNull(message = "error.customer.id.null")
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	var id: String,
+	var id: Long?,
 	var firstName: String,
 	var lastName: String,
 	var age: String,

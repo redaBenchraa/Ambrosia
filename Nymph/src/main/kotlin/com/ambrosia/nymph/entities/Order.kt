@@ -20,7 +20,7 @@ class Order(
 	@Column(nullable = false)
 	@NotNull(message = "error.order.id.null")
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	var id: String,
+	var id: Long?,
 	@Column(nullable = false)
 	@CreatedDate
 	@ColumnDefault(NOW)
