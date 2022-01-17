@@ -18,7 +18,7 @@ import javax.validation.constraints.NotNull
 class Order(
 	@Id
 	@Column(nullable = false)
-	@NotNull(message = "error.order.id.null")
+	@field:NotNull(message = "error.order.id.null")
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	var id: Long?,
 	@Column(nullable = false)

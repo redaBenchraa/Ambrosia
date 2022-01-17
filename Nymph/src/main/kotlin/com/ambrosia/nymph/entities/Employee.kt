@@ -22,23 +22,23 @@ import javax.validation.constraints.Size
 class Employee(
 	@Id
 	@Column(nullable = false)
-	@NotNull(message = "error.employee.id.null")
+	@field:NotNull(message = "error.employee.id.null")
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	var id: Long? = null,
-	@NotNull(message = "error.employee.firstName.null")
-	@NotBlank(message = "error.employee.firstName.blank")
-	@Size(max = NAME_MAX_SIZE, message = "error.employee.firstName.size.invalid")
+	@field:NotNull(message = "error.employee.firstName.null")
+	@field:NotBlank(message = "error.employee.firstName.blank")
+	@field:Size(max = NAME_MAX_SIZE, message = "error.employee.firstName.size.invalid")
 	var firstName: String,
-	@NotNull(message = "error.employee.lastName.null")
-	@NotBlank(message = "error.employee.lastName.blank")
-	@Size(max = NAME_MAX_SIZE, message = "error.employee.lastName.size.invalid")
+	@field:NotNull(message = "error.employee.lastName.null")
+	@field:NotBlank(message = "error.employee.lastName.blank")
+	@field:Size(max = NAME_MAX_SIZE, message = "error.employee.lastName.size.invalid")
 	var lastName: String,
-	@NotNull(message = "error.employee.email.null")
-	@NotBlank(message = "error.employee.email.blank")
-	@Size(max = EMAIL_MAX_SIZE, message = "error.employee.email.size.invalid")
+	@field:NotNull(message = "error.employee.email.null")
+	@field:NotBlank(message = "error.employee.email.blank")
+	@field:Size(max = EMAIL_MAX_SIZE, message = "error.employee.email.size.invalid")
 	var email: String,
 	@Column(nullable = false)
-	@NotNull(message = "error.employee.position.null")
+	@field:NotNull(message = "error.employee.position.null")
 	var position: Role = Role.MANAGER,
 	@Column(nullable = false)
 	@CreatedDate

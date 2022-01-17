@@ -17,10 +17,10 @@ import javax.validation.constraints.NotNull
 class MenuItem(
 	@Id
 	@Column(nullable = false)
-	@NotNull(message = "error.menuItem.id.null")
+	@field:NotNull(message = "error.menuItem.id.null")
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	var id: Long?,
-	@NotNull(message = "error.menuItem.extra.null")
+	@field:NotNull(message = "error.menuItem.extra.null")
 	@Min(0, message = "error.menuItem.price.negative")
 	var extra: Double = EXTRA_MIN.toDouble(),
 	@Column(nullable = false)

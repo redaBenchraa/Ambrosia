@@ -8,6 +8,7 @@ import org.springframework.boot.runApplication
 class NymphApplication
 
 fun main(args: Array<String>) {
+	System.setProperty("spring.profiles.active", "problem")
 	runApplication<NymphApplication>(*args)
 }
 

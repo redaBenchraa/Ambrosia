@@ -21,18 +21,18 @@ import javax.validation.constraints.Size
 class Menu(
 	@Id
 	@Column(nullable = false)
-	@NotNull(message = "error.menu.id.null")
+	@field:NotNull(message = "error.menu.id.null")
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	var id: Long?,
-	@NotNull(message = "error.menu.name.null")
-	@NotBlank(message = "error.menu.name.blank")
-	@Size(max = NAME_MAX_SIZE, message = "error.menu.name.size.invalid")
+	@field:NotNull(message = "error.menu.name.null")
+	@field:NotBlank(message = "error.menu.name.blank")
+	@field:Size(max = NAME_MAX_SIZE, message = "error.menu.name.size.invalid")
 	@Column(nullable = false)
 	var name: String,
 	@Column(columnDefinition = "text")
 	var description: String?,
 	var image: String?,
-	@NotNull(message = "error.menu.price.null")
+	@field:NotNull(message = "error.menu.price.null")
 	@Min(PRICE_MIN, message = "error.menu.price.negative")
 	var price: Double,
 	@Column(nullable = false)

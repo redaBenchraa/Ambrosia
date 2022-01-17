@@ -18,12 +18,12 @@ import javax.validation.constraints.Size
 class Category(
 	@Id
 	@Column(nullable = false)
-	@NotNull(message = "error.category.id.null")
+	@field:NotNull(message = "error.category.id.null")
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	var id: Long?,
-	@NotNull(message = "error.item.category.null")
-	@NotBlank(message = "error.item.category.blank")
-	@Size(max = NAME_MAX_SIZE, message = "error.item.category.size.invalid")
+	@field:NotNull(message = "error.item.category.null")
+	@field:NotBlank(message = "error.item.category.blank")
+	@field:Size(max = NAME_MAX_SIZE, message = "error.item.category.size.invalid")
 	@Column(nullable = false)
 	var name: String,
 	@Column(columnDefinition = "text")

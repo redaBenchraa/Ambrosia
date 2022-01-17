@@ -89,7 +89,7 @@ class BusinessServiceTest {
 		firstName = "firstName",
 		lastName = "lastName",
 		password = "password",
-		email = "email@email.com",
+		email = "email@field:Email.com",
 		position = Role.MANAGER,
 	)
 
@@ -110,7 +110,7 @@ class BusinessServiceTest {
 		lastName = "lastName",
 		position = Role.MANAGER,
 		id = 1,
-		email = "email@email.com"
+		email = "email@field:Email.com"
 	)
 
 }

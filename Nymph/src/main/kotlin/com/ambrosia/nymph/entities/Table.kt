@@ -18,12 +18,12 @@ import javax.validation.constraints.NotNull
 class Table(
 	@Id
 	@Column(nullable = false)
-	@NotNull(message = "error.table.id.null")
+	@field:NotNull(message = "error.table.id.null")
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	var id: Long?,
-	@NotNull(message = "error.table.isAvailable.null")
+	@field:NotNull(message = "error.table.isAvailable.null")
 	var isAvailable: Boolean = true,
-	@NotNull(message = "error.table.number.null")
+	@field:NotNull(message = "error.table.number.null")
 	var number: Int,
 	@Column(nullable = false)
 	@CreatedDate
