@@ -12,11 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
 @Service
-class KeycloakService {
-
-	@Autowired
-	lateinit var env: EnvironmentProperties
-
+class KeycloakService(@Autowired private val env: EnvironmentProperties) {
 	fun getAccessToken(user: KeycloakUser): AccessTokenResponse {
 		return getRealmUser(user).tokenManager()
 			.accessToken
@@ -30,8 +26,7 @@ class KeycloakService {
 		userRepresentation.lastName = user.lastName
 		userRepresentation.email = user.email
 		userRepresentation.realmRoles = user.roles
-		userRepresentation.credentials =
-			listOf(getPasswordRepresentation(user.password))
+		userRepresentation.credentials = listOf(getPasswordRepresentation(user.password))
 		return userRepresentation
 	}
 

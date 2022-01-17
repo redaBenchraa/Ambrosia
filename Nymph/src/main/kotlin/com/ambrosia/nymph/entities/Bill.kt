@@ -16,8 +16,8 @@ class Bill(
 	@Id
 	@Column(nullable = false)
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	@NotNull(message = "error.bill.id.null")
-	var id: String,
+	@field:NotNull(message = "error.bill.id.null")
+	var id: Long?,
 	@Column(nullable = false)
 	@CreatedDate
 	@ColumnDefault(NOW)
@@ -26,7 +26,7 @@ class Bill(
 	@LastModifiedDate
 	@ColumnDefault(NOW)
 	var updatedAt: LocalDateTime = LocalDateTime.now(),
-	var archivedAt: LocalDateTime? = null,
+	var deleted: Boolean = false,
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	@JoinColumn(name = "customer_id", nullable = true)
 	@OnDelete(action = OnDeleteAction.NO_ACTION)

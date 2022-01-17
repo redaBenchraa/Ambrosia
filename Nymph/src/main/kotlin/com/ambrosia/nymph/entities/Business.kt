@@ -19,22 +19,22 @@ import javax.validation.constraints.Size
 class Business(
 	@Id
 	@Column(nullable = false)
-	@NotNull(message = "error.business.id.null")
+	@field:NotNull(message = "error.business.id.null")
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	var id: String,
-	@NotNull(message = "error.business.name.null")
-	@NotBlank(message = "error.business.name.blank")
-	@Size(max = NAME_MAX_SIZE, message = "error.business.name.invalidSize")
+	var id: Long?,
+	@field:NotNull(message = "error.business.name.null")
+	@field:NotBlank(message = "error.business.name.blank")
+	@field:Size(max = NAME_MAX_SIZE, message = "error.business.name.size.invalid")
 	@Column(nullable = false)
 	var name: String,
-	@NotNull
-	@NotBlank(message = "error.business.phoneNumber.blank")
-	@Column(nullable = false, unique = true)
+	@field:NotNull
+	@field:NotBlank(message = "error.business.phoneNumber.blank")
+	@Column(nullable = false)
 	var phoneNumber: String,
-	@Column(nullable = false, unique = true)
-	@NotBlank(message = "error.business.email.blank")
-	@Email(message = "error.business.email.invalidFormat")
-	@Size(max = EMAIL_MAX_SIZE, message = "error.business.email.invalidSize")
+	@Column(nullable = false)
+	@field:NotBlank(message = "error.business.email.blank")
+	@field:Email(message = "error.business.email.format.invalid")
+	@field:Size(max = EMAIL_MAX_SIZE, message = "error.business.email.size.invalid")
 	var email: String,
 	@Column(columnDefinition = "text")
 	var description: String?,
@@ -53,48 +53,54 @@ class Business(
 	@LastModifiedDate
 	@ColumnDefault(NOW)
 	var updatedAt: LocalDateTime = LocalDateTime.now(),
-	var archivedAt: LocalDateTime? = null,
+	var deleted: Boolean = false,
 	@OneToMany(
 		cascade = [CascadeType.ALL],
 		fetch = FetchType.LAZY,
-		mappedBy = "business"
+		mappedBy = "business",
+		targetEntity = Category::class
 	)
 	@JsonBackReference
-	var categories: Set<Category>,
+	var categories: Set<Category> = HashSet(),
 	@OneToMany(
 		cascade = [CascadeType.ALL],
 		fetch = FetchType.LAZY,
-		mappedBy = "business"
+		mappedBy = "business",
+		targetEntity = Employee::class
 	)
 	@JsonBackReference
-	var employees: Set<Employee>,
+	var employees: Set<Employee> = HashSet(),
 	@OneToMany(
 		cascade = [CascadeType.ALL],
 		fetch = FetchType.LAZY,
-		mappedBy = "business"
+		mappedBy = "business",
+		targetEntity = Table::class
 	)
 	@JsonBackReference
-	var tables: Set<Table>,
+	var tables: Set<Table> = HashSet(),
 	@OneToMany(
 		cascade = [CascadeType.ALL],
 		fetch = FetchType.LAZY,
-		mappedBy = "business"
+		mappedBy = "business",
+		targetEntity = Item::class
 	)
 	@JsonBackReference
-	var items: Set<Item>,
+	var items: Set<Item> = HashSet(),
 	@OneToMany(
 		cascade = [CascadeType.ALL],
 		fetch = FetchType.LAZY,
-		mappedBy = "business"
+		mappedBy = "business",
+		targetEntity = Menu::class
 	)
 	@JsonBackReference
-	var menus: Set<Menu>,
+	var menus: Set<Menu> = HashSet(),
 	@OneToMany(
 		cascade = [CascadeType.ALL],
 		fetch = FetchType.LAZY,
-		mappedBy = "business"
+		mappedBy = "business",
+		targetEntity = Session::class
 	)
 	@JsonBackReference
-	var sessions: Set<Session>,
+	var sessions: Set<Session> = HashSet(),
 )
 

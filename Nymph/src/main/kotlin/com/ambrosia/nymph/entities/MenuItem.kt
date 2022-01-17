@@ -17,10 +17,10 @@ import javax.validation.constraints.NotNull
 class MenuItem(
 	@Id
 	@Column(nullable = false)
-	@NotNull(message = "error.menuItem.id.null")
+	@field:NotNull(message = "error.menuItem.id.null")
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	var id: String,
-	@NotNull(message = "error.menuItem.extra.null")
+	var id: Long?,
+	@field:NotNull(message = "error.menuItem.extra.null")
 	@Min(0, message = "error.menuItem.price.negative")
 	var extra: Double = EXTRA_MIN.toDouble(),
 	@Column(nullable = false)
@@ -31,7 +31,7 @@ class MenuItem(
 	@LastModifiedDate
 	@ColumnDefault(Constants.NOW)
 	var updatedAt: LocalDateTime = LocalDateTime.now(),
-	var archivedAt: LocalDateTime? = null,
+	var deleted: Boolean = false,
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	@JoinColumn(name = "menu_id", nullable = false)
 	@OnDelete(action = OnDeleteAction.NO_ACTION)

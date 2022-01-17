@@ -1,7 +1,7 @@
 package com.ambrosia.nymph.models
 
 
-class KeycloakUser(
+data class KeycloakUser(
 	val id: String,
 	val username: String,
 	val password: String,

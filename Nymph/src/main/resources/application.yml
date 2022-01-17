@@ -1,6 +1,8 @@
 server:
   port: 8888
 spring:
+  main:
+    allow-bean-definition-overriding: true
   liquibase:
     change-log: classpath:db/changelog/liquibase-changeLog.xml
     enabled: true
@@ -19,11 +21,11 @@ spring:
         format_sql: true
       show-sql: true
 keycloak:
-  realm: ${KEYCLOCK_REALM:athena}
-  resource: ${KEYCLOCK_RESOURCE:core}
+  realm: ${KEYCLOCK_REALM:ambrosia}
+  resource: ${KEYCLOCK_RESOURCE:nymph}
   auth-server-url: ${KEYCLOCK_URL:http://localhost:8080/auth}
   credentials:
-    secret: ${KEYCLOCK_CREDENTIALS_SECRET:306a8281-542c-4e95-a6a9-678d6a2234b2}
+    secret: ${KEYCLOCK_CREDENTIALS_SECRET:jxBaCmaYywnH4N7yB0Sf8LARnzoedyiI}
   bearer-only: true
   public-client: true
   enabled: true

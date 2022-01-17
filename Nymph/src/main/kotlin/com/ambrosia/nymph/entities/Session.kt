@@ -16,14 +16,14 @@ import javax.validation.constraints.NotNull
 class Session(
 	@Id
 	@Column(nullable = false)
-	@NotNull(message = "error.session.id.null")
+	@field:NotNull(message = "error.session.id.null")
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	var id: String,
+	var id: Long?,
 	@Column(nullable = false)
-	@NotNull(message = "error.session.isPaid.null")
+	@field:NotNull(message = "error.session.isPaid.null")
 	var isPaid: Boolean = false,
 	@Column(nullable = false)
-	@NotNull(message = "error.session.isApproved.null")
+	@field:NotNull(message = "error.session.isApproved.null")
 	var isApproved: Boolean = true,
 	@Column(nullable = false)
 	@CreatedDate
@@ -33,7 +33,7 @@ class Session(
 	@LastModifiedDate
 	@ColumnDefault(NOW)
 	var updatedAt: LocalDateTime = LocalDateTime.now(),
-	var archivedAt: LocalDateTime? = null,
+	var deleted: Boolean = false,
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	@JoinColumn(name = "business_id", nullable = false)
 	@OnDelete(action = OnDeleteAction.NO_ACTION)
@@ -52,14 +52,16 @@ class Session(
 	@OneToMany(
 		cascade = [CascadeType.ALL],
 		fetch = FetchType.LAZY,
-		mappedBy = "session"
+		mappedBy = "session",
+		targetEntity = Order::class
 	)
 	@JsonBackReference
 	var orders: Set<Order>,
 	@OneToMany(
 		cascade = [CascadeType.ALL],
 		fetch = FetchType.LAZY,
-		mappedBy = "session"
+		mappedBy = "session",
+		targetEntity = Bill::class
 	)
 	@JsonBackReference
 	var bills: Set<Bill>,

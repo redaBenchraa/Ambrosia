@@ -18,12 +18,12 @@ import javax.validation.constraints.NotNull
 class Table(
 	@Id
 	@Column(nullable = false)
-	@NotNull(message = "error.table.id.null")
+	@field:NotNull(message = "error.table.id.null")
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	var id: String,
-	@NotNull(message = "error.table.isAvailable.null")
+	var id: Long?,
+	@field:NotNull(message = "error.table.isAvailable.null")
 	var isAvailable: Boolean = true,
-	@NotNull(message = "error.table.number.null")
+	@field:NotNull(message = "error.table.number.null")
 	var number: Int,
 	@Column(nullable = false)
 	@CreatedDate
@@ -33,7 +33,7 @@ class Table(
 	@LastModifiedDate
 	@ColumnDefault(NOW)
 	var updatedAt: LocalDateTime = LocalDateTime.now(),
-	var archivedAt: LocalDateTime? = null,
+	var deleted: Boolean = false,
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	@JoinColumn(name = "business_id", nullable = false)
 	@OnDelete(action = OnDeleteAction.NO_ACTION)
@@ -42,7 +42,8 @@ class Table(
 	@OneToMany(
 		cascade = [CascadeType.ALL],
 		fetch = FetchType.LAZY,
-		mappedBy = "table"
+		mappedBy = "table",
+		targetEntity = Session::class
 	)
 	@JsonBackReference
 	var sessions: Set<Session>,

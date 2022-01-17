@@ -13,9 +13,9 @@ import javax.validation.constraints.NotNull
 class Customer(
 	@Id
 	@Column(nullable = false)
-	@NotNull(message = "error.customer.id.null")
+	@field:NotNull(message = "error.customer.id.null")
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	var id: String,
+	var id: Long?,
 	var firstName: String,
 	var lastName: String,
 	var age: String,
@@ -27,18 +27,20 @@ class Customer(
 	@LastModifiedDate
 	@ColumnDefault(Constants.NOW)
 	var updatedAt: LocalDateTime = LocalDateTime.now(),
-	var archivedAt: LocalDateTime? = null,
+	var deleted: Boolean = false,
 	@OneToMany(
 		cascade = [CascadeType.ALL],
 		fetch = FetchType.LAZY,
-		mappedBy = "customer"
+		mappedBy = "customer",
+		targetEntity = Order::class
 	)
 	@JsonBackReference
 	var orders: Set<Order>,
 	@OneToMany(
 		cascade = [CascadeType.ALL],
 		fetch = FetchType.LAZY,
-		mappedBy = "customer"
+		mappedBy = "customer",
+		targetEntity = Bill::class
 	)
 	@JsonBackReference
 	var bills: Set<Bill>,
