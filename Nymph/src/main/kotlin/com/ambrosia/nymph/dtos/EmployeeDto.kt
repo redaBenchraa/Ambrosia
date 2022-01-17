@@ -6,7 +6,7 @@ import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotNull
 import javax.validation.constraints.Size
 
-class EmployeeDto(
+data class EmployeeDto(
 	var id: String?,
 	@NotNull(message = "error.employee.firstName.null")
 	@NotBlank(message = "error.employee.firstName.blank")
@@ -19,4 +19,5 @@ class EmployeeDto(
 	@NotNull(message = "error.employee.position.null")
 	var position: Role = Role.MANAGER,
 	var password: String? = null,
+	var deleted: Boolean = false
 )

@@ -9,6 +9,7 @@ fun Employee.toDto(): EmployeeDto = EmployeeDto(
 	firstName = firstName,
 	lastName = lastName,
 	position = position,
+	deleted = deleted
 )
 
 fun EmployeeDto.toEntity(): Employee = Employee(
@@ -16,4 +17,5 @@ fun EmployeeDto.toEntity(): Employee = Employee(
 	firstName = firstName,
 	lastName = lastName,
 	position = position,
+	deleted = deleted
 )

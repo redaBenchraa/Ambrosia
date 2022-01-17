@@ -11,5 +11,6 @@ class Constants private constructor() {
 		const val NAME_MAX_SIZE = 48
 		const val EMAIL_MAX_SIZE = 254
 		const val NOW = "now()"
+		const val UNDEFINED = "undefined"
 	}
 }

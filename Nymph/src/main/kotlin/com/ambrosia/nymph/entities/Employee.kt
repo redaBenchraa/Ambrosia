@@ -4,18 +4,20 @@ import com.ambrosia.nymph.constants.Constants.Companion.NAME_MAX_SIZE
 import com.ambrosia.nymph.constants.Constants.Companion.NOW
 import com.ambrosia.nymph.constants.Role
 import com.fasterxml.jackson.annotation.JsonManagedReference
-import org.hibernate.annotations.ColumnDefault
-import org.hibernate.annotations.OnDelete
-import org.hibernate.annotations.OnDeleteAction
+import org.hibernate.annotations.*
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedDate
 import java.time.LocalDateTime
 import javax.persistence.*
+import javax.persistence.Entity
 import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotNull
 import javax.validation.constraints.Size
 
 @Entity
+@SQLDelete(sql = "UPDATE employee SET deleted = true WHERE id=?")
+@FilterDef(name = "deletedEmployeeFilter", parameters = [ParamDef(name = "isDeleted", type = "boolean")])
+@Filter(name = "deletedEmployeeFilter", condition = "deleted = :isDeleted")
 class Employee(
 	@Id
 	@Column(nullable = false)
@@ -41,7 +43,7 @@ class Employee(
 	@LastModifiedDate
 	@ColumnDefault(NOW)
 	var updatedAt: LocalDateTime = LocalDateTime.now(),
-	var archivedAt: LocalDateTime? = null,
+	var deleted: Boolean = false,
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	@JoinColumn(name = "business_id", nullable = false)
 	@OnDelete(action = OnDeleteAction.NO_ACTION)

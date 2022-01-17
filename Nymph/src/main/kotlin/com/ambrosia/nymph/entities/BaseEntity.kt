@@ -22,5 +22,5 @@ open class BaseEntity(
 	@LastModifiedDate
 	@ColumnDefault(NOW)
 	var updatedAt: LocalDateTime = LocalDateTime.now(),
-	var archivedAt: LocalDateTime? = null,
+	var deleted: Boolean = false,
 )
