@@ -31,12 +31,10 @@
     <changeSet author="Alexander" id="1641823948673-2">
         <createTable tableName="business">
             <column name="id" type="bigserial">
-                <constraints nullable="false" primaryKey="true"
-                             primaryKeyName="business_pkey"/>
+                <constraints nullable="false" primaryKey="true" primaryKeyName="business_pkey"/>
             </column>
             <column name="deleted" type="bool"/>
-            <column defaultValueComputed="now()" name="created_at"
-                    type="TIMESTAMP">
+            <column defaultValueComputed="now()" name="created_at" type="TIMESTAMP">
                 <constraints nullable="false"/>
             </column>
             <column name="currency" type="VARCHAR(255)">
@@ -58,8 +56,7 @@
                 <constraints nullable="false"/>
             </column>
             <column name="slogan" type="VARCHAR(255)"/>
-            <column defaultValueComputed="now()" name="updated_at"
-                    type="TIMESTAMP">
+            <column defaultValueComputed="now()" name="updated_at" type="TIMESTAMP">
                 <constraints nullable="false"/>
             </column>
         </createTable>
@@ -67,12 +64,10 @@
     <changeSet author="Alexander" id="1641823948673-3">
         <createTable tableName="category">
             <column name="id" type="bigserial">
-                <constraints nullable="false" primaryKey="true"
-                             primaryKeyName="category_pkey"/>
+                <constraints nullable="false" primaryKey="true" primaryKeyName="category_pkey"/>
             </column>
             <column name="deleted" type="bool"/>
-            <column defaultValueComputed="now()" name="created_at"
-                    type="TIMESTAMP">
+            <column defaultValueComputed="now()" name="created_at" type="TIMESTAMP">
                 <constraints nullable="false"/>
             </column>
             <column name="description" type="TEXT"/>
@@ -80,8 +75,7 @@
             <column name="name" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
-            <column defaultValueComputed="now()" name="updated_at"
-                    type="TIMESTAMP">
+            <column defaultValueComputed="now()" name="updated_at" type="TIMESTAMP">
                 <constraints nullable="false"/>
             </column>
             <column name="business_id" type="bigint">
@@ -92,19 +86,16 @@
     <changeSet author="Alexander" id="1641823948673-4">
         <createTable tableName="customer">
             <column name="id" type="bigserial">
-                <constraints nullable="false" primaryKey="true"
-                             primaryKeyName="customer_pkey"/>
+                <constraints nullable="false" primaryKey="true" primaryKeyName="customer_pkey"/>
             </column>
             <column name="age" type="VARCHAR(255)"/>
             <column name="deleted" type="bool"/>
-            <column defaultValueComputed="now()" name="created_at"
-                    type="TIMESTAMP">
+            <column defaultValueComputed="now()" name="created_at" type="TIMESTAMP">
                 <constraints nullable="false"/>
             </column>
             <column name="first_name" type="VARCHAR(255)"/>
             <column name="last_name" type="VARCHAR(255)"/>
-            <column defaultValueComputed="now()" name="updated_at"
-                    type="TIMESTAMP">
+            <column defaultValueComputed="now()" name="updated_at" type="TIMESTAMP">
                 <constraints nullable="false"/>
             </column>
         </createTable>
@@ -112,16 +103,21 @@
     <changeSet author="Alexander" id="1641823948673-5">
         <createTable tableName="employee">
             <column name="id" type="bigserial">
-                <constraints nullable="false" primaryKey="true"
-                             primaryKeyName="employee_pkey"/>
+                <constraints nullable="false" primaryKey="true" primaryKeyName="employee_pkey"/>
             </column>
             <column name="deleted" type="bool"/>
-            <column defaultValueComputed="now()" name="created_at"
-                    type="TIMESTAMP">
+            <column defaultValueComputed="now()" name="created_at" type="TIMESTAMP">
                 <constraints nullable="false"/>
             </column>
-            <column name="first_name" type="VARCHAR(255)"/>
-            <column name="last_name" type="VARCHAR(255)"/>
+            <column name="first_name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="email" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
             <column name="position" type="INTEGER">
                 <constraints nullable="false"/>
             </column>
@@ -422,16 +418,6 @@
                                  referencedColumnNames="id"
                                  referencedTableName="business"
                                  validate="true"/>
-    </changeSet>
-    <changeSet author="Alexander" id="1641823948673-22">
-        <addUniqueConstraint columnNames="phone_number"
-                             constraintName="uk_5pgig1fq5p135ccwc37fbvumn"
-                             tableName="business"/>
-    </changeSet>
-    <changeSet author="Alexander" id="1641823948673-23">
-        <addUniqueConstraint columnNames="email"
-                             constraintName="uk_ktb1t97n9aeupitfjsdpjcmuq"
-                             tableName="business"/>
     </changeSet>
     <changeSet author="Alexander" id="1641823948673-24">
         <addForeignKeyConstraint baseColumnNames="category_id"

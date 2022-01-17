@@ -13,7 +13,7 @@ import javax.validation.constraints.NotNull
 class Customer(
 	@Id
 	@Column(nullable = false)
-	@NotNull(message = "error.customer.id.null")
+	@field:NotNull(message = "error.customer.id.null")
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	var id: Long?,
 	var firstName: String,

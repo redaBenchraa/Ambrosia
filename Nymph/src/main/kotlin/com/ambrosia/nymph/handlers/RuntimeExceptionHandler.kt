@@ -27,7 +27,6 @@ class RuntimeExceptionHandler : ProblemHandling, SecurityAdviceTrait {
 	@Autowired
 	lateinit var translator: Translator
 
-
 	override fun defaultConstraintViolationType(): URI = URI.create(Urls.VIOLATIONS)
 
 	override fun isCausalChainsEnabled(): Boolean = true

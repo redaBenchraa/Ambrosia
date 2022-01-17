@@ -19,22 +19,22 @@ import javax.validation.constraints.Size
 class Business(
 	@Id
 	@Column(nullable = false)
-	@NotNull(message = "error.business.id.null")
+	@field:NotNull(message = "error.business.id.null")
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	var id: Long?,
-	@NotNull(message = "error.business.name.null")
-	@NotBlank(message = "error.business.name.blank")
-	@Size(max = NAME_MAX_SIZE, message = "error.business.name.size.invalid")
+	@field:NotNull(message = "error.business.name.null")
+	@field:NotBlank(message = "error.business.name.blank")
+	@field:Size(max = NAME_MAX_SIZE, message = "error.business.name.size.invalid")
 	@Column(nullable = false)
 	var name: String,
-	@NotNull
-	@NotBlank(message = "error.business.phoneNumber.blank")
-	@Column(nullable = false, unique = true)
+	@field:NotNull
+	@field:NotBlank(message = "error.business.phoneNumber.blank")
+	@Column(nullable = false)
 	var phoneNumber: String,
-	@Column(nullable = false, unique = true)
-	@NotBlank(message = "error.business.email.blank")
-	@Email(message = "error.business.email.invalidFormat")
-	@Size(max = EMAIL_MAX_SIZE, message = "error.business.email.size.invalid")
+	@Column(nullable = false)
+	@field:NotBlank(message = "error.business.email.blank")
+	@field:Email(message = "error.business.email.format.invalid")
+	@field:Size(max = EMAIL_MAX_SIZE, message = "error.business.email.size.invalid")
 	var email: String,
 	@Column(columnDefinition = "text")
 	var description: String?,

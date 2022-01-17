@@ -19,18 +19,18 @@ import javax.validation.constraints.Size
 class Item(
 	@Id
 	@Column(nullable = false)
-	@NotNull(message = "error.item.id.null")
+	@field:NotNull(message = "error.item.id.null")
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	var id: Long?,
-	@NotNull(message = "error.item.name.null")
-	@NotBlank(message = "error.item.name.blank")
-	@Size(max = NAME_MAX_SIZE, message = "error.item.name.size.invalid")
+	@field:NotNull(message = "error.item.name.null")
+	@field:NotBlank(message = "error.item.name.blank")
+	@field:Size(max = NAME_MAX_SIZE, message = "error.item.name.size.invalid")
 	@Column(nullable = false)
 	var name: String,
 	@Column(columnDefinition = "text")
 	var description: String?,
 	var image: String?,
-	@NotNull(message = "error.item.price.null")
+	@field:NotNull(message = "error.item.price.null")
 	@Min(0, message = "error.item.price.negative")
 	var price: Double,
 	var onlyForMenu: Boolean = false,

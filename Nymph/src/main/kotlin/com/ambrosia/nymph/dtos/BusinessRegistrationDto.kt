@@ -9,17 +9,17 @@ import javax.validation.constraints.Size
 
 data class BusinessRegistrationDto(
 	var id: Long? = null,
-	@NotNull(message = "error.business.name.null")
-	@NotBlank(message = "error.business.name.blank")
-	@Size(max = Constants.NAME_MAX_SIZE, message = "error.business.name.size.invalid")
+	@field:NotNull(message = "error.business.name.null")
+	@field:NotBlank(message = "error.business.name.blank")
+	@field:Size(max = Constants.NAME_MAX_SIZE, message = "error.business.name.size.invalid")
 	var name: String?,
-	@NotNull(message = "error.business.phoneNumber.null")
-	@NotBlank(message = "error.business.phoneNumber.blank")
+	@field:NotNull(message = "error.business.phoneNumber.null")
+	@field:NotBlank(message = "error.business.phoneNumber.blank")
 	var phoneNumber: String?,
-	@NotNull(message = "error.business.email.null")
-	@NotBlank(message = "error.business.email.blank")
-	@Email(message = "error.business.email.format.invalid")
-	@Size(max = Constants.EMAIL_MAX_SIZE, message = "error.business.email.size.invalid")
+	@field:NotNull(message = "error.business.email.null")
+	@field:NotBlank(message = "error.business.email.blank")
+	@field:Email(message = "error.business.email.format.invalid")
+	@field:Size(max = Constants.EMAIL_MAX_SIZE, message = "error.business.email.size.invalid")
 	var email: String?,
 	var description: String?,
 	var slogan: String?,

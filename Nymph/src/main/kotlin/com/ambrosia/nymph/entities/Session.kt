@@ -16,14 +16,14 @@ import javax.validation.constraints.NotNull
 class Session(
 	@Id
 	@Column(nullable = false)
-	@NotNull(message = "error.session.id.null")
+	@field:NotNull(message = "error.session.id.null")
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	var id: Long?,
 	@Column(nullable = false)
-	@NotNull(message = "error.session.isPaid.null")
+	@field:NotNull(message = "error.session.isPaid.null")
 	var isPaid: Boolean = false,
 	@Column(nullable = false)
-	@NotNull(message = "error.session.isApproved.null")
+	@field:NotNull(message = "error.session.isApproved.null")
 	var isApproved: Boolean = true,
 	@Column(nullable = false)
 	@CreatedDate
