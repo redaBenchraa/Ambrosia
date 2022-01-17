@@ -2,6 +2,7 @@ package com.ambrosia.nymph.dtos
 
 import com.ambrosia.nymph.constants.Constants
 import com.ambrosia.nymph.constants.Currency
+import javax.validation.Valid
 import javax.validation.constraints.Email
 import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotNull
@@ -26,5 +27,6 @@ data class BusinessRegistrationDto(
 	var logo: String?,
 	var location: String?,
 	var currency: String = Currency.EUR.name,
+	@field:Valid
 	var employee: EmployeeRegistrationDto? = null,
 )
