@@ -21,10 +21,10 @@ class Item(
 	@Column(nullable = false)
 	@NotNull(message = "error.item.id.null")
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	var id: String,
+	var id: Long?,
 	@NotNull(message = "error.item.name.null")
 	@NotBlank(message = "error.item.name.blank")
-	@Size(max = NAME_MAX_SIZE, message = "error.item.name.invalidSize")
+	@Size(max = NAME_MAX_SIZE, message = "error.item.name.size.invalid")
 	@Column(nullable = false)
 	var name: String,
 	@Column(columnDefinition = "text")

@@ -21,10 +21,10 @@ class Business(
 	@Column(nullable = false)
 	@NotNull(message = "error.business.id.null")
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	var id: String?,
+	var id: Long?,
 	@NotNull(message = "error.business.name.null")
 	@NotBlank(message = "error.business.name.blank")
-	@Size(max = NAME_MAX_SIZE, message = "error.business.name.invalidSize")
+	@Size(max = NAME_MAX_SIZE, message = "error.business.name.size.invalid")
 	@Column(nullable = false)
 	var name: String,
 	@NotNull
@@ -34,7 +34,7 @@ class Business(
 	@Column(nullable = false, unique = true)
 	@NotBlank(message = "error.business.email.blank")
 	@Email(message = "error.business.email.invalidFormat")
-	@Size(max = EMAIL_MAX_SIZE, message = "error.business.email.invalidSize")
+	@Size(max = EMAIL_MAX_SIZE, message = "error.business.email.size.invalid")
 	var email: String,
 	@Column(columnDefinition = "text")
 	var description: String?,

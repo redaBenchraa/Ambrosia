@@ -1,6 +1,7 @@
 package com.ambrosia.nymph.entities
 
 import com.ambrosia.nymph.constants.Constants
+import com.ambrosia.nymph.constants.Constants.Companion.NAME_MAX_SIZE
 import com.fasterxml.jackson.annotation.JsonManagedReference
 import org.hibernate.annotations.ColumnDefault
 import org.hibernate.annotations.OnDelete
@@ -19,10 +20,10 @@ class Category(
 	@Column(nullable = false)
 	@NotNull(message = "error.category.id.null")
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	var id: String,
+	var id: Long?,
 	@NotNull(message = "error.item.category.null")
 	@NotBlank(message = "error.item.category.blank")
-	@Size(max = 128, message = "error.item.category.invalidSize")
+	@Size(max = NAME_MAX_SIZE, message = "error.item.category.size.invalid")
 	@Column(nullable = false)
 	var name: String,
 	@Column(columnDefinition = "text")

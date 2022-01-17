@@ -13,7 +13,7 @@ import javax.persistence.Id
 open class BaseEntity(
 	@Id @Column(nullable = false)
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	var id: String,
+	var id: Long?,
 	@Column(nullable = false)
 	@CreatedDate
 	@ColumnDefault(NOW)

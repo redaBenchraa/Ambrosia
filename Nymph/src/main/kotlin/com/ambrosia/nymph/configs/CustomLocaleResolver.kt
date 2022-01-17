@@ -22,9 +22,7 @@ class CustomLocaleResolver : AcceptHeaderLocaleResolver(), WebMvcConfigurer {
 		val headerLang = request.getHeader("Accept-Language")
 		return if (Objects.isNull(headerLang) || headerLang.isEmpty())
 			Locale.getDefault()
-		else Locale.lookup(
-			Locale.LanguageRange.parse(headerLang), locales
-		)
+		else Locale.lookup(Locale.LanguageRange.parse(headerLang), locales)
 	}
 
 	@Bean

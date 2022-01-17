@@ -4,7 +4,7 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
     <changeSet author="Alexander" id="1641823948673-1">
         <createTable tableName="bill">
-            <column name="id" type="VARCHAR(255)">
+            <column name="id" type="bigserial">
                 <constraints nullable="false" primaryKey="true"
                              primaryKeyName="bill_pkey"/>
             </column>
@@ -17,20 +17,20 @@
                     type="TIMESTAMP">
                 <constraints nullable="false"/>
             </column>
-            <column name="customer_id" type="VARCHAR(255)">
+            <column name="customer_id" type="bigint">
                 <constraints nullable="false"/>
             </column>
-            <column name="employee_id" type="VARCHAR(255)">
+            <column name="employee_id" type="bigint">
                 <constraints nullable="false"/>
             </column>
-            <column name="session_id" type="VARCHAR(255)">
+            <column name="session_id" type="bigint">
                 <constraints nullable="false"/>
             </column>
         </createTable>
     </changeSet>
     <changeSet author="Alexander" id="1641823948673-2">
         <createTable tableName="business">
-            <column name="id" type="VARCHAR(255)">
+            <column name="id" type="bigserial">
                 <constraints nullable="false" primaryKey="true"
                              primaryKeyName="business_pkey"/>
             </column>
@@ -66,7 +66,7 @@
     </changeSet>
     <changeSet author="Alexander" id="1641823948673-3">
         <createTable tableName="category">
-            <column name="id" type="VARCHAR(255)">
+            <column name="id" type="bigserial">
                 <constraints nullable="false" primaryKey="true"
                              primaryKeyName="category_pkey"/>
             </column>
@@ -84,14 +84,14 @@
                     type="TIMESTAMP">
                 <constraints nullable="false"/>
             </column>
-            <column name="business_id" type="VARCHAR(255)">
+            <column name="business_id" type="bigint">
                 <constraints nullable="false"/>
             </column>
         </createTable>
     </changeSet>
     <changeSet author="Alexander" id="1641823948673-4">
         <createTable tableName="customer">
-            <column name="id" type="VARCHAR(255)">
+            <column name="id" type="bigserial">
                 <constraints nullable="false" primaryKey="true"
                              primaryKeyName="customer_pkey"/>
             </column>
@@ -111,7 +111,7 @@
     </changeSet>
     <changeSet author="Alexander" id="1641823948673-5">
         <createTable tableName="employee">
-            <column name="id" type="VARCHAR(255)">
+            <column name="id" type="bigserial">
                 <constraints nullable="false" primaryKey="true"
                              primaryKeyName="employee_pkey"/>
             </column>
@@ -129,14 +129,14 @@
                     type="TIMESTAMP">
                 <constraints nullable="false"/>
             </column>
-            <column name="business_id" type="VARCHAR(255)">
+            <column name="business_id" type="bigint">
                 <constraints nullable="false"/>
             </column>
         </createTable>
     </changeSet>
     <changeSet author="Alexander" id="1641823948673-6">
         <createTable tableName="item">
-            <column name="id" type="VARCHAR(255)">
+            <column name="id" type="bigserial">
                 <constraints nullable="false" primaryKey="true"
                              primaryKeyName="item_pkey"/>
             </column>
@@ -160,14 +160,14 @@
                     type="TIMESTAMP">
                 <constraints nullable="false"/>
             </column>
-            <column name="business_id" type="VARCHAR(255)">
+            <column name="business_id" type="bigint">
                 <constraints nullable="false"/>
             </column>
         </createTable>
     </changeSet>
     <changeSet author="Alexander" id="1641823948673-7">
         <createTable tableName="menu">
-            <column name="id" type="VARCHAR(255)">
+            <column name="id" type="bigserial">
                 <constraints nullable="false" primaryKey="true"
                              primaryKeyName="menu_pkey"/>
             </column>
@@ -188,14 +188,14 @@
                     type="TIMESTAMP">
                 <constraints nullable="false"/>
             </column>
-            <column name="business_id" type="VARCHAR(255)">
+            <column name="business_id" type="bigint">
                 <constraints nullable="false"/>
             </column>
         </createTable>
     </changeSet>
     <changeSet author="Alexander" id="1641823948673-8">
         <createTable tableName="menu_item">
-            <column name="id" type="VARCHAR(255)">
+            <column name="id" type="bigserial">
                 <constraints nullable="false" primaryKey="true"
                              primaryKeyName="menu_item_pkey"/>
             </column>
@@ -211,20 +211,20 @@
                     type="TIMESTAMP">
                 <constraints nullable="false"/>
             </column>
-            <column name="category_id" type="VARCHAR(255)">
+            <column name="category_id" type="bigint">
                 <constraints nullable="false"/>
             </column>
-            <column name="item_id" type="VARCHAR(255)">
+            <column name="item_id" type="bigint">
                 <constraints nullable="false"/>
             </column>
-            <column name="menu_id" type="VARCHAR(255)">
+            <column name="menu_id" type="bigint">
                 <constraints nullable="false"/>
             </column>
         </createTable>
     </changeSet>
     <changeSet author="Alexander" id="1641823948673-9">
         <createTable tableName="ordered_item">
-            <column name="id" type="VARCHAR(255)">
+            <column name="id" type="bigserial">
                 <constraints nullable="false" primaryKey="true"
                              primaryKeyName="ordered_item_pkey"/>
             </column>
@@ -245,17 +245,17 @@
                     type="TIMESTAMP">
                 <constraints nullable="false"/>
             </column>
-            <column name="item_id" type="VARCHAR(255)">
+            <column name="item_id" type="bigint">
                 <constraints nullable="false"/>
             </column>
-            <column name="order_id" type="VARCHAR(255)">
+            <column name="order_id" type="bigint">
                 <constraints nullable="false"/>
             </column>
         </createTable>
     </changeSet>
     <changeSet author="Alexander" id="1641823948673-10">
         <createTable tableName="session">
-            <column name="id" type="VARCHAR(255)">
+            <column name="id" type="bigserial">
                 <constraints nullable="false" primaryKey="true"
                              primaryKeyName="session_pkey"/>
             </column>
@@ -274,20 +274,20 @@
                     type="TIMESTAMP">
                 <constraints nullable="false"/>
             </column>
-            <column name="business_id" type="VARCHAR(255)">
+            <column name="business_id" type="bigint">
                 <constraints nullable="false"/>
             </column>
-            <column name="employee_id" type="VARCHAR(255)">
+            <column name="employee_id" type="bigint">
                 <constraints nullable="false"/>
             </column>
-            <column name="table_id" type="VARCHAR(255)">
+            <column name="table_id" type="bigint">
                 <constraints nullable="false"/>
             </column>
         </createTable>
     </changeSet>
     <changeSet author="Alexander" id="1641823948673-11">
         <createTable tableName="tables">
-            <column name="id" type="VARCHAR(255)">
+            <column name="id" type="bigserial">
                 <constraints nullable="false" primaryKey="true"
                              primaryKeyName="tables_pkey"/>
             </column>
@@ -306,14 +306,14 @@
                     type="TIMESTAMP">
                 <constraints nullable="false"/>
             </column>
-            <column name="business_id" type="VARCHAR(255)">
+            <column name="business_id" type="bigint">
                 <constraints nullable="false"/>
             </column>
         </createTable>
     </changeSet>
     <changeSet author="Alexander" id="1641823948673-12">
         <createTable tableName="orders">
-            <column name="id" type="VARCHAR(255)">
+            <column name="id" type="bigserial">
                 <constraints nullable="false" primaryKey="true"
                              primaryKeyName="orders_pkey"/>
             </column>
@@ -326,10 +326,10 @@
                     type="TIMESTAMP">
                 <constraints nullable="false"/>
             </column>
-            <column name="customer_id" type="VARCHAR(255)">
+            <column name="customer_id" type="bigint">
                 <constraints nullable="false"/>
             </column>
-            <column name="session_id" type="VARCHAR(255)">
+            <column name="session_id" type="bigint">
                 <constraints nullable="false"/>
             </column>
         </createTable>

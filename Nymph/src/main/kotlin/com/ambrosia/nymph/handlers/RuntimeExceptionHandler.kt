@@ -45,11 +45,11 @@ class RuntimeExceptionHandler : ProblemHandling, SecurityAdviceTrait {
 			.body(
 				Problem.builder()
 					.withType(URI.create(Urls.NOT_FOUND))
-					.withTitle(translator.toLocale("error.entity_not_found"))
+					.withTitle(translator.toLocale("error.entityNotFound"))
 					.withStatus(Status.NOT_FOUND)
 					.withDetail(
 						String.format(
-							translator.toLocale("error.entity_not_found_details"),
+							translator.toLocale("error.entityNotFoundDetails"),
 							ex.entityClass.simpleName, ex.parameters.toString()
 						)
 					)
@@ -64,11 +64,11 @@ class RuntimeExceptionHandler : ProblemHandling, SecurityAdviceTrait {
 			.body(
 				Problem.builder()
 					.withType(URI.create(Urls.ALREADY_EXITS))
-					.withTitle(translator.toLocale("error.entity_already_exists"))
+					.withTitle(translator.toLocale("error.entityAlreadyExists"))
 					.withStatus(Status.CONFLICT)
 					.withDetail(
 						String.format(
-							translator.toLocale("error.entity_already_exists_details"),
+							translator.toLocale("error.entityAlreadyExistsDetails"),
 							ex.entityClass.simpleName, ex.parameters
 						)
 					)

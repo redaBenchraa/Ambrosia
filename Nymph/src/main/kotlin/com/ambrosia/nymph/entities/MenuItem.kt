@@ -19,7 +19,7 @@ class MenuItem(
 	@Column(nullable = false)
 	@NotNull(message = "error.menuItem.id.null")
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	var id: String,
+	var id: Long?,
 	@NotNull(message = "error.menuItem.extra.null")
 	@Min(0, message = "error.menuItem.price.negative")
 	var extra: Double = EXTRA_MIN.toDouble(),

@@ -18,7 +18,7 @@ class Session(
 	@Column(nullable = false)
 	@NotNull(message = "error.session.id.null")
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	var id: String,
+	var id: Long?,
 	@Column(nullable = false)
 	@NotNull(message = "error.session.isPaid.null")
 	var isPaid: Boolean = false,
