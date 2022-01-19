@@ -15,21 +15,25 @@ class Category(
 	@Id
 	@Column(nullable = false)
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	var id: Long?,
+	var id: Long? = null,
 	@Column(nullable = false)
 	var name: String,
+
 	@Column(columnDefinition = "text")
 	var description: String?,
 	var image: String?,
 	var deleted: Boolean = false,
+
 	@Column(nullable = false)
 	@CreatedDate
 	@ColumnDefault(Constants.NOW)
 	var createdAt: LocalDateTime = LocalDateTime.now(),
+
 	@Column(nullable = false)
 	@LastModifiedDate
 	@ColumnDefault(Constants.NOW)
 	var updatedAt: LocalDateTime = LocalDateTime.now(),
+
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	@JoinColumn(name = "business_id", nullable = false)
 	@OnDelete(action = OnDeleteAction.NO_ACTION)
