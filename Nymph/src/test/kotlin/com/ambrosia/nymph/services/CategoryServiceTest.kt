@@ -54,6 +54,20 @@ class CategoryServiceTest {
 	}
 
 	@Test
+	fun `Edit a category from a non existing business`() {
+		every { businessRepository.findById(any()) } returns Optional.empty()
+		assertThrows<EntityNotFoundException> { categoryService.editCategory(1, getCategory().toDto()) }
+	}
+
+	@Test
+	fun `Edit a non existing category`() {
+		every { businessRepository.findById(any()) } returns Optional.of(getBusiness())
+		every { categoryRepository.findById(any()) } returns Optional.empty()
+		assertThrows<EntityNotFoundException> { categoryService.editCategory(1, getCategory().toDto()) }
+	}
+
+
+	@Test
 	fun `Remove a category`() {
 		every { businessRepository.findById(any()) } returns Optional.of(getBusiness())
 		every { categoryRepository.findById(any()) } returns Optional.of(getCategory())
@@ -63,7 +77,7 @@ class CategoryServiceTest {
 	}
 
 	@Test
-	fun `Remove an category from a non existing business`() {
+	fun `Remove a category from a non existing business`() {
 		every { businessRepository.findById(any()) } returns Optional.empty()
 		assertThrows<EntityNotFoundException> { categoryService.deleteCategory(1, 1) }
 	}
