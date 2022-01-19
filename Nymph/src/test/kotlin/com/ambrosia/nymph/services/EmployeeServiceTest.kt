@@ -1,7 +1,6 @@
 package com.ambrosia.nymph.services
 
 import com.ambrosia.nymph.constants.Role
-import com.ambrosia.nymph.dtos.BusinessRegistrationDto
 import com.ambrosia.nymph.dtos.EmployeeRegistrationDto
 import com.ambrosia.nymph.entities.Business
 import com.ambrosia.nymph.entities.Employee
@@ -83,7 +82,6 @@ class EmployeeServiceTest {
 		}
 	}
 
-
 	@Test
 	fun `Remove an employee`() {
 		every { businessRepository.findById(any()) } returns Optional.of(getBusiness())
@@ -99,25 +97,11 @@ class EmployeeServiceTest {
 		assertThrows<EntityNotFoundException> { employeeService.deleteEmployee(1, 1) }
 	}
 
-	private fun getBusinessRegistrationDto(): BusinessRegistrationDto {
-		return BusinessRegistrationDto(
-			name = "name",
-			currency = "EUR",
-			description = "desc",
-			email = "email",
-			phoneNumber = "phoneNumber",
-			location = "location",
-			logo = "logo",
-			slogan = "slogan",
-			employee = getEmployeeRegistrationDto()
-		)
-	}
-
 	private fun getEmployeeRegistrationDto(): EmployeeRegistrationDto = EmployeeRegistrationDto(
 		firstName = "firstName",
 		lastName = "lastName",
 		password = "password",
-		email = "email@field:Email.com",
+		email = "email@email.com",
 		position = Role.MANAGER,
 	)
 
@@ -138,7 +122,7 @@ class EmployeeServiceTest {
 		lastName = "lastName",
 		position = Role.MANAGER,
 		id = 1,
-		email = "email@field:Email.com"
+		email = "email@email.com"
 	)
 
 }
