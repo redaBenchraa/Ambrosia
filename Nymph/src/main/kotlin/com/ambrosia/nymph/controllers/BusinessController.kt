@@ -44,6 +44,14 @@ class BusinessController(
 		return categoryService.addCategory(businessId, category)
 	}
 
+	@PutMapping("/{id}/categories")
+	fun editCategory(
+		@PathVariable("id") businessId: Long, @Valid @RequestBody category: CategoryDto
+	): CategoryDto {
+		return categoryService.editCategory(businessId, category)
+	}
+
+
 	@DeleteMapping("/{businessId}/categories/{categoryId}")
 	fun deleteCategory(@PathVariable("businessId") businessId: Long, @PathVariable("categoryId") categoryId: Long) {
 		return categoryService.deleteCategory(businessId, categoryId)
