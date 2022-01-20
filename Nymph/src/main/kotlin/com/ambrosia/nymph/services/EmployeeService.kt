@@ -1,6 +1,5 @@
 package com.ambrosia.nymph.services
 
-import com.ambrosia.nymph.constants.Constants
 import com.ambrosia.nymph.dtos.EmployeeDto
 import com.ambrosia.nymph.dtos.EmployeeRegistrationDto
 import com.ambrosia.nymph.entities.Business
@@ -32,13 +31,11 @@ class EmployeeService(
 	}
 
 	@Transactional
-	fun editEmployee(businessId: Long, employeeDto: EmployeeRegistrationDto): EmployeeDto {
+	fun editEmployee(businessId: Long, employeeId: Long, employeeDto: EmployeeRegistrationDto): EmployeeDto {
 		businessRepository.findById(businessId)
 			.orElseThrow { EntityNotFoundException(Business::class.java, "id", businessId) }
-		val employee = employeeDto.id?.let {
-			employeeRepository.findById(it)
-				.orElseThrow { EntityNotFoundException(Employee::class.java, "id", it) }
-		} ?: throw EntityNotFoundException(Employee::class.java, "id", Constants.UNDEFINED)
+		val employee = employeeRepository.findById(employeeId)
+			.orElseThrow { EntityNotFoundException(Employee::class.java, "id", employeeId) }
 		employeeDto.firstName?.let { employee.firstName = it }
 		employeeDto.lastName?.let { employee.lastName = it }
 		employeeDto.position.let { employee.position = it }

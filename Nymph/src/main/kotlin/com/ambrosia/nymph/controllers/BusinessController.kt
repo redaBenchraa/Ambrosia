@@ -32,6 +32,16 @@ class BusinessController(
 		return employeeService.addEmployee(businessId, employee)
 	}
 
+	@PutMapping("/{businessId}/employees/{employeeId}")
+	fun editEmployee(
+		@PathVariable("businessId") businessId: Long,
+		@PathVariable("employeeId") employeeId: Long,
+		@Valid @RequestBody employee: EmployeeRegistrationDto
+	): EmployeeDto {
+		return employeeService.editEmployee(businessId, employeeId, employee)
+	}
+
+
 	@DeleteMapping("/{businessId}/employees/{employeeId}")
 	fun deleteEmployee(@PathVariable("businessId") businessId: Long, @PathVariable("employeeId") employeeId: Long) {
 		employeeService.deleteEmployee(businessId, employeeId)
@@ -44,13 +54,14 @@ class BusinessController(
 		return categoryService.addCategory(businessId, category)
 	}
 
-	@PutMapping("/{id}/categories")
+	@PutMapping("/{businessId}/categories/{categoryId}")
 	fun editCategory(
-		@PathVariable("id") businessId: Long, @Valid @RequestBody category: CategoryDto
+		@PathVariable("businessId") businessId: Long,
+		@PathVariable("categoryId") categoryId: Long,
+		@Valid @RequestBody category: CategoryDto
 	): CategoryDto {
-		return categoryService.editCategory(businessId, category)
+		return categoryService.editCategory(businessId, categoryId, category)
 	}
-
 
 	@DeleteMapping("/{businessId}/categories/{categoryId}")
 	fun deleteCategory(@PathVariable("businessId") businessId: Long, @PathVariable("categoryId") categoryId: Long) {

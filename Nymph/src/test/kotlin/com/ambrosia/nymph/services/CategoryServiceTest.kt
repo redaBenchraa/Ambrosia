@@ -44,7 +44,7 @@ class CategoryServiceTest {
 		every { categoryRepository.findById(any()) } returns Optional.of(getCategory())
 		every { categoryRepository.save(any()) } returns getCategory()
 		val categoryDto = getCategory().toDto().apply { name = "new name" }
-		val result = categoryService.editCategory(1, categoryDto)
+		val result = categoryService.editCategory(1, 4, categoryDto)
 		assertEquals("new name", result.name)
 		verify {
 			businessRepository.findById(any())
@@ -56,14 +56,14 @@ class CategoryServiceTest {
 	@Test
 	fun `Edit a category from a non existing business`() {
 		every { businessRepository.findById(any()) } returns Optional.empty()
-		assertThrows<EntityNotFoundException> { categoryService.editCategory(1, getCategory().toDto()) }
+		assertThrows<EntityNotFoundException> { categoryService.editCategory(1, 1, getCategory().toDto()) }
 	}
 
 	@Test
 	fun `Edit a non existing category`() {
 		every { businessRepository.findById(any()) } returns Optional.of(getBusiness())
 		every { categoryRepository.findById(any()) } returns Optional.empty()
-		assertThrows<EntityNotFoundException> { categoryService.editCategory(1, getCategory().toDto()) }
+		assertThrows<EntityNotFoundException> { categoryService.editCategory(1, 1, getCategory().toDto()) }
 	}
 
 

@@ -1,6 +1,5 @@
 package com.ambrosia.nymph.services
 
-import com.ambrosia.nymph.constants.Constants.Companion.UNDEFINED
 import com.ambrosia.nymph.dtos.CategoryDto
 import com.ambrosia.nymph.entities.Business
 import com.ambrosia.nymph.entities.Employee
@@ -30,13 +29,11 @@ class CategoryService(
 	}
 
 	@Transactional
-	fun editCategory(businessId: Long, categoryDto: CategoryDto): CategoryDto {
+	fun editCategory(businessId: Long, categoryId: Long, categoryDto: CategoryDto): CategoryDto {
 		businessRepository.findById(businessId)
 			.orElseThrow { EntityNotFoundException(Business::class.java, "id", businessId) }
-		val category = categoryDto.id?.let {
-			categoryRepository.findById(it)
-				.orElseThrow { EntityNotFoundException(Employee::class.java, "id", it) }
-		} ?: throw EntityNotFoundException(Employee::class.java, "id", UNDEFINED)
+		val category = categoryRepository.findById(categoryId)
+			.orElseThrow { EntityNotFoundException(Employee::class.java, "id", categoryId) }
 		categoryDto.name?.let { category.name = it }
 		categoryDto.description?.let { category.description = it }
 		categoryDto.image?.let { category.image = it }
