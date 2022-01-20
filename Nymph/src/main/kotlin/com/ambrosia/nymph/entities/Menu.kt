@@ -33,7 +33,7 @@ class Menu(
 	var description: String?,
 	var image: String?,
 	@field:NotNull(message = "error.menu.price.null")
-	@Min(PRICE_MIN, message = "error.menu.price.negative")
+	@field:Min(PRICE_MIN, message = "error.menu.price.negative")
 	var price: Double,
 	@Column(nullable = false)
 	@CreatedDate

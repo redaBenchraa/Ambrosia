@@ -12,15 +12,15 @@ data class EmployeeDto(
 	@field:NotNull(message = "error.employee.firstName.null")
 	@field:NotBlank(message = "error.employee.firstName.blank")
 	@field:Size(max = NAME_MAX_SIZE, message = "error.employee.firstName.size.invalid")
-	var firstName: String,
+	var firstName: String?,
 	@field:NotNull(message = "error.employee.lastName.null")
 	@field:NotBlank(message = "error.employee.lastName.blank")
 	@field:Size(max = NAME_MAX_SIZE, message = "error.employee.lastName.size.invalid")
-	var lastName: String,
+	var lastName: String?,
 	@field:NotNull(message = "error.employee.email.null")
 	@field:NotBlank(message = "error.employee.email.blank")
 	@field:Size(max = EMAIL_MAX_SIZE, message = "error.employee.email.size.invalid")
-	var email: String,
+	var email: String?,
 	@field:NotNull(message = "error.employee.position.null")
 	var position: Role = Role.MANAGER,
 	var deleted: Boolean = false
