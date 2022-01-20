@@ -56,7 +56,7 @@ class EmployeeServiceTest {
 		every { employeeRepository.findById(any()) } returns Optional.of(getEmployee())
 		every { employeeRepository.save(any()) } returns getEmployee()
 		val employeeDto = getEmployee().toRegistrationEmployeeDto().apply { firstName = "new name" }
-		val result = employeeService.editEmployee(1, employeeDto)
+		val result = employeeService.editEmployee(1, 1, employeeDto)
 		assertEquals("new name", result.firstName)
 		verify {
 			businessRepository.findById(any())
@@ -69,7 +69,7 @@ class EmployeeServiceTest {
 	fun `Edit an employee from a non existing business`() {
 		every { businessRepository.findById(any()) } returns Optional.empty()
 		assertThrows<EntityNotFoundException> {
-			employeeService.editEmployee(1, getEmployee().toRegistrationEmployeeDto())
+			employeeService.editEmployee(1, 1, getEmployee().toRegistrationEmployeeDto())
 		}
 	}
 
@@ -78,7 +78,7 @@ class EmployeeServiceTest {
 		every { businessRepository.findById(any()) } returns Optional.of(getBusiness())
 		every { employeeRepository.findById(any()) } returns Optional.empty()
 		assertThrows<EntityNotFoundException> {
-			employeeService.editEmployee(1, getEmployee().toRegistrationEmployeeDto())
+			employeeService.editEmployee(1, 1, getEmployee().toRegistrationEmployeeDto())
 		}
 	}
 

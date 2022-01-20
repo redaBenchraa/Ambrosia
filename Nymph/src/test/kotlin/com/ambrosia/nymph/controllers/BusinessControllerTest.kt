@@ -28,8 +28,7 @@ import org.springframework.http.HttpStatus.CONFLICT
 import org.springframework.http.MediaType
 import org.springframework.http.MediaType.APPLICATION_JSON
 import org.springframework.test.web.servlet.MockMvc
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
 
 @SpringBootTest
@@ -188,6 +187,40 @@ class BusinessControllerTest {
 	}
 
 	@Test
+	fun `Edit an employee`() {
+		every { employeeService.editEmployee(any(), any(), any()) } returns getEmployee().toDto()
+		val content = objectMapper.writeValueAsString(getCategory().toDto())
+		mockMvc.perform(put("$baseUrl/1/employees/1").contentType(APPLICATION_JSON).content(content))
+			.andExpect(status().isOk)
+			.andExpect(content().contentType(APPLICATION_JSON))
+			.andExpect(content().json(objectMapper.writeValueAsString(getCategory().toDto())))
+	}
+
+	@Test
+	fun `Edit an employee from an non existing business`() {
+		val exception = EntityAlreadyExistsException(Business::class.java, "id", "1")
+		val expected = runtimeExceptionHandler.handleEntityAlreadyExistsException(exception)
+		every { employeeService.editEmployee(any(), any(), any()) } throws exception
+		val content = objectMapper.writeValueAsString(getCategory().toDto())
+		mockMvc.perform(put("$baseUrl/1/employees/1").contentType(APPLICATION_JSON).content(content))
+			.andExpect(status().`is`(CONFLICT.value()))
+			.andExpect(content().contentType(APPLICATION_JSON))
+			.andExpect(content().json(objectMapper.writeValueAsString(expected.body)))
+	}
+
+	@Test
+	fun `Edit a non existing employee`() {
+		val exception = EntityAlreadyExistsException(Employee::class.java, "id", "1")
+		val expected = runtimeExceptionHandler.handleEntityAlreadyExistsException(exception)
+		every { employeeService.editEmployee(any(), any(), any()) } throws exception
+		val content = objectMapper.writeValueAsString(getCategory().toDto())
+		mockMvc.perform(put("$baseUrl/1/employees/1").contentType(APPLICATION_JSON).content(content))
+			.andExpect(status().`is`(CONFLICT.value()))
+			.andExpect(content().contentType(APPLICATION_JSON))
+			.andExpect(content().json(objectMapper.writeValueAsString(expected.body)))
+	}
+
+	@Test
 	fun `Delete an employee from a business`() {
 		every { employeeService.deleteEmployee(any(), any()) } returns Unit
 		mockMvc.perform(delete("$baseUrl/1/employees/1").contentType(APPLICATION_JSON))
@@ -213,6 +246,40 @@ class BusinessControllerTest {
 			.andExpect(status().isOk)
 			.andExpect(content().contentType(APPLICATION_JSON))
 			.andExpect(content().json(objectMapper.writeValueAsString(getCategory().toDto())))
+	}
+
+	@Test
+	fun `Edit a category`() {
+		every { categoryService.editCategory(any(), any(), any()) } returns getCategory().toDto()
+		val content = objectMapper.writeValueAsString(getCategory().toDto())
+		mockMvc.perform(put("$baseUrl/1/categories/1").contentType(APPLICATION_JSON).content(content))
+			.andExpect(status().isOk)
+			.andExpect(content().contentType(APPLICATION_JSON))
+			.andExpect(content().json(objectMapper.writeValueAsString(getCategory().toDto())))
+	}
+
+	@Test
+	fun `Edit a non existing category`() {
+		val exception = EntityAlreadyExistsException(Category::class.java, "id", "1")
+		val expected = runtimeExceptionHandler.handleEntityAlreadyExistsException(exception)
+		every { categoryService.editCategory(any(), any(), any()) } throws exception
+		val content = objectMapper.writeValueAsString(getCategory().toDto())
+		mockMvc.perform(put("$baseUrl/1/categories/1").contentType(APPLICATION_JSON).content(content))
+			.andExpect(status().`is`(CONFLICT.value()))
+			.andExpect(content().contentType(APPLICATION_JSON))
+			.andExpect(content().json(objectMapper.writeValueAsString(expected.body)))
+	}
+
+	@Test
+	fun `Edit a category from an non existing business`() {
+		val exception = EntityAlreadyExistsException(Category::class.java, "id", "1")
+		val expected = runtimeExceptionHandler.handleEntityAlreadyExistsException(exception)
+		every { categoryService.editCategory(any(), any(), any()) } throws exception
+		val content = objectMapper.writeValueAsString(getCategory().toDto())
+		mockMvc.perform(put("$baseUrl/1/categories/1").contentType(APPLICATION_JSON).content(content))
+			.andExpect(status().`is`(CONFLICT.value()))
+			.andExpect(content().contentType(APPLICATION_JSON))
+			.andExpect(content().json(objectMapper.writeValueAsString(expected.body)))
 	}
 
 	@Test
