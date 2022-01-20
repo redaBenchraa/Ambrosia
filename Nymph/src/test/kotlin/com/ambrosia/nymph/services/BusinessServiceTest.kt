@@ -13,7 +13,6 @@ import io.mockk.verify
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Test
-import java.util.*
 
 class BusinessServiceTest {
 
@@ -26,7 +25,7 @@ class BusinessServiceTest {
 	fun `Register a business with an employee`() {
 		every { businessRepository.save(any()) } returns getBusiness()
 		every { employeeRepository.save(any()) } returns getEmployee()
-		every { employeeRepository.findByEmail(any()) } returns Optional.empty()
+		every { employeeRepository.countByEmail(any()) } returns 0
 		val result = businessService.createBusiness(getBusinessRegistrationDto())
 		verify {
 			businessRepository.save(any())

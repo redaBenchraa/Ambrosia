@@ -1,10 +1,8 @@
 package com.ambrosia.nymph.repositories
 
-import com.ambrosia.nymph.entities.Employee
+import com.ambrosia.nymph.entities.Item
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
 
 @Repository
-interface EmployeeRepository : JpaRepository<Employee, Long> {
-	fun countByEmail(email: String): Long
-}
+interface ItemRepository : JpaRepository<Item, Long>
