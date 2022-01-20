@@ -54,10 +54,9 @@ class EmployeeService(
 	}
 
 	fun verifyIfEmployeeExists(employeeDto: EmployeeRegistrationDto) {
-		employeeRepository.findByEmail(employeeDto.email!!)
-			.ifPresent {
-				throw EntityAlreadyExistsException(Employee::class.java, "email", employeeDto.email!!)
-			}
+		if (employeeRepository.countByEmail(employeeDto.email!!) != 0L) {
+			throw EntityAlreadyExistsException(Employee::class.java, "email", employeeDto.email!!)
+		}
 	}
 
 }
