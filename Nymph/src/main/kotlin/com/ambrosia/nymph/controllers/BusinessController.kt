@@ -75,4 +75,20 @@ class BusinessController(
 		return itemService.addItem(businessId, item)
 	}
 
+	@PutMapping("/{businessId}/items/{itemId}")
+	fun editItems(
+		@PathVariable("businessId") businessId: Long,
+		@PathVariable("itemId") itemId: Long,
+		@Valid @RequestBody item: ItemDto
+	): ItemDto {
+		return itemService.editItem(businessId, itemId, item)
+	}
+
+
+	@DeleteMapping("/{businessId}/items/{itemId}")
+	fun deleteItem(@PathVariable("businessId") businessId: Long, @PathVariable("itemId") itemId: Long) {
+		return itemService.deleteItem(businessId, itemId)
+	}
+
+
 }

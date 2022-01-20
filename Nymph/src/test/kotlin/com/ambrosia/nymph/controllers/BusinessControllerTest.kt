@@ -9,6 +9,7 @@ import com.ambrosia.nymph.entities.Category
 import com.ambrosia.nymph.entities.Employee
 import com.ambrosia.nymph.entities.Item
 import com.ambrosia.nymph.exceptions.EntityAlreadyExistsException
+import com.ambrosia.nymph.exceptions.EntityNotFoundException
 import com.ambrosia.nymph.handlers.RuntimeExceptionHandler
 import com.ambrosia.nymph.mappers.toDto
 import com.ambrosia.nymph.mappers.toRegistrationEmployeeDto
@@ -26,6 +27,7 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.http.HttpStatus
 import org.springframework.http.HttpStatus.CONFLICT
 import org.springframework.http.MediaType
 import org.springframework.http.MediaType.APPLICATION_JSON
@@ -74,7 +76,7 @@ class BusinessControllerTest {
 	}
 
 	@Test
-	fun `Register throws entity already exist exception`() {
+	fun `Register with an already exising employee email`() {
 		val exception = EntityAlreadyExistsException(Business::class.java, "email", "email@gmail.com")
 		val expected = runtimeExceptionHandler.handleEntityAlreadyExistsException(exception)
 		every { businessService.createBusiness(any()) } throws exception
@@ -149,20 +151,6 @@ class BusinessControllerTest {
 	}
 
 	@Test
-	fun `Add an employee from a non existing business`() {
-		val exception = EntityAlreadyExistsException(Business::class.java, "id", "1")
-		val expected = runtimeExceptionHandler.handleEntityAlreadyExistsException(exception)
-		val content = objectMapper.writeValueAsString(getEmployee().toRegistrationEmployeeDto().apply {
-			password = "password"
-		})
-		every { employeeService.addEmployee(any(), any()) } throws exception
-		mockMvc.perform(post("$baseUrl/1/employees").contentType(APPLICATION_JSON).content(content))
-			.andExpect(status().`is`(CONFLICT.value()))
-			.andExpect(content().contentType(APPLICATION_JSON))
-			.andExpect(content().json(objectMapper.writeValueAsString(expected.body)))
-	}
-
-	@Test
 	fun `Add an employee with a blank password to a business`() {
 		every { employeeService.addEmployee(any(), any()) } returns getEmployee().toDto()
 		val content = objectMapper.writeValueAsString(getEmployee().toRegistrationEmployeeDto().apply { password = "" })
@@ -203,25 +191,39 @@ class BusinessControllerTest {
 	}
 
 	@Test
+	fun `Add an employee from a non existing business`() {
+		val exception = EntityNotFoundException(Business::class.java, "id", "1")
+		val expected = runtimeExceptionHandler.handleEntityNotFoundException(exception)
+		val content = objectMapper.writeValueAsString(getEmployee().toRegistrationEmployeeDto().apply {
+			password = "password"
+		})
+		every { employeeService.addEmployee(any(), any()) } throws exception
+		mockMvc.perform(post("$baseUrl/1/employees").contentType(APPLICATION_JSON).content(content))
+			.andExpect(status().`is`(HttpStatus.NOT_FOUND.value()))
+			.andExpect(content().contentType(APPLICATION_JSON))
+			.andExpect(content().json(objectMapper.writeValueAsString(expected.body)))
+	}
+
+	@Test
 	fun `Edit an employee from an non existing business`() {
-		val exception = EntityAlreadyExistsException(Business::class.java, "id", "1")
-		val expected = runtimeExceptionHandler.handleEntityAlreadyExistsException(exception)
+		val exception = EntityNotFoundException(Business::class.java, "id", "1")
+		val expected = runtimeExceptionHandler.handleEntityNotFoundException(exception)
 		every { employeeService.editEmployee(any(), any(), any()) } throws exception
 		val content = objectMapper.writeValueAsString(getEmployee().toDto())
 		mockMvc.perform(put("$baseUrl/1/employees/1").contentType(APPLICATION_JSON).content(content))
-			.andExpect(status().`is`(CONFLICT.value()))
+			.andExpect(status().`is`(HttpStatus.NOT_FOUND.value()))
 			.andExpect(content().contentType(APPLICATION_JSON))
 			.andExpect(content().json(objectMapper.writeValueAsString(expected.body)))
 	}
 
 	@Test
 	fun `Edit a non existing employee`() {
-		val exception = EntityAlreadyExistsException(Employee::class.java, "id", "1")
-		val expected = runtimeExceptionHandler.handleEntityAlreadyExistsException(exception)
+		val exception = EntityNotFoundException(Employee::class.java, "id", "1")
+		val expected = runtimeExceptionHandler.handleEntityNotFoundException(exception)
 		every { employeeService.editEmployee(any(), any(), any()) } throws exception
 		val content = objectMapper.writeValueAsString(getEmployee().toDto())
 		mockMvc.perform(put("$baseUrl/1/employees/1").contentType(APPLICATION_JSON).content(content))
-			.andExpect(status().`is`(CONFLICT.value()))
+			.andExpect(status().`is`(HttpStatus.NOT_FOUND.value()))
 			.andExpect(content().contentType(APPLICATION_JSON))
 			.andExpect(content().json(objectMapper.writeValueAsString(expected.body)))
 	}
@@ -235,11 +237,11 @@ class BusinessControllerTest {
 
 	@Test
 	fun `Delete an employee from a non existing business`() {
-		val exception = EntityAlreadyExistsException(Business::class.java, "id", "1")
-		val expected = runtimeExceptionHandler.handleEntityAlreadyExistsException(exception)
+		val exception = EntityNotFoundException(Category::class.java, "id", "1")
+		val expected = runtimeExceptionHandler.handleEntityNotFoundException(exception)
 		every { employeeService.deleteEmployee(any(), any()) } throws exception
 		mockMvc.perform(delete("$baseUrl/1/employees/1"))
-			.andExpect(status().`is`(CONFLICT.value()))
+			.andExpect(status().`is`(HttpStatus.NOT_FOUND.value()))
 			.andExpect(content().contentType(APPLICATION_JSON))
 			.andExpect(content().json(objectMapper.writeValueAsString(expected.body)))
 	}
@@ -268,24 +270,24 @@ class BusinessControllerTest {
 
 	@Test
 	fun `Edit a non existing category`() {
-		val exception = EntityAlreadyExistsException(Category::class.java, "id", "1")
-		val expected = runtimeExceptionHandler.handleEntityAlreadyExistsException(exception)
+		val exception = EntityNotFoundException(Category::class.java, "id", "1")
+		val expected = runtimeExceptionHandler.handleEntityNotFoundException(exception)
 		every { categoryService.editCategory(any(), any(), any()) } throws exception
 		val content = objectMapper.writeValueAsString(getCategory().toDto())
 		mockMvc.perform(put("$baseUrl/1/categories/1").contentType(APPLICATION_JSON).content(content))
-			.andExpect(status().`is`(CONFLICT.value()))
+			.andExpect(status().`is`(HttpStatus.NOT_FOUND.value()))
 			.andExpect(content().contentType(APPLICATION_JSON))
 			.andExpect(content().json(objectMapper.writeValueAsString(expected.body)))
 	}
 
 	@Test
 	fun `Edit a category from an non existing business`() {
-		val exception = EntityAlreadyExistsException(Category::class.java, "id", "1")
-		val expected = runtimeExceptionHandler.handleEntityAlreadyExistsException(exception)
+		val exception = EntityNotFoundException(Business::class.java, "id", "1")
+		val expected = runtimeExceptionHandler.handleEntityNotFoundException(exception)
 		every { categoryService.editCategory(any(), any(), any()) } throws exception
 		val content = objectMapper.writeValueAsString(getCategory().toDto())
 		mockMvc.perform(put("$baseUrl/1/categories/1").contentType(APPLICATION_JSON).content(content))
-			.andExpect(status().`is`(CONFLICT.value()))
+			.andExpect(status().`is`(HttpStatus.NOT_FOUND.value()))
 			.andExpect(content().contentType(APPLICATION_JSON))
 			.andExpect(content().json(objectMapper.writeValueAsString(expected.body)))
 	}
@@ -322,12 +324,23 @@ class BusinessControllerTest {
 	}
 
 	@Test
-	fun `Delete a category from a non existing business`() {
-		val exception = EntityAlreadyExistsException(Business::class.java, "id", "1")
-		val expected = runtimeExceptionHandler.handleEntityAlreadyExistsException(exception)
+	fun `Delete a non existing category`() {
+		val exception = EntityNotFoundException(Category::class.java, "id", "1")
+		val expected = runtimeExceptionHandler.handleEntityNotFoundException(exception)
 		every { categoryService.deleteCategory(any(), any()) } throws exception
 		mockMvc.perform(delete("$baseUrl/1/categories/1"))
-			.andExpect(status().`is`(CONFLICT.value()))
+			.andExpect(status().`is`(HttpStatus.NOT_FOUND.value()))
+			.andExpect(content().contentType(APPLICATION_JSON))
+			.andExpect(content().json(objectMapper.writeValueAsString(expected.body)))
+	}
+
+	@Test
+	fun `Delete a category from a non existing business`() {
+		val exception = EntityNotFoundException(Business::class.java, "id", "1")
+		val expected = runtimeExceptionHandler.handleEntityNotFoundException(exception)
+		every { categoryService.deleteCategory(any(), any()) } throws exception
+		mockMvc.perform(delete("$baseUrl/1/categories/1"))
+			.andExpect(status().`is`(HttpStatus.NOT_FOUND.value()))
 			.andExpect(content().contentType(APPLICATION_JSON))
 			.andExpect(content().json(objectMapper.writeValueAsString(expected.body)))
 	}
@@ -392,24 +405,53 @@ class BusinessControllerTest {
 
 	@Test
 	fun `Edit a non existing item`() {
-		val exception = EntityAlreadyExistsException(Item::class.java, "id", "1")
-		val expected = runtimeExceptionHandler.handleEntityAlreadyExistsException(exception)
+		val exception = EntityNotFoundException(Item::class.java, "id", "1")
+		val expected = runtimeExceptionHandler.handleEntityNotFoundException(exception)
 		every { itemService.editItem(any(), any(), any()) } throws exception
 		val content = objectMapper.writeValueAsString(getItem().toDto())
 		mockMvc.perform(put("$baseUrl/1/items/1").contentType(APPLICATION_JSON).content(content))
-			.andExpect(status().`is`(CONFLICT.value()))
+			.andExpect(status().`is`(HttpStatus.NOT_FOUND.value()))
 			.andExpect(content().contentType(APPLICATION_JSON))
 			.andExpect(content().json(objectMapper.writeValueAsString(expected.body)))
 	}
 
 	@Test
 	fun `Edit an item from an non existing business`() {
-		val exception = EntityAlreadyExistsException(Item::class.java, "id", "1")
-		val expected = runtimeExceptionHandler.handleEntityAlreadyExistsException(exception)
+		val exception = EntityNotFoundException(Business::class.java, "id", "1")
+		val expected = runtimeExceptionHandler.handleEntityNotFoundException(exception)
 		every { itemService.editItem(any(), any(), any()) } throws exception
 		val content = objectMapper.writeValueAsString(getItem().toDto())
-		mockMvc.perform(put("$baseUrl/1/categories/1").contentType(APPLICATION_JSON).content(content))
-			.andExpect(status().`is`(CONFLICT.value()))
+		mockMvc.perform(put("$baseUrl/1/items/1").contentType(APPLICATION_JSON).content(content))
+			.andExpect(status().`is`(HttpStatus.NOT_FOUND.value()))
+			.andExpect(content().contentType(APPLICATION_JSON))
+			.andExpect(content().json(objectMapper.writeValueAsString(expected.body)))
+	}
+
+	@Test
+	fun `Delete an item from a business`() {
+		every { itemService.deleteItem(any(), any()) } returns Unit
+		mockMvc.perform(delete("$baseUrl/1/items/1").contentType(APPLICATION_JSON))
+			.andExpect(status().isOk)
+	}
+
+	@Test
+	fun `Delete an item from a non existing business`() {
+		val exception = EntityNotFoundException(Business::class.java, "id", "1")
+		val expected = runtimeExceptionHandler.handleEntityNotFoundException(exception)
+		every { itemService.deleteItem(any(), any()) } throws exception
+		mockMvc.perform(delete("$baseUrl/1/items/1"))
+			.andExpect(status().`is`(HttpStatus.NOT_FOUND.value()))
+			.andExpect(content().contentType(APPLICATION_JSON))
+			.andExpect(content().json(objectMapper.writeValueAsString(expected.body)))
+	}
+
+	@Test
+	fun `Delete a non existing item`() {
+		val exception = EntityNotFoundException(Item::class.java, "id", "1")
+		val expected = runtimeExceptionHandler.handleEntityNotFoundException(exception)
+		every { itemService.deleteItem(any(), any()) } throws exception
+		mockMvc.perform(delete("$baseUrl/1/items/1"))
+			.andExpect(status().`is`(HttpStatus.NOT_FOUND.value()))
 			.andExpect(content().contentType(APPLICATION_JSON))
 			.andExpect(content().json(objectMapper.writeValueAsString(expected.body)))
 	}
