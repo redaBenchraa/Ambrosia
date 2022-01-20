@@ -7,6 +7,7 @@ import com.ambrosia.nymph.dtos.EmployeeRegistrationDto
 import com.ambrosia.nymph.entities.Business
 import com.ambrosia.nymph.entities.Category
 import com.ambrosia.nymph.entities.Employee
+import com.ambrosia.nymph.entities.Item
 import com.ambrosia.nymph.exceptions.EntityAlreadyExistsException
 import com.ambrosia.nymph.handlers.RuntimeExceptionHandler
 import com.ambrosia.nymph.mappers.toDto
@@ -14,6 +15,7 @@ import com.ambrosia.nymph.mappers.toRegistrationEmployeeDto
 import com.ambrosia.nymph.services.BusinessService
 import com.ambrosia.nymph.services.CategoryService
 import com.ambrosia.nymph.services.EmployeeService
+import com.ambrosia.nymph.services.ItemService
 import com.ambrosia.nymph.utils.Translator
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.ninjasquad.springmockk.MockkBean
@@ -57,6 +59,9 @@ class BusinessControllerTest {
 
 	@MockkBean
 	private lateinit var categoryService: CategoryService
+
+	@MockkBean
+	private lateinit var itemService: ItemService
 
 	@Test
 	fun `Create a new business with a manager`() {
@@ -188,12 +193,13 @@ class BusinessControllerTest {
 
 	@Test
 	fun `Edit an employee`() {
-		every { employeeService.editEmployee(any(), any(), any()) } returns getEmployee().toDto()
-		val content = objectMapper.writeValueAsString(getCategory().toDto())
+		val employee = getEmployee().toDto();
+		every { employeeService.editEmployee(any(), any(), any()) } returns employee
+		val content = objectMapper.writeValueAsString(employee)
 		mockMvc.perform(put("$baseUrl/1/employees/1").contentType(APPLICATION_JSON).content(content))
 			.andExpect(status().isOk)
 			.andExpect(content().contentType(APPLICATION_JSON))
-			.andExpect(content().json(objectMapper.writeValueAsString(getCategory().toDto())))
+			.andExpect(content().json(objectMapper.writeValueAsString(employee)))
 	}
 
 	@Test
@@ -201,7 +207,7 @@ class BusinessControllerTest {
 		val exception = EntityAlreadyExistsException(Business::class.java, "id", "1")
 		val expected = runtimeExceptionHandler.handleEntityAlreadyExistsException(exception)
 		every { employeeService.editEmployee(any(), any(), any()) } throws exception
-		val content = objectMapper.writeValueAsString(getCategory().toDto())
+		val content = objectMapper.writeValueAsString(getEmployee().toDto())
 		mockMvc.perform(put("$baseUrl/1/employees/1").contentType(APPLICATION_JSON).content(content))
 			.andExpect(status().`is`(CONFLICT.value()))
 			.andExpect(content().contentType(APPLICATION_JSON))
@@ -213,7 +219,7 @@ class BusinessControllerTest {
 		val exception = EntityAlreadyExistsException(Employee::class.java, "id", "1")
 		val expected = runtimeExceptionHandler.handleEntityAlreadyExistsException(exception)
 		every { employeeService.editEmployee(any(), any(), any()) } throws exception
-		val content = objectMapper.writeValueAsString(getCategory().toDto())
+		val content = objectMapper.writeValueAsString(getEmployee().toDto())
 		mockMvc.perform(put("$baseUrl/1/employees/1").contentType(APPLICATION_JSON).content(content))
 			.andExpect(status().`is`(CONFLICT.value()))
 			.andExpect(content().contentType(APPLICATION_JSON))
@@ -240,22 +246,24 @@ class BusinessControllerTest {
 
 	@Test
 	fun `Add a category to a business`() {
-		every { categoryService.addCategory(any(), any()) } returns getCategory().toDto()
-		val content = objectMapper.writeValueAsString(getCategory().toDto())
+		val category = getCategory().toDto();
+		every { categoryService.addCategory(any(), any()) } returns category
+		val content = objectMapper.writeValueAsString(category)
 		mockMvc.perform(post("$baseUrl/1/categories").contentType(APPLICATION_JSON).content(content))
 			.andExpect(status().isOk)
 			.andExpect(content().contentType(APPLICATION_JSON))
-			.andExpect(content().json(objectMapper.writeValueAsString(getCategory().toDto())))
+			.andExpect(content().json(objectMapper.writeValueAsString(category)))
 	}
 
 	@Test
 	fun `Edit a category`() {
-		every { categoryService.editCategory(any(), any(), any()) } returns getCategory().toDto()
-		val content = objectMapper.writeValueAsString(getCategory().toDto())
+		val category = getCategory().toDto();
+		every { categoryService.editCategory(any(), any(), any()) } returns category
+		val content = objectMapper.writeValueAsString(category)
 		mockMvc.perform(put("$baseUrl/1/categories/1").contentType(APPLICATION_JSON).content(content))
 			.andExpect(status().isOk)
 			.andExpect(content().contentType(APPLICATION_JSON))
-			.andExpect(content().json(objectMapper.writeValueAsString(getCategory().toDto())))
+			.andExpect(content().json(objectMapper.writeValueAsString(category)))
 	}
 
 	@Test
@@ -284,8 +292,9 @@ class BusinessControllerTest {
 
 	@Test
 	fun `Add category with empty name to a business`() {
-		every { categoryService.addCategory(any(), any()) } returns getCategory().toDto()
-		val content = objectMapper.writeValueAsString(getCategory().toDto().apply { name = "" })
+		val category = getCategory().toDto()
+		every { categoryService.addCategory(any(), any()) } returns category
+		val content = objectMapper.writeValueAsString(category.apply { name = "" })
 		mockMvc.perform(
 			post("$baseUrl/1/categories")
 				.contentType(APPLICATION_JSON)
@@ -323,6 +332,54 @@ class BusinessControllerTest {
 			.andExpect(content().json(objectMapper.writeValueAsString(expected.body)))
 	}
 
+	@Test
+	fun `Add an item to a business`() {
+		val item = getItem().toDto()
+		every { itemService.addItem(any(), any()) } returns item
+		val content = objectMapper.writeValueAsString(item)
+		mockMvc.perform(post("$baseUrl/1/items").contentType(APPLICATION_JSON).content(content))
+			.andExpect(status().isOk)
+			.andExpect(content().contentType(APPLICATION_JSON))
+			.andExpect(content().json(objectMapper.writeValueAsString(item)))
+	}
+
+	@Test
+	fun `Add an item from a non existing business`() {
+		val exception = EntityAlreadyExistsException(Business::class.java, "id", "1")
+		val expected = runtimeExceptionHandler.handleEntityAlreadyExistsException(exception)
+		val content = objectMapper.writeValueAsString(getItem().toDto())
+		every { itemService.addItem(any(), any()) } throws exception
+		mockMvc.perform(post("$baseUrl/1/items").contentType(APPLICATION_JSON).content(content))
+			.andExpect(status().`is`(CONFLICT.value()))
+			.andExpect(content().contentType(APPLICATION_JSON))
+			.andExpect(content().json(objectMapper.writeValueAsString(expected.body)))
+	}
+
+	@Test
+	fun `Add an item with a blank password to a business`() {
+		val item = getItem().toDto()
+		every { itemService.addItem(any(), any()) } returns item
+		val content = objectMapper.writeValueAsString(item.apply { name = "" })
+		mockMvc.perform(
+			post("$baseUrl/1/items")
+				.contentType(APPLICATION_JSON)
+				.content(content)
+		)
+			.andExpect(status().isBadRequest)
+			.andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON))
+			.andExpect(jsonPath("$.type", `is`<Any>(Urls.VIOLATIONS)))
+			.andExpect(jsonPath("$.title", `is`("Constraint Violation")))
+			.andExpect(jsonPath("$.status", `is`(400)))
+			.andExpect(jsonPath("$.violations", hasSize<Any>(1)))
+			.andExpect(jsonPath("$.violations[0].field", `is`("name")))
+			.andExpect(
+				jsonPath(
+					"$.violations[0].message", `is`(translator.toLocale("error.item.name.blank"))
+				)
+			)
+	}
+
+
 	private fun getBusinessRegistrationDto() = BusinessRegistrationDto(
 		name = "name",
 		currency = "EUR",
@@ -339,6 +396,13 @@ class BusinessControllerTest {
 			position = Role.MANAGER,
 			email = "email@email.com",
 		),
+	)
+
+	private fun getItem() = Item(
+		name = "name",
+		description = "description",
+		image = "image",
+		price = 10.0,
 	)
 
 	private fun getCategory() = Category(

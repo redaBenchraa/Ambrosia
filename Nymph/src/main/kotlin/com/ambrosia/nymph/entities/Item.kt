@@ -21,7 +21,7 @@ class Item(
 	@Column(nullable = false)
 	@field:NotNull(message = "error.item.id.null")
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	var id: Long?,
+	var id: Long? = null,
 	@field:NotNull(message = "error.item.name.null")
 	@field:NotBlank(message = "error.item.name.blank")
 	@field:Size(max = NAME_MAX_SIZE, message = "error.item.name.size.invalid")
@@ -31,7 +31,7 @@ class Item(
 	var description: String?,
 	var image: String?,
 	@field:NotNull(message = "error.item.price.null")
-	@Min(0, message = "error.item.price.negative")
+	@field:Min(0, message = "error.item.price.negative")
 	var price: Double,
 	var onlyForMenu: Boolean = false,
 	@Column(nullable = false)
@@ -47,5 +47,5 @@ class Item(
 	@JoinColumn(name = "business_id", nullable = false)
 	@OnDelete(action = OnDeleteAction.NO_ACTION)
 	@JsonManagedReference
-	var business: Business,
+	var business: Business? = null,
 )

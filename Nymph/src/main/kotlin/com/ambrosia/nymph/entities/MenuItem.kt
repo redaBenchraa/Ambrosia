@@ -21,7 +21,7 @@ class MenuItem(
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	var id: Long?,
 	@field:NotNull(message = "error.menuItem.extra.null")
-	@Min(0, message = "error.menuItem.price.negative")
+	@field:Min(0, message = "error.menuItem.price.negative")
 	var extra: Double = EXTRA_MIN.toDouble(),
 	@Column(nullable = false)
 	@CreatedDate

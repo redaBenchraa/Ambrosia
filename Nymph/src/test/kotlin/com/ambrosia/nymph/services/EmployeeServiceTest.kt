@@ -6,7 +6,7 @@ import com.ambrosia.nymph.entities.Business
 import com.ambrosia.nymph.entities.Employee
 import com.ambrosia.nymph.exceptions.EntityAlreadyExistsException
 import com.ambrosia.nymph.exceptions.EntityNotFoundException
-import com.ambrosia.nymph.mappers.toRegistrationEmployeeDto
+import com.ambrosia.nymph.mappers.toDto
 import com.ambrosia.nymph.repositories.BusinessRepository
 import com.ambrosia.nymph.repositories.EmployeeRepository
 import io.mockk.every
@@ -55,8 +55,7 @@ class EmployeeServiceTest {
 		every { businessRepository.findById(any()) } returns Optional.of(getBusiness())
 		every { employeeRepository.findById(any()) } returns Optional.of(getEmployee())
 		every { employeeRepository.save(any()) } returns getEmployee()
-		val employeeDto = getEmployee().toRegistrationEmployeeDto().apply { firstName = "new name" }
-		val result = employeeService.editEmployee(1, 1, employeeDto)
+		val result = employeeService.editEmployee(1, 1, getEmployee().toDto())
 		assertEquals("new name", result.firstName)
 		verify {
 			businessRepository.findById(any())
@@ -69,7 +68,7 @@ class EmployeeServiceTest {
 	fun `Edit an employee from a non existing business`() {
 		every { businessRepository.findById(any()) } returns Optional.empty()
 		assertThrows<EntityNotFoundException> {
-			employeeService.editEmployee(1, 1, getEmployee().toRegistrationEmployeeDto())
+			employeeService.editEmployee(1, 1, getEmployee().toDto())
 		}
 	}
 
@@ -78,7 +77,7 @@ class EmployeeServiceTest {
 		every { businessRepository.findById(any()) } returns Optional.of(getBusiness())
 		every { employeeRepository.findById(any()) } returns Optional.empty()
 		assertThrows<EntityNotFoundException> {
-			employeeService.editEmployee(1, 1, getEmployee().toRegistrationEmployeeDto())
+			employeeService.editEmployee(1, 1, getEmployee().toDto())
 		}
 	}
 
