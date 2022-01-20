@@ -30,7 +30,7 @@ class OrderedItem(
 	@Column(columnDefinition = "text")
 	var description: String?,
 	@field:NotNull(message = "error.orderedItem.price.null")
-	@Min(0, message = "error.orderedItem.price.negative")
+	@field:Min(0, message = "error.orderedItem.price.negative")
 	var price: Double,
 	@Column(nullable = false)
 	@CreatedDate

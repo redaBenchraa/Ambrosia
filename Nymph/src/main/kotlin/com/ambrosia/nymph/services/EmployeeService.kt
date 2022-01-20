@@ -31,7 +31,7 @@ class EmployeeService(
 	}
 
 	@Transactional
-	fun editEmployee(businessId: Long, employeeId: Long, employeeDto: EmployeeRegistrationDto): EmployeeDto {
+	fun editEmployee(businessId: Long, employeeId: Long, employeeDto: EmployeeDto): EmployeeDto {
 		businessRepository.findById(businessId)
 			.orElseThrow { EntityNotFoundException(Business::class.java, "id", businessId) }
 		val employee = employeeRepository.findById(employeeId)

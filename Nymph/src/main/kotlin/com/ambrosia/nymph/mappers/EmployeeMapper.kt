@@ -10,7 +10,7 @@ fun Employee.toDto(): EmployeeDto = EmployeeDto(
 )
 
 fun EmployeeDto.toEntity(): Employee = Employee(
-	id, firstName, lastName, email, position
+	id, firstName!!, lastName!!, email!!, position
 )
 
 fun Employee.toRegistrationEmployeeDto(): EmployeeRegistrationDto = EmployeeRegistrationDto(

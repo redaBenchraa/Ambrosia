@@ -1,12 +1,10 @@
 package com.ambrosia.nymph.controllers
 
-import com.ambrosia.nymph.dtos.BusinessRegistrationDto
-import com.ambrosia.nymph.dtos.CategoryDto
-import com.ambrosia.nymph.dtos.EmployeeDto
-import com.ambrosia.nymph.dtos.EmployeeRegistrationDto
+import com.ambrosia.nymph.dtos.*
 import com.ambrosia.nymph.services.BusinessService
 import com.ambrosia.nymph.services.CategoryService
 import com.ambrosia.nymph.services.EmployeeService
+import com.ambrosia.nymph.services.ItemService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
 import javax.validation.Valid
@@ -16,7 +14,8 @@ import javax.validation.Valid
 class BusinessController(
 	@Autowired private val businessService: BusinessService,
 	@Autowired private val employeeService: EmployeeService,
-	@Autowired private val categoryService: CategoryService
+	@Autowired private val categoryService: CategoryService,
+	@Autowired private val itemService: ItemService
 ) {
 
 	@PostMapping("/register")
@@ -36,7 +35,7 @@ class BusinessController(
 	fun editEmployee(
 		@PathVariable("businessId") businessId: Long,
 		@PathVariable("employeeId") employeeId: Long,
-		@Valid @RequestBody employee: EmployeeRegistrationDto
+		@Valid @RequestBody employee: EmployeeDto
 	): EmployeeDto {
 		return employeeService.editEmployee(businessId, employeeId, employee)
 	}
@@ -66,6 +65,14 @@ class BusinessController(
 	@DeleteMapping("/{businessId}/categories/{categoryId}")
 	fun deleteCategory(@PathVariable("businessId") businessId: Long, @PathVariable("categoryId") categoryId: Long) {
 		return categoryService.deleteCategory(businessId, categoryId)
+	}
+
+	@PostMapping("/{id}/items")
+	fun addItems(
+		@PathVariable("id") businessId: Long,
+		@Valid @RequestBody item: ItemDto
+	): ItemDto {
+		return itemService.addItem(businessId, item)
 	}
 
 }
