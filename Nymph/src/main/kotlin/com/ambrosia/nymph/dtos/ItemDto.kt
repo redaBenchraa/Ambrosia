@@ -6,7 +6,7 @@ import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotNull
 import javax.validation.constraints.Size
 
-class ItemDto(
+data class ItemDto(
 	var id: Long?,
 	@field:NotNull(message = "error.item.name.null")
 	@field:NotBlank(message = "error.item.name.blank")
