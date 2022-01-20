@@ -10,6 +10,7 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import java.util.*
@@ -43,9 +44,10 @@ class ItemServiceTest {
 		every { businessRepository.findById(any()) } returns Optional.of(getBusiness())
 		every { itemRepository.findById(any()) } returns Optional.of(getItem())
 		every { itemRepository.save(any()) } returns getItem()
-		val itemDto = getItem().toDto().apply { name = "new name" }
+		val itemDto = getItem().toDto().copy(name = "new name", onlyForMenu = true)
 		val result = itemService.editItem(1, 4, itemDto)
 		assertEquals("new name", result.name)
+		assertTrue(result.onlyForMenu)
 		verify {
 			businessRepository.findById(any())
 			itemRepository.findById(any())

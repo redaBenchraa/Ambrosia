@@ -356,7 +356,7 @@ class BusinessControllerTest {
 	}
 
 	@Test
-	fun `Add an item with a blank password to a business`() {
+	fun `Add an item with a blank name to a business`() {
 		val item = getItem().toDto()
 		every { itemService.addItem(any(), any()) } returns item
 		val content = objectMapper.writeValueAsString(item.apply { name = "" })
@@ -379,6 +379,40 @@ class BusinessControllerTest {
 			)
 	}
 
+	@Test
+	fun `Edit an item`() {
+		val item = getItem().toDto();
+		every { itemService.editItem(any(), any(), any()) } returns item
+		val content = objectMapper.writeValueAsString(item)
+		mockMvc.perform(put("$baseUrl/1/items/1").contentType(APPLICATION_JSON).content(content))
+			.andExpect(status().isOk)
+			.andExpect(content().contentType(APPLICATION_JSON))
+			.andExpect(content().json(objectMapper.writeValueAsString(item)))
+	}
+
+	@Test
+	fun `Edit a non existing item`() {
+		val exception = EntityAlreadyExistsException(Item::class.java, "id", "1")
+		val expected = runtimeExceptionHandler.handleEntityAlreadyExistsException(exception)
+		every { itemService.editItem(any(), any(), any()) } throws exception
+		val content = objectMapper.writeValueAsString(getItem().toDto())
+		mockMvc.perform(put("$baseUrl/1/items/1").contentType(APPLICATION_JSON).content(content))
+			.andExpect(status().`is`(CONFLICT.value()))
+			.andExpect(content().contentType(APPLICATION_JSON))
+			.andExpect(content().json(objectMapper.writeValueAsString(expected.body)))
+	}
+
+	@Test
+	fun `Edit an item from an non existing business`() {
+		val exception = EntityAlreadyExistsException(Item::class.java, "id", "1")
+		val expected = runtimeExceptionHandler.handleEntityAlreadyExistsException(exception)
+		every { itemService.editItem(any(), any(), any()) } throws exception
+		val content = objectMapper.writeValueAsString(getItem().toDto())
+		mockMvc.perform(put("$baseUrl/1/categories/1").contentType(APPLICATION_JSON).content(content))
+			.andExpect(status().`is`(CONFLICT.value()))
+			.andExpect(content().contentType(APPLICATION_JSON))
+			.andExpect(content().json(objectMapper.writeValueAsString(expected.body)))
+	}
 
 	private fun getBusinessRegistrationDto() = BusinessRegistrationDto(
 		name = "name",
