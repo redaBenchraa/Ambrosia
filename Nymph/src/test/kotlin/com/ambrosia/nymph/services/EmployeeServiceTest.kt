@@ -55,7 +55,7 @@ class EmployeeServiceTest {
 		every { businessRepository.findById(any()) } returns Optional.of(getBusiness())
 		every { employeeRepository.findById(any()) } returns Optional.of(getEmployee())
 		every { employeeRepository.save(any()) } returns getEmployee()
-		val result = employeeService.editEmployee(1, 1, getEmployee().toDto())
+		val result = employeeService.editEmployee(1, 1, getEmployee().toDto().apply { firstName = "new name" })
 		assertEquals("new name", result.firstName)
 		verify {
 			businessRepository.findById(any())
