@@ -6,34 +6,17 @@ import com.ambrosia.nymph.entities.Employee
 
 
 fun Employee.toDto(): EmployeeDto = EmployeeDto(
-	id = id,
-	firstName = firstName,
-	lastName = lastName,
-	position = position,
-	deleted = deleted,
-	email = email
+	id, firstName, lastName, email, position, deleted
 )
 
 fun EmployeeDto.toEntity(): Employee = Employee(
-	id = id,
-	firstName = firstName,
-	lastName = lastName,
-	position = position,
-	deleted = deleted,
-	email = email
+	id, firstName, lastName, email, position
 )
 
 fun Employee.toRegistrationEmployeeDto(): EmployeeRegistrationDto = EmployeeRegistrationDto(
-	firstName = firstName,
-	lastName = lastName,
-	position = position,
-	email = email,
-	id = id
+	id, firstName, lastName, email, position
 )
 
 fun EmployeeRegistrationDto.toEntity(): Employee = Employee(
-	firstName = firstName!!,
-	lastName = lastName!!,
-	email = email!!,
-	position = position
+	id, firstName!!, lastName!!, email!!, position
 )
