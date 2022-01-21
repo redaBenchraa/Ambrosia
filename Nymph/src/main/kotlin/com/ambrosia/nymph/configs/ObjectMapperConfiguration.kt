@@ -10,20 +10,19 @@ import org.zalando.problem.violations.ConstraintViolationProblemModule
 
 @Configuration
 class ObjectMapperConfiguration {
+
     @Bean
-    fun objectMapper(): ObjectMapper {
-        return ObjectMapper()
-            .registerModules(
-                KotlinModule.Builder()
-                    .withReflectionCacheSize(512)
-                    .configure(KotlinFeature.NullToEmptyCollection, false)
-                    .configure(KotlinFeature.NullToEmptyMap, false)
-                    .configure(KotlinFeature.NullIsSameAsDefault, false)
-                    .configure(KotlinFeature.SingletonSupport, false)
-                    .configure(KotlinFeature.StrictNullChecks, false)
-                    .build(),
-                ProblemModule().withStackTraces(false),
-                ConstraintViolationProblemModule()
-            )
-    }
+    fun objectMapper(): ObjectMapper = ObjectMapper()
+        .registerModules(
+            KotlinModule.Builder()
+                .withReflectionCacheSize(512)
+                .configure(KotlinFeature.NullToEmptyCollection, false)
+                .configure(KotlinFeature.NullToEmptyMap, false)
+                .configure(KotlinFeature.NullIsSameAsDefault, false)
+                .configure(KotlinFeature.SingletonSupport, false)
+                .configure(KotlinFeature.StrictNullChecks, false)
+                .build(),
+            ProblemModule().withStackTraces(false),
+            ConstraintViolationProblemModule()
+        )
 }

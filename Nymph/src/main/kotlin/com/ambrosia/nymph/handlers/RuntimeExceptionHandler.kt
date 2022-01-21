@@ -42,7 +42,7 @@ class RuntimeExceptionHandler : ProblemHandling, SecurityAdviceTrait {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
             .body(
                 Problem.builder()
-                    .withType(URI.create(Urls.NOT_FOUND))
+                    .withType(URI.create(Urls.ENTITY_NOT_FOUND))
                     .withTitle(translator.toLocale("error.entityNotFound"))
                     .withStatus(Status.NOT_FOUND)
                     .withDetail(
@@ -58,13 +58,11 @@ class RuntimeExceptionHandler : ProblemHandling, SecurityAdviceTrait {
 
     @ExceptionHandler(EntityAlreadyExistsException::class)
     @ResponseStatus(value = HttpStatus.CONFLICT)
-    fun handleEntityAlreadyExistsException(
-        ex: EntityAlreadyExistsException
-    ): ResponseEntity<Problem> {
+    fun handleEntityAlreadyExistsException(ex: EntityAlreadyExistsException): ResponseEntity<Problem> {
         return ResponseEntity.status(HttpStatus.CONFLICT)
             .body(
                 Problem.builder()
-                    .withType(URI.create(Urls.ALREADY_EXITS))
+                    .withType(URI.create(Urls.ENTITY_ALREADY_EXITS))
                     .withTitle(translator.toLocale("error.entityAlreadyExists"))
                     .withStatus(Status.CONFLICT)
                     .withDetail(

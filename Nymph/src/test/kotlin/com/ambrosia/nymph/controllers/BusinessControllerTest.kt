@@ -47,7 +47,7 @@ class BusinessControllerTest {
     private lateinit var businessService: BusinessService
 
     @Test
-    fun `Create a new business with a manager`() {
+    fun `Register a new business with a manager`() {
         every { businessService.createBusiness(any()) } returns getBusinessRegistrationDto()
         val content = objectMapper.writeValueAsString(getBusinessRegistrationDto())
         mockMvc
@@ -73,7 +73,7 @@ class BusinessControllerTest {
     }
 
     @Test
-    fun `Create business with blank name`() {
+    fun `Register a business with blank name`() {
         val invalidBusinessDto = getBusinessRegistrationDto().apply { name = "" }
         every { businessService.createBusiness(any()) } returns getBusinessRegistrationDto()
         mockMvc
@@ -98,16 +98,11 @@ class BusinessControllerTest {
     }
 
     @Test
-    fun `Create business with invalid employee name`() {
-        val invalidBusinessDto = getBusinessRegistrationDto()
-        invalidBusinessDto.employee?.email = "email"
+    fun `Register a business with invalid employee name`() {
+        val content = objectMapper.writeValueAsString(getBusinessRegistrationDto().copy(email = "email"))
         every { businessService.createBusiness(any()) } returns getBusinessRegistrationDto()
         mockMvc
-            .perform(
-                post("$baseUrl/register")
-                    .contentType(APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsString(invalidBusinessDto))
-            )
+            .perform(post("$baseUrl/register").contentType(APPLICATION_JSON).content(content))
             .andExpect(status().isBadRequest)
             .andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON))
             .andExpect(jsonPath("$.type", `is`<Any>(Urls.VIOLATIONS)))

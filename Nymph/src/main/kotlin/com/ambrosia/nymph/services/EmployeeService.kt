@@ -21,10 +21,9 @@ class EmployeeService(
 ) {
     @Transactional
     fun addEmployee(businessId: Long, employeeDto: EmployeeRegistrationDto): EmployeeDto {
-        val business =
-            businessRepository.findById(businessId).orElseThrow {
-                EntityNotFoundException(Business::class.java, "id", businessId)
-            }
+        val business = businessRepository.findById(businessId).orElseThrow {
+            EntityNotFoundException(Business::class.java, "id", businessId)
+        }
         verifyIfEmployeeExists(employeeDto)
         val employee = employeeDto.toEntity()
         employee.business = business
@@ -36,10 +35,9 @@ class EmployeeService(
         businessRepository.findById(businessId).orElseThrow {
             EntityNotFoundException(Business::class.java, "id", businessId)
         }
-        val employee =
-            employeeRepository.findById(employeeId).orElseThrow {
-                EntityNotFoundException(Employee::class.java, "id", employeeId)
-            }
+        val employee = employeeRepository.findById(employeeId).orElseThrow {
+            EntityNotFoundException(Employee::class.java, "id", employeeId)
+        }
         employeeDto.firstName?.let { employee.firstName = it }
         employeeDto.lastName?.let { employee.lastName = it }
         employeeDto.position.let { employee.position = it }
@@ -53,10 +51,9 @@ class EmployeeService(
         businessRepository.findById(businessId).orElseThrow {
             EntityNotFoundException(Business::class.java, "id", businessId)
         }
-        val employee =
-            employeeRepository.findById(employeeId).orElseThrow {
-                EntityNotFoundException(Employee::class.java, "id", employeeId)
-            }
+        val employee = employeeRepository.findById(employeeId).orElseThrow {
+            EntityNotFoundException(Employee::class.java, "id", employeeId)
+        }
         employeeRepository.delete(employee)
     }
 

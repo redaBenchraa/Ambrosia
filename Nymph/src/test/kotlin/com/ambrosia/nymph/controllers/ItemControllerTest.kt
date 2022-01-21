@@ -18,8 +18,8 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.http.HttpStatus
 import org.springframework.http.HttpStatus.CONFLICT
+import org.springframework.http.HttpStatus.NOT_FOUND
 import org.springframework.http.MediaType
 import org.springframework.http.MediaType.APPLICATION_JSON
 import org.springframework.test.web.servlet.MockMvc
@@ -114,7 +114,7 @@ class ItemControllerTest {
         val content = objectMapper.writeValueAsString(getItem().toDto())
         mockMvc
             .perform(put("$baseUrl/1").contentType(APPLICATION_JSON).content(content))
-            .andExpect(status().`is`(HttpStatus.NOT_FOUND.value()))
+            .andExpect(status().`is`(NOT_FOUND.value()))
             .andExpect(content().contentType(APPLICATION_JSON))
             .andExpect(content().json(objectMapper.writeValueAsString(expected.body)))
     }
@@ -127,7 +127,7 @@ class ItemControllerTest {
         val content = objectMapper.writeValueAsString(getItem().toDto())
         mockMvc
             .perform(put("$baseUrl/1").contentType(APPLICATION_JSON).content(content))
-            .andExpect(status().`is`(HttpStatus.NOT_FOUND.value()))
+            .andExpect(status().`is`(NOT_FOUND.value()))
             .andExpect(content().contentType(APPLICATION_JSON))
             .andExpect(content().json(objectMapper.writeValueAsString(expected.body)))
     }
@@ -145,7 +145,7 @@ class ItemControllerTest {
         every { itemService.deleteItem(any(), any()) } throws exception
         mockMvc
             .perform(delete("$baseUrl/1"))
-            .andExpect(status().`is`(HttpStatus.NOT_FOUND.value()))
+            .andExpect(status().`is`(NOT_FOUND.value()))
             .andExpect(content().contentType(APPLICATION_JSON))
             .andExpect(content().json(objectMapper.writeValueAsString(expected.body)))
     }
@@ -157,7 +157,7 @@ class ItemControllerTest {
         every { itemService.deleteItem(any(), any()) } throws exception
         mockMvc
             .perform(delete("$baseUrl/1"))
-            .andExpect(status().`is`(HttpStatus.NOT_FOUND.value()))
+            .andExpect(status().`is`(NOT_FOUND.value()))
             .andExpect(content().contentType(APPLICATION_JSON))
             .andExpect(content().json(objectMapper.writeValueAsString(expected.body)))
     }

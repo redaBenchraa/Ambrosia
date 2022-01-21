@@ -14,9 +14,7 @@ import javax.validation.Valid
 class BusinessController(@Autowired private val businessService: BusinessService) {
 
     @PostMapping("/register")
-    fun createBusiness(
-        @Valid @RequestBody business: BusinessRegistrationDto
-    ): BusinessRegistrationDto {
+    fun createBusiness(@Valid @RequestBody business: BusinessRegistrationDto): BusinessRegistrationDto {
         return businessService.createBusiness(business)
     }
 }

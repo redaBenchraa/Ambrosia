@@ -20,10 +20,9 @@ class CategoryService(
 
     @Transactional
     fun addCategory(businessId: Long, categoryDto: CategoryDto): CategoryDto {
-        val business =
-            businessRepository.findById(businessId).orElseThrow {
-                EntityNotFoundException(Business::class.java, "id", businessId)
-            }
+        val business = businessRepository.findById(businessId).orElseThrow {
+            EntityNotFoundException(Business::class.java, "id", businessId)
+        }
         val category = categoryDto.toEntity()
         category.business = business
         return categoryRepository.save(category).toDto()
@@ -34,10 +33,9 @@ class CategoryService(
         businessRepository.findById(businessId).orElseThrow {
             EntityNotFoundException(Business::class.java, "id", businessId)
         }
-        val category =
-            categoryRepository.findById(categoryId).orElseThrow {
-                EntityNotFoundException(Employee::class.java, "id", categoryId)
-            }
+        val category = categoryRepository.findById(categoryId).orElseThrow {
+            EntityNotFoundException(Employee::class.java, "id", categoryId)
+        }
         categoryDto.name?.let { category.name = it }
         categoryDto.description?.let { category.description = it }
         categoryDto.image?.let { category.image = it }
@@ -50,10 +48,9 @@ class CategoryService(
         businessRepository.findById(businessId).orElseThrow {
             EntityNotFoundException(Business::class.java, "id", businessId)
         }
-        val category =
-            categoryRepository.findById(categoryId).orElseThrow {
-                EntityNotFoundException(Employee::class.java, "id", categoryId)
-            }
+        val category = categoryRepository.findById(categoryId).orElseThrow {
+            EntityNotFoundException(Employee::class.java, "id", categoryId)
+        }
         categoryRepository.delete(category)
     }
 }
