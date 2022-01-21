@@ -18,4 +18,16 @@ data class MenuDto(
     @field:NotNull(message = "error.menu.price.null")
     @field:Min(PRICE_MIN, message = "error.menu.price.negative")
     var price: Double?,
+    var categories: MutableSet<MenuCategory> = HashSet()
+)
+
+data class MenuCategory(
+    var category: CategoryDto,
+    var items: List<MenuItemDto>
+)
+
+data class MenuItemDto(
+    var id: Long,
+    var item: ItemDto,
+    var extra: Double = 0.0,
 )

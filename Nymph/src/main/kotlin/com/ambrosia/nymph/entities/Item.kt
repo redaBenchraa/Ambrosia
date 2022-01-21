@@ -27,12 +27,14 @@ class Item(
     @field:Size(max = NAME_MAX_SIZE, message = "error.item.name.size.invalid")
     @Column(nullable = false)
     var name: String,
-    @Column(columnDefinition = "text") var description: String?,
-    var image: String?,
+    @Column(columnDefinition = "text")
+    var description: String? = null,
+    var image: String? = null,
     @field:NotNull(message = "error.item.price.null")
     @field:Min(0, message = "error.item.price.negative")
     var price: Double,
-    @Column(nullable = false) var onlyForMenu: Boolean = false,
+    @Column(nullable = false)
+    var onlyForMenu: Boolean = false,
     @Column(nullable = false)
     @CreatedDate
     @ColumnDefault(Constants.NOW)

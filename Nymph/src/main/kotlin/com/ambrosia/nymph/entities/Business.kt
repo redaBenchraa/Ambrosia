@@ -58,7 +58,7 @@ class Business(
         targetEntity = Category::class
     )
     @JsonBackReference
-    var categories: Set<Category> = HashSet(),
+    var categories: MutableSet<Category> = HashSet(),
     @OneToMany(
         cascade = [CascadeType.ALL],
         fetch = FetchType.LAZY,
@@ -66,7 +66,7 @@ class Business(
         targetEntity = Employee::class
     )
     @JsonBackReference
-    var employees: Set<Employee> = HashSet(),
+    var employees: MutableSet<Employee> = HashSet(),
     @OneToMany(
         cascade = [CascadeType.ALL],
         fetch = FetchType.LAZY,
@@ -74,7 +74,7 @@ class Business(
         targetEntity = Table::class
     )
     @JsonBackReference
-    var tables: Set<Table> = HashSet(),
+    var tables: MutableSet<Table> = HashSet(),
     @OneToMany(
         cascade = [CascadeType.ALL],
         fetch = FetchType.LAZY,
@@ -82,7 +82,7 @@ class Business(
         targetEntity = Item::class
     )
     @JsonBackReference
-    var items: Set<Item> = HashSet(),
+    var items: MutableSet<Item> = HashSet(),
     @OneToMany(
         cascade = [CascadeType.ALL],
         fetch = FetchType.LAZY,
@@ -90,7 +90,7 @@ class Business(
         targetEntity = Menu::class
     )
     @JsonBackReference
-    var menus: Set<Menu> = HashSet(),
+    var menus: MutableSet<Menu> = HashSet(),
     @OneToMany(
         cascade = [CascadeType.ALL],
         fetch = FetchType.LAZY,
@@ -98,5 +98,5 @@ class Business(
         targetEntity = Session::class
     )
     @JsonBackReference
-    var sessions: Set<Session> = HashSet(),
+    var sessions: MutableSet<Session> = HashSet(),
 )

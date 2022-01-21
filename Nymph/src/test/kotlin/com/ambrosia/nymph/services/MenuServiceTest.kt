@@ -5,6 +5,8 @@ import com.ambrosia.nymph.entities.Menu
 import com.ambrosia.nymph.exceptions.EntityNotFoundException
 import com.ambrosia.nymph.mappers.toDto
 import com.ambrosia.nymph.repositories.BusinessRepository
+import com.ambrosia.nymph.repositories.CategoryRepository
+import com.ambrosia.nymph.repositories.ItemRepository
 import com.ambrosia.nymph.repositories.MenuRepository
 import io.mockk.every
 import io.mockk.mockk
@@ -18,7 +20,9 @@ class MenuServiceTest {
 
     private val businessRepository: BusinessRepository = mockk()
     private val menuRepository: MenuRepository = mockk()
-    private val menuService = MenuService(businessRepository, menuRepository)
+    private val categoryRepository: CategoryRepository = mockk()
+    private val itemRepository: ItemRepository = mockk()
+    private val menuService = MenuService(businessRepository, menuRepository, categoryRepository, itemRepository)
 
     @Test
     fun `Add a menu to a business`() {

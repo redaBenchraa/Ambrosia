@@ -29,11 +29,12 @@ class Menu(
     @field:Size(max = NAME_MAX_SIZE, message = "error.menu.name.size.invalid")
     @Column(nullable = false)
     var name: String,
-    @Column(columnDefinition = "text") var description: String?,
-    var image: String?,
+    @Column(columnDefinition = "text")
+    var description: String? = null,
+    var image: String? = null,
     @field:NotNull(message = "error.menu.price.null")
     @field:Min(PRICE_MIN, message = "error.menu.price.negative")
-    var price: Double,
+    var price: Double = PRICE_MIN.toDouble(),
     @Column(nullable = false)
     @CreatedDate
     @ColumnDefault(NOW)
@@ -55,5 +56,5 @@ class Menu(
         targetEntity = MenuItem::class
     )
     @JsonBackReference
-    var menuItems: Set<MenuItem>? = null,
+    var menuItems: MutableSet<MenuItem> = HashSet(),
 )

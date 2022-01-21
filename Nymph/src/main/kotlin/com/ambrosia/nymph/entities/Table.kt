@@ -44,5 +44,5 @@ class Table(
         targetEntity = Session::class
     )
     @JsonBackReference
-    var sessions: Set<Session>,
+    var sessions: MutableSet<Session>,
 )
