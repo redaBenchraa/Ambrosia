@@ -20,14 +20,10 @@ import org.zalando.problem.spring.web.advice.security.SecurityProblemSupport
 @EnableWebSecurity
 @Import(SecurityProblemSupport::class)
 @EnableGlobalMethodSecurity(jsr250Enabled = true, prePostEnabled = true, securedEnabled = true)
-class KeycloakSecurityConfig(problemSupport: SecurityProblemSupport) :
-    KeycloakWebSecurityConfigurerAdapter() {
+class KeycloakSecurityConfig : KeycloakWebSecurityConfigurerAdapter() {
 
-    private val problemSupport: SecurityProblemSupport
-
-    init {
-        this.problemSupport = problemSupport
-    }
+    @Autowired
+    private lateinit var problemSupport: SecurityProblemSupport
 
     @Throws(Exception::class)
     override fun configure(http: HttpSecurity) {

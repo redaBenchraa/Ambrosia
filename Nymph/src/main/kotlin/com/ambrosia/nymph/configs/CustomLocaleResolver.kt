@@ -19,11 +19,9 @@ class CustomLocaleResolver : AcceptHeaderLocaleResolver(), WebMvcConfigurer {
     }
 
     @Bean
-    fun messageSource(): ResourceBundleMessageSource {
-        val rs = ResourceBundleMessageSource()
-        rs.setBasename("messages")
-        rs.setDefaultEncoding("windows-1252")
-        rs.setUseCodeAsDefaultMessage(true)
-        return rs
+    fun messageSource(): ResourceBundleMessageSource = ResourceBundleMessageSource().apply {
+        setBasename("messages")
+        setDefaultEncoding("windows-1252")
+        setUseCodeAsDefaultMessage(true)
     }
 }

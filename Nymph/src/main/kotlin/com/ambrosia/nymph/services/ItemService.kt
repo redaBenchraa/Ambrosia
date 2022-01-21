@@ -20,10 +20,9 @@ class ItemService(
 
     @Transactional
     fun addItem(businessId: Long, itemDto: ItemDto): ItemDto {
-        val business =
-            businessRepository.findById(businessId).orElseThrow {
-                EntityNotFoundException(Business::class.java, "id", businessId)
-            }
+        val business = businessRepository.findById(businessId).orElseThrow {
+            EntityNotFoundException(Business::class.java, "id", businessId)
+        }
         val item = itemDto.toEntity()
         item.business = business
         return itemRepository.save(item).toDto()
@@ -34,10 +33,9 @@ class ItemService(
         businessRepository.findById(businessId).orElseThrow {
             EntityNotFoundException(Business::class.java, "id", businessId)
         }
-        val item =
-            itemRepository.findById(itemId).orElseThrow {
-                EntityNotFoundException(Item::class.java, "id", itemId)
-            }
+        val item = itemRepository.findById(itemId).orElseThrow {
+            EntityNotFoundException(Item::class.java, "id", itemId)
+        }
         itemDto.name?.let { item.name = it }
         itemDto.description?.let { item.description = it }
         itemDto.image?.let { item.image = it }
@@ -52,10 +50,9 @@ class ItemService(
         businessRepository.findById(businessId).orElseThrow {
             EntityNotFoundException(Business::class.java, "id", businessId)
         }
-        val item =
-            itemRepository.findById(itemId).orElseThrow {
-                EntityNotFoundException(Item::class.java, "id", itemId)
-            }
+        val item = itemRepository.findById(itemId).orElseThrow {
+            EntityNotFoundException(Item::class.java, "id", itemId)
+        }
         itemRepository.delete(item)
     }
 }

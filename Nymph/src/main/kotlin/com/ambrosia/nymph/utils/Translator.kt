@@ -6,11 +6,7 @@ import org.springframework.stereotype.Component
 
 @Component
 class Translator(private val messageSource: ResourceBundleMessageSource) {
-    fun toLocale(msgCode: String?): String {
-        val locale = LocaleContextHolder.getLocale()
-        if (msgCode == null) {
-            return ""
-        }
-        return messageSource.getMessage(msgCode, null, locale)
-    }
+    fun toLocale(msgCode: String?): String =
+        if (msgCode == null) String()
+        else messageSource.getMessage(msgCode, null, LocaleContextHolder.getLocale())
 }
