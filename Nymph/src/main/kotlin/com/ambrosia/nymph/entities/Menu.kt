@@ -23,7 +23,7 @@ class Menu(
 	@Column(nullable = false)
 	@field:NotNull(message = "error.menu.id.null")
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	var id: Long?,
+	var id: Long? = null,
 	@field:NotNull(message = "error.menu.name.null")
 	@field:NotBlank(message = "error.menu.name.blank")
 	@field:Size(max = NAME_MAX_SIZE, message = "error.menu.name.size.invalid")
@@ -48,7 +48,7 @@ class Menu(
 	@JoinColumn(name = "business_id", nullable = false)
 	@OnDelete(action = OnDeleteAction.NO_ACTION)
 	@JsonManagedReference
-	var business: Business,
+	var business: Business? = null,
 	@OneToMany(
 		cascade = [CascadeType.ALL],
 		fetch = FetchType.LAZY,
@@ -56,5 +56,5 @@ class Menu(
 		targetEntity = MenuItem::class
 	)
 	@JsonBackReference
-	var menuItems: Set<MenuItem>,
+	var menuItems: Set<MenuItem>? = null,
 )
