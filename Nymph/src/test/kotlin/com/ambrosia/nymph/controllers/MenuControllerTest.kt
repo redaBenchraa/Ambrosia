@@ -30,7 +30,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
 @AutoConfigureMockMvc(addFilters = false)
 class MenuControllerTest {
 
-    val baseUrl = "/business/1/menu"
+    val baseUrl = "/businesses/1/menus"
 
     @Autowired
     private lateinit var mockMvc: MockMvc

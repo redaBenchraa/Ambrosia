@@ -7,11 +7,19 @@ import org.springframework.web.bind.annotation.*
 import javax.validation.Valid
 
 @RestController
-@RequestMapping("business/{businessId}/menu")
+@RequestMapping("businesses/{businessId}/menus")
 class MenuController(@Autowired private val menuService: MenuService) {
 
     @PostMapping
     fun addMenus(
+        @PathVariable("businessId") businessId: Long,
+        @Valid @RequestBody menu: MenuDto
+    ): MenuDto {
+        return menuService.addMenu(businessId, menu)
+    }
+
+    @PostMapping("{menuId}/items")
+    fun addItemToMenus(
         @PathVariable("businessId") businessId: Long,
         @Valid @RequestBody menu: MenuDto
     ): MenuDto {

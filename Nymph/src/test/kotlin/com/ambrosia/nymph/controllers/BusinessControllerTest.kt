@@ -29,7 +29,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
 @AutoConfigureMockMvc(addFilters = false)
 class BusinessControllerTest {
 
-    val baseUrl = "/business"
+    val baseUrl = "/businesses"
 
     @Autowired
     private lateinit var mockMvc: MockMvc
