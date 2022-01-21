@@ -99,7 +99,7 @@ class BusinessControllerTest {
 
     @Test
     fun `Register a business with invalid employee name`() {
-        val content = objectMapper.writeValueAsString(getBusinessRegistrationDto().copy(email = "email"))
+        val content = objectMapper.writeValueAsString(getBusinessRegistrationDto().apply { employee?.email = "email" })
         every { businessService.createBusiness(any()) } returns getBusinessRegistrationDto()
         mockMvc
             .perform(post("$baseUrl/register").contentType(APPLICATION_JSON).content(content))

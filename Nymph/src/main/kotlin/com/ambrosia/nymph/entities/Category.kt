@@ -17,8 +17,9 @@ class Category(
     @GeneratedValue(strategy = GenerationType.AUTO)
     var id: Long? = null,
     @Column(nullable = false) var name: String,
-    @Column(columnDefinition = "text") var description: String?,
-    var image: String?,
+    @Column(columnDefinition = "text")
+    var description: String? = null,
+    var image: String? = null,
     var deleted: Boolean = false,
     @Column(nullable = false)
     @CreatedDate

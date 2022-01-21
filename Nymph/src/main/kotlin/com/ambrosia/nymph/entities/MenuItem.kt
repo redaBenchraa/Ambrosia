@@ -19,9 +19,9 @@ class MenuItem(
     @Column(nullable = false)
     @field:NotNull(message = "error.menuItem.id.null")
     @GeneratedValue(strategy = GenerationType.AUTO)
-    var id: Long?,
+    var id: Long? = null,
     @field:NotNull(message = "error.menuItem.extra.null")
-    @field:Min(0, message = "error.menuItem.price.negative")
+    @field:Min(EXTRA_MIN, message = "error.menuItem.price.negative")
     var extra: Double = EXTRA_MIN.toDouble(),
     @Column(nullable = false)
     @CreatedDate
@@ -36,15 +36,15 @@ class MenuItem(
     @JoinColumn(name = "menu_id", nullable = false)
     @OnDelete(action = OnDeleteAction.NO_ACTION)
     @JsonManagedReference
-    var menu: Menu,
+    var menu: Menu? = null,
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "category_id", nullable = false)
     @OnDelete(action = OnDeleteAction.NO_ACTION)
     @JsonManagedReference
-    var category: Category,
+    var category: Category? = null,
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "item_id", nullable = false)
     @OnDelete(action = OnDeleteAction.NO_ACTION)
     @JsonManagedReference
-    var item: Item,
+    var item: Item? = null,
 )

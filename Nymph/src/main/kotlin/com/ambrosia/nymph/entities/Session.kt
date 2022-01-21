@@ -56,7 +56,7 @@ class Session(
         targetEntity = Order::class
     )
     @JsonBackReference
-    var orders: Set<Order>,
+    var orders: MutableSet<Order>,
     @OneToMany(
         cascade = [CascadeType.ALL],
         fetch = FetchType.LAZY,
@@ -64,5 +64,5 @@ class Session(
         targetEntity = Bill::class
     )
     @JsonBackReference
-    var bills: Set<Bill>,
+    var bills: MutableSet<Bill>,
 )
