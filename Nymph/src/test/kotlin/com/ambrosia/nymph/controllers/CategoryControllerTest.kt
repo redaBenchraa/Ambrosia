@@ -28,7 +28,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
 @AutoConfigureMockMvc(addFilters = false)
 class CategoryControllerTest {
 
-    val baseUrl = "/business/1/category"
+    val baseUrl = "/businesses/1/categories"
 
     @Autowired
     private lateinit var mockMvc: MockMvc

@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*
 import javax.validation.Valid
 
 @RestController
-@RequestMapping("business/{businessId}/employee")
+@RequestMapping("businesses/{businessId}/employees")
 class EmployeeController(@Autowired private val employeeService: EmployeeService) {
 
     @PostMapping

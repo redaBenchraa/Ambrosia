@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController
 import javax.validation.Valid
 
 @RestController
-@RequestMapping("business")
+@RequestMapping("businesses")
 class BusinessController(@Autowired private val businessService: BusinessService) {
 
     @PostMapping("/register")
