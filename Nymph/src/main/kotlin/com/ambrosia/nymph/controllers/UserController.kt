@@ -13,34 +13,32 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
-
 @RestController
 @RequestMapping("users")
 class UserController(@Autowired private val userService: UserService) {
 
+    @GetMapping(value = ["/me"])
+    @PreAuthorize("hasRole('ADMIN')")
+    fun loadUserDetail(authentication: KeycloakAuthenticationToken): AccessToken {
+        val account = authentication.details as SimpleKeycloakAccount
+        return account.keycloakSecurityContext.token
+    }
 
-	@GetMapping(value = ["/me"])
-	@PreAuthorize("hasRole('ADMIN')")
-	fun loadUserDetail(authentication: KeycloakAuthenticationToken): AccessToken {
-		val account = authentication.details as SimpleKeycloakAccount
-		return account.keycloakSecurityContext
-			.token
-	}
+    @PostMapping
+    @Throws(KeycloakException::class)
+    fun createUser() {
+        userService.createKeycloakUser(user)
+    }
 
-	@PostMapping
-	@Throws(KeycloakException::class)
-	fun createUser() {
-		userService.createKeycloakUser(user)
-	}
-
-	private val user: KeycloakUser
-		get() = KeycloakUser(
-			id = "",
-			username = "a",
-			email = "a",
-			firstName = "a",
-			lastName = "a",
-			password = "a",
-			roles = listOf("user")
-		);
+    private val user: KeycloakUser
+        get() =
+            KeycloakUser(
+                id = "",
+                username = "a",
+                email = "a",
+                firstName = "a",
+                lastName = "a",
+                password = "a",
+                roles = listOf("user")
+            )
 }

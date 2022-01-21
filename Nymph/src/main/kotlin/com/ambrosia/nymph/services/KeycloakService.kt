@@ -13,51 +13,51 @@ import org.springframework.stereotype.Service
 
 @Service
 class KeycloakService(@Autowired private val env: EnvironmentProperties) {
-	fun getAccessToken(user: KeycloakUser): AccessTokenResponse {
-		return getRealmUser(user).tokenManager()
-			.accessToken
-	}
+    fun getAccessToken(user: KeycloakUser): AccessTokenResponse {
+        return getRealmUser(user).tokenManager().accessToken
+    }
 
-	fun getUserRepresentation(user: KeycloakUser): UserRepresentation {
-		val userRepresentation = UserRepresentation()
-		userRepresentation.isEnabled = true
-		userRepresentation.username = user.username
-		userRepresentation.firstName = user.firstName
-		userRepresentation.lastName = user.lastName
-		userRepresentation.email = user.email
-		userRepresentation.realmRoles = user.roles
-		userRepresentation.credentials = listOf(getPasswordRepresentation(user.password))
-		return userRepresentation
-	}
+    fun getUserRepresentation(user: KeycloakUser): UserRepresentation {
+        val userRepresentation = UserRepresentation()
+        userRepresentation.isEnabled = true
+        userRepresentation.username = user.username
+        userRepresentation.firstName = user.firstName
+        userRepresentation.lastName = user.lastName
+        userRepresentation.email = user.email
+        userRepresentation.realmRoles = user.roles
+        userRepresentation.credentials = listOf(getPasswordRepresentation(user.password))
+        return userRepresentation
+    }
 
-	val realmManager: Keycloak
-		get() = KeycloakBuilder.builder()
-			.serverUrl(env.authServerUrl())
-			.realm(env.realm())
-			.grantType(OAuth2Constants.PASSWORD)
-			.clientId(env.clientId())
-			.clientSecret(env.clientSecret())
-			.username(env.realmManagerUsername())
-			.password(env.realmManagerPassword())
-			.build()
+    val realmManager: Keycloak
+        get() =
+            KeycloakBuilder.builder()
+                .serverUrl(env.authServerUrl())
+                .realm(env.realm())
+                .grantType(OAuth2Constants.PASSWORD)
+                .clientId(env.clientId())
+                .clientSecret(env.clientSecret())
+                .username(env.realmManagerUsername())
+                .password(env.realmManagerPassword())
+                .build()
 
-	fun getRealmUser(user: KeycloakUser): Keycloak {
-		return KeycloakBuilder.builder()
-			.serverUrl(env.authServerUrl())
-			.realm(env.realm())
-			.grantType(OAuth2Constants.PASSWORD)
-			.clientId(env.clientId())
-			.clientSecret(env.clientSecret())
-			.username(user.email)
-			.password(user.password)
-			.build()
-	}
+    fun getRealmUser(user: KeycloakUser): Keycloak {
+        return KeycloakBuilder.builder()
+            .serverUrl(env.authServerUrl())
+            .realm(env.realm())
+            .grantType(OAuth2Constants.PASSWORD)
+            .clientId(env.clientId())
+            .clientSecret(env.clientSecret())
+            .username(user.email)
+            .password(user.password)
+            .build()
+    }
 
-	fun getPasswordRepresentation(password: String?): CredentialRepresentation {
-		val passwordCred = CredentialRepresentation()
-		passwordCred.isTemporary = false
-		passwordCred.type = CredentialRepresentation.PASSWORD
-		passwordCred.value = password
-		return passwordCred
-	}
+    fun getPasswordRepresentation(password: String?): CredentialRepresentation {
+        val passwordCred = CredentialRepresentation()
+        passwordCred.isTemporary = false
+        passwordCred.type = CredentialRepresentation.PASSWORD
+        passwordCred.value = password
+        return passwordCred
+    }
 }

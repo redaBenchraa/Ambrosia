@@ -8,14 +8,14 @@ import javax.validation.constraints.NotNull
 import javax.validation.constraints.Size
 
 data class MenuDto(
-	var id: Long?,
-	@field:NotNull(message = "error.menu.name.null")
-	@field:NotBlank(message = "error.menu.name.blank")
-	@field:Size(max = NAME_MAX_SIZE, message = "error.menu.name.size.invalid")
-	var name: String?,
-	var description: String?,
-	var image: String?,
-	@field:NotNull(message = "error.menu.price.null")
-	@field:Min(PRICE_MIN, message = "error.menu.price.negative")
-	var price: Double?,
+    var id: Long?,
+    @field:NotNull(message = "error.menu.name.null")
+    @field:NotBlank(message = "error.menu.name.blank")
+    @field:Size(max = NAME_MAX_SIZE, message = "error.menu.name.size.invalid")
+    var name: String?,
+    var description: String?,
+    var image: String?,
+    @field:NotNull(message = "error.menu.price.null")
+    @field:Min(PRICE_MIN, message = "error.menu.price.negative")
+    var price: Double?,
 )

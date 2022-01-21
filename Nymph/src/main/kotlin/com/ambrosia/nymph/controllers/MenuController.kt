@@ -10,22 +10,28 @@ import javax.validation.Valid
 @RequestMapping("business/{businessId}/menu")
 class MenuController(@Autowired private val menuService: MenuService) {
 
-	@PostMapping
-	fun addMenus(@PathVariable("businessId") businessId: Long, @Valid @RequestBody menu: MenuDto): MenuDto {
-		return menuService.addMenu(businessId, menu)
-	}
+    @PostMapping
+    fun addMenus(
+        @PathVariable("businessId") businessId: Long,
+        @Valid @RequestBody menu: MenuDto
+    ): MenuDto {
+        return menuService.addMenu(businessId, menu)
+    }
 
-	@PutMapping("{menuId}")
-	fun editMenus(
-		@PathVariable("businessId") businessId: Long,
-		@PathVariable("menuId") menuId: Long,
-		@Valid @RequestBody menu: MenuDto
-	): MenuDto {
-		return menuService.editMenu(businessId, menuId, menu)
-	}
+    @PutMapping("{menuId}")
+    fun editMenus(
+        @PathVariable("businessId") businessId: Long,
+        @PathVariable("menuId") menuId: Long,
+        @Valid @RequestBody menu: MenuDto
+    ): MenuDto {
+        return menuService.editMenu(businessId, menuId, menu)
+    }
 
-	@DeleteMapping("{menuId}")
-	fun deleteMenu(@PathVariable("businessId") businessId: Long, @PathVariable("menuId") menuId: Long) {
-		return menuService.deleteMenu(businessId, menuId)
-	}
+    @DeleteMapping("{menuId}")
+    fun deleteMenu(
+        @PathVariable("businessId") businessId: Long,
+        @PathVariable("menuId") menuId: Long
+    ) {
+        return menuService.deleteMenu(businessId, menuId)
+    }
 }

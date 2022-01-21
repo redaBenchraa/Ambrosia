@@ -19,110 +19,116 @@ import java.util.*
 
 class EmployeeServiceTest {
 
-	private val businessRepository: BusinessRepository = mockk()
-	private val employeeRepository: EmployeeRepository = mockk()
+    private val businessRepository: BusinessRepository = mockk()
+    private val employeeRepository: EmployeeRepository = mockk()
 
-	private val employeeService = EmployeeService(businessRepository, employeeRepository)
+    private val employeeService = EmployeeService(businessRepository, employeeRepository)
 
-	@Test
-	fun `Add an employee to a business`() {
-		every { businessRepository.findById(any()) } returns Optional.of(getBusiness())
-		every { employeeRepository.countByEmail(any()) } returns 0
-		every { employeeRepository.save(any()) } returns getEmployee()
-		val result = employeeService.addEmployee(1, getEmployeeRegistrationDto())
-		verify {
-			businessRepository.findById(any())
-			employeeRepository.save(any())
-		}
-		assertEquals(1, result.id)
-	}
+    @Test
+    fun `Add an employee to a business`() {
+        every { businessRepository.findById(any()) } returns Optional.of(getBusiness())
+        every { employeeRepository.countByEmail(any()) } returns 0
+        every { employeeRepository.save(any()) } returns getEmployee()
+        val result = employeeService.addEmployee(1, getEmployeeRegistrationDto())
+        verify {
+            businessRepository.findById(any())
+            employeeRepository.save(any())
+        }
+        assertEquals(1, result.id)
+    }
 
-	@Test
-	fun `Add an employee to a business with an existing email`() {
-		every { businessRepository.findById(any()) } returns Optional.of(getBusiness())
-		every { employeeRepository.countByEmail(any()) } returns 1
-		assertThrows<EntityAlreadyExistsException> { employeeService.addEmployee(1, getEmployeeRegistrationDto()) }
-	}
+    @Test
+    fun `Add an employee to a business with an existing email`() {
+        every { businessRepository.findById(any()) } returns Optional.of(getBusiness())
+        every { employeeRepository.countByEmail(any()) } returns 1
+        assertThrows<EntityAlreadyExistsException> {
+            employeeService.addEmployee(1, getEmployeeRegistrationDto())
+        }
+    }
 
-	@Test
-	fun `Add employee to a non existing business`() {
-		every { businessRepository.findById(any()) } returns Optional.empty()
-		assertThrows<EntityNotFoundException> { employeeService.addEmployee(1, getEmployeeRegistrationDto()) }
-	}
+    @Test
+    fun `Add employee to a non existing business`() {
+        every { businessRepository.findById(any()) } returns Optional.empty()
+        assertThrows<EntityNotFoundException> {
+            employeeService.addEmployee(1, getEmployeeRegistrationDto())
+        }
+    }
 
-	@Test
-	fun `Edit an employee`() {
-		every { businessRepository.findById(any()) } returns Optional.of(getBusiness())
-		every { employeeRepository.findById(any()) } returns Optional.of(getEmployee())
-		every { employeeRepository.save(any()) } returns getEmployee()
-		val employee = getEmployee().toDto().copy(firstName = "new name", lastName = null)
-		val result = employeeService.editEmployee(1, 1, employee)
-		assertEquals("new name", result.firstName)
-		verify {
-			businessRepository.findById(any())
-			employeeRepository.findById(any())
-			employeeRepository.save(any())
-		}
-	}
+    @Test
+    fun `Edit an employee`() {
+        every { businessRepository.findById(any()) } returns Optional.of(getBusiness())
+        every { employeeRepository.findById(any()) } returns Optional.of(getEmployee())
+        every { employeeRepository.save(any()) } returns getEmployee()
+        val employee = getEmployee().toDto().copy(firstName = "new name", lastName = null)
+        val result = employeeService.editEmployee(1, 1, employee)
+        assertEquals("new name", result.firstName)
+        verify {
+            businessRepository.findById(any())
+            employeeRepository.findById(any())
+            employeeRepository.save(any())
+        }
+    }
 
-	@Test
-	fun `Edit an employee from a non existing business`() {
-		every { businessRepository.findById(any()) } returns Optional.empty()
-		assertThrows<EntityNotFoundException> {
-			employeeService.editEmployee(1, 1, getEmployee().toDto())
-		}
-	}
+    @Test
+    fun `Edit an employee from a non existing business`() {
+        every { businessRepository.findById(any()) } returns Optional.empty()
+        assertThrows<EntityNotFoundException> {
+            employeeService.editEmployee(1, 1, getEmployee().toDto())
+        }
+    }
 
-	@Test
-	fun `Edit a non existing employee`() {
-		every { businessRepository.findById(any()) } returns Optional.of(getBusiness())
-		every { employeeRepository.findById(any()) } returns Optional.empty()
-		assertThrows<EntityNotFoundException> {
-			employeeService.editEmployee(1, 1, getEmployee().toDto())
-		}
-	}
+    @Test
+    fun `Edit a non existing employee`() {
+        every { businessRepository.findById(any()) } returns Optional.of(getBusiness())
+        every { employeeRepository.findById(any()) } returns Optional.empty()
+        assertThrows<EntityNotFoundException> {
+            employeeService.editEmployee(1, 1, getEmployee().toDto())
+        }
+    }
 
-	@Test
-	fun `Remove an employee`() {
-		every { businessRepository.findById(any()) } returns Optional.of(getBusiness())
-		every { employeeRepository.findById(any()) } returns Optional.of(getEmployee())
-		every { employeeRepository.delete(any()) } returns Unit
-		employeeService.deleteEmployee(1, 1)
-		verify { employeeRepository.delete(any()) }
-	}
+    @Test
+    fun `Remove an employee`() {
+        every { businessRepository.findById(any()) } returns Optional.of(getBusiness())
+        every { employeeRepository.findById(any()) } returns Optional.of(getEmployee())
+        every { employeeRepository.delete(any()) } returns Unit
+        employeeService.deleteEmployee(1, 1)
+        verify { employeeRepository.delete(any()) }
+    }
 
-	@Test
-	fun `Remove an employee from a non existing business`() {
-		every { businessRepository.findById(any()) } returns Optional.empty()
-		assertThrows<EntityNotFoundException> { employeeService.deleteEmployee(1, 1) }
-	}
+    @Test
+    fun `Remove an employee from a non existing business`() {
+        every { businessRepository.findById(any()) } returns Optional.empty()
+        assertThrows<EntityNotFoundException> { employeeService.deleteEmployee(1, 1) }
+    }
 
-	private fun getEmployeeRegistrationDto(): EmployeeRegistrationDto = EmployeeRegistrationDto(
-		firstName = "firstName",
-		lastName = "lastName",
-		password = "password",
-		email = "email@email.com",
-		position = Role.MANAGER,
-	)
+    private fun getEmployeeRegistrationDto(): EmployeeRegistrationDto =
+        EmployeeRegistrationDto(
+            firstName = "firstName",
+            lastName = "lastName",
+            password = "password",
+            email = "email@email.com",
+            position = Role.MANAGER,
+        )
 
-	private fun getBusiness(): Business = Business(
-		name = "name",
-		currency = "EUR",
-		description = "desc",
-		email = "email",
-		phoneNumber = "phoneNumber",
-		location = "location",
-		logo = "logo",
-		slogan = "slogan",
-		id = 1,
-	)
+    private fun getBusiness(): Business =
+        Business(
+            name = "name",
+            currency = "EUR",
+            description = "desc",
+            email = "email",
+            phoneNumber = "phoneNumber",
+            location = "location",
+            logo = "logo",
+            slogan = "slogan",
+            id = 1,
+        )
 
-	private fun getEmployee(): Employee = Employee(
-		firstName = "firstName",
-		lastName = "lastName",
-		position = Role.MANAGER,
-		id = 1,
-		email = "email@email.com"
-	)
-
+    private fun getEmployee(): Employee =
+        Employee(
+            firstName = "firstName",
+            lastName = "lastName",
+            position = Role.MANAGER,
+            id = 1,
+            email = "email@email.com"
+        )
 }

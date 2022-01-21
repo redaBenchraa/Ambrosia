@@ -16,35 +16,33 @@ import javax.validation.constraints.NotNull
 @Entity
 @Table(name = "tables")
 class Table(
-	@Id
-	@Column(nullable = false)
-	@field:NotNull(message = "error.table.id.null")
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	var id: Long?,
-	@field:NotNull(message = "error.table.isAvailable.null")
-	var isAvailable: Boolean = true,
-	@field:NotNull(message = "error.table.number.null")
-	var number: Int,
-	@Column(nullable = false)
-	@CreatedDate
-	@ColumnDefault(NOW)
-	var createdAt: LocalDateTime = LocalDateTime.now(),
-	@Column(nullable = false)
-	@LastModifiedDate
-	@ColumnDefault(NOW)
-	var updatedAt: LocalDateTime = LocalDateTime.now(),
-	var deleted: Boolean = false,
-	@ManyToOne(fetch = FetchType.LAZY, optional = false)
-	@JoinColumn(name = "business_id", nullable = false)
-	@OnDelete(action = OnDeleteAction.NO_ACTION)
-	@JsonManagedReference
-	var business: Business,
-	@OneToMany(
-		cascade = [CascadeType.ALL],
-		fetch = FetchType.LAZY,
-		mappedBy = "table",
-		targetEntity = Session::class
-	)
-	@JsonBackReference
-	var sessions: Set<Session>,
+    @Id
+    @Column(nullable = false)
+    @field:NotNull(message = "error.table.id.null")
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    var id: Long?,
+    @field:NotNull(message = "error.table.isAvailable.null") var isAvailable: Boolean = true,
+    @field:NotNull(message = "error.table.number.null") var number: Int,
+    @Column(nullable = false)
+    @CreatedDate
+    @ColumnDefault(NOW)
+    var createdAt: LocalDateTime = LocalDateTime.now(),
+    @Column(nullable = false)
+    @LastModifiedDate
+    @ColumnDefault(NOW)
+    var updatedAt: LocalDateTime = LocalDateTime.now(),
+    var deleted: Boolean = false,
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "business_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.NO_ACTION)
+    @JsonManagedReference
+    var business: Business,
+    @OneToMany(
+        cascade = [CascadeType.ALL],
+        fetch = FetchType.LAZY,
+        mappedBy = "table",
+        targetEntity = Session::class
+    )
+    @JsonBackReference
+    var sessions: Set<Session>,
 )

@@ -19,42 +19,41 @@ import javax.validation.constraints.Size
 
 @Entity
 class Menu(
-	@Id
-	@Column(nullable = false)
-	@field:NotNull(message = "error.menu.id.null")
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	var id: Long? = null,
-	@field:NotNull(message = "error.menu.name.null")
-	@field:NotBlank(message = "error.menu.name.blank")
-	@field:Size(max = NAME_MAX_SIZE, message = "error.menu.name.size.invalid")
-	@Column(nullable = false)
-	var name: String,
-	@Column(columnDefinition = "text")
-	var description: String?,
-	var image: String?,
-	@field:NotNull(message = "error.menu.price.null")
-	@field:Min(PRICE_MIN, message = "error.menu.price.negative")
-	var price: Double,
-	@Column(nullable = false)
-	@CreatedDate
-	@ColumnDefault(NOW)
-	var createdAt: LocalDateTime = LocalDateTime.now(),
-	@Column(nullable = false)
-	@LastModifiedDate
-	@ColumnDefault(NOW)
-	var updatedAt: LocalDateTime = LocalDateTime.now(),
-	var deleted: Boolean = false,
-	@ManyToOne(fetch = FetchType.LAZY, optional = false)
-	@JoinColumn(name = "business_id", nullable = false)
-	@OnDelete(action = OnDeleteAction.NO_ACTION)
-	@JsonManagedReference
-	var business: Business? = null,
-	@OneToMany(
-		cascade = [CascadeType.ALL],
-		fetch = FetchType.LAZY,
-		mappedBy = "menu",
-		targetEntity = MenuItem::class
-	)
-	@JsonBackReference
-	var menuItems: Set<MenuItem>? = null,
+    @Id
+    @Column(nullable = false)
+    @field:NotNull(message = "error.menu.id.null")
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    var id: Long? = null,
+    @field:NotNull(message = "error.menu.name.null")
+    @field:NotBlank(message = "error.menu.name.blank")
+    @field:Size(max = NAME_MAX_SIZE, message = "error.menu.name.size.invalid")
+    @Column(nullable = false)
+    var name: String,
+    @Column(columnDefinition = "text") var description: String?,
+    var image: String?,
+    @field:NotNull(message = "error.menu.price.null")
+    @field:Min(PRICE_MIN, message = "error.menu.price.negative")
+    var price: Double,
+    @Column(nullable = false)
+    @CreatedDate
+    @ColumnDefault(NOW)
+    var createdAt: LocalDateTime = LocalDateTime.now(),
+    @Column(nullable = false)
+    @LastModifiedDate
+    @ColumnDefault(NOW)
+    var updatedAt: LocalDateTime = LocalDateTime.now(),
+    var deleted: Boolean = false,
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "business_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.NO_ACTION)
+    @JsonManagedReference
+    var business: Business? = null,
+    @OneToMany(
+        cascade = [CascadeType.ALL],
+        fetch = FetchType.LAZY,
+        mappedBy = "menu",
+        targetEntity = MenuItem::class
+    )
+    @JsonBackReference
+    var menuItems: Set<MenuItem>? = null,
 )
