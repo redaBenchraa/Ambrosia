@@ -33,6 +33,7 @@ class Item(
 	@field:NotNull(message = "error.item.price.null")
 	@field:Min(0, message = "error.item.price.negative")
 	var price: Double,
+	@Column(nullable = false)
 	var onlyForMenu: Boolean = false,
 	@Column(nullable = false)
 	@CreatedDate

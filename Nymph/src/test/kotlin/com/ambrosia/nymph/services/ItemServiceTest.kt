@@ -45,7 +45,7 @@ class ItemServiceTest {
 		every { itemRepository.findById(any()) } returns Optional.of(getItem())
 		every { itemRepository.save(any()) } returns getItem()
 		val itemDto = getItem().toDto().copy(name = "new name", onlyForMenu = true)
-		val result = itemService.editItem(1, 4, itemDto)
+		val result = itemService.editItem(1, 1, itemDto)
 		assertEquals("new name", result.name)
 		assertTrue(result.onlyForMenu)
 		verify {
