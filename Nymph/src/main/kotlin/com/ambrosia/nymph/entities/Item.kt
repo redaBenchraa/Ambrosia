@@ -17,36 +17,34 @@ import javax.validation.constraints.Size
 
 @Entity
 class Item(
-	@Id
-	@Column(nullable = false)
-	@field:NotNull(message = "error.item.id.null")
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	var id: Long? = null,
-	@field:NotNull(message = "error.item.name.null")
-	@field:NotBlank(message = "error.item.name.blank")
-	@field:Size(max = NAME_MAX_SIZE, message = "error.item.name.size.invalid")
-	@Column(nullable = false)
-	var name: String,
-	@Column(columnDefinition = "text")
-	var description: String?,
-	var image: String?,
-	@field:NotNull(message = "error.item.price.null")
-	@field:Min(0, message = "error.item.price.negative")
-	var price: Double,
-	@Column(nullable = false)
-	var onlyForMenu: Boolean = false,
-	@Column(nullable = false)
-	@CreatedDate
-	@ColumnDefault(Constants.NOW)
-	var createdAt: LocalDateTime = LocalDateTime.now(),
-	@Column(nullable = false)
-	@LastModifiedDate
-	@ColumnDefault(Constants.NOW)
-	var updatedAt: LocalDateTime = LocalDateTime.now(),
-	var deleted: Boolean = false,
-	@ManyToOne(fetch = FetchType.LAZY, optional = false)
-	@JoinColumn(name = "business_id", nullable = false)
-	@OnDelete(action = OnDeleteAction.NO_ACTION)
-	@JsonManagedReference
-	var business: Business? = null,
+    @Id
+    @Column(nullable = false)
+    @field:NotNull(message = "error.item.id.null")
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    var id: Long? = null,
+    @field:NotNull(message = "error.item.name.null")
+    @field:NotBlank(message = "error.item.name.blank")
+    @field:Size(max = NAME_MAX_SIZE, message = "error.item.name.size.invalid")
+    @Column(nullable = false)
+    var name: String,
+    @Column(columnDefinition = "text") var description: String?,
+    var image: String?,
+    @field:NotNull(message = "error.item.price.null")
+    @field:Min(0, message = "error.item.price.negative")
+    var price: Double,
+    @Column(nullable = false) var onlyForMenu: Boolean = false,
+    @Column(nullable = false)
+    @CreatedDate
+    @ColumnDefault(Constants.NOW)
+    var createdAt: LocalDateTime = LocalDateTime.now(),
+    @Column(nullable = false)
+    @LastModifiedDate
+    @ColumnDefault(Constants.NOW)
+    var updatedAt: LocalDateTime = LocalDateTime.now(),
+    var deleted: Boolean = false,
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "business_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.NO_ACTION)
+    @JsonManagedReference
+    var business: Business? = null,
 )

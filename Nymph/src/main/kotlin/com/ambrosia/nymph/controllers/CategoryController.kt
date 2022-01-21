@@ -10,24 +10,28 @@ import javax.validation.Valid
 @RequestMapping("business/{businessId}/category")
 class CategoryController(@Autowired private val categoryService: CategoryService) {
 
-	@PostMapping
-	fun addCategory(
-		@PathVariable("businessId") businessId: Long, @Valid @RequestBody category: CategoryDto
-	): CategoryDto {
-		return categoryService.addCategory(businessId, category)
-	}
+    @PostMapping
+    fun addCategory(
+        @PathVariable("businessId") businessId: Long,
+        @Valid @RequestBody category: CategoryDto
+    ): CategoryDto {
+        return categoryService.addCategory(businessId, category)
+    }
 
-	@PutMapping("{categoryId}")
-	fun editCategory(
-		@PathVariable("businessId") businessId: Long,
-		@PathVariable("categoryId") categoryId: Long,
-		@Valid @RequestBody category: CategoryDto
-	): CategoryDto {
-		return categoryService.editCategory(businessId, categoryId, category)
-	}
+    @PutMapping("{categoryId}")
+    fun editCategory(
+        @PathVariable("businessId") businessId: Long,
+        @PathVariable("categoryId") categoryId: Long,
+        @Valid @RequestBody category: CategoryDto
+    ): CategoryDto {
+        return categoryService.editCategory(businessId, categoryId, category)
+    }
 
-	@DeleteMapping("{categoryId}")
-	fun deleteCategory(@PathVariable("businessId") businessId: Long, @PathVariable("categoryId") categoryId: Long) {
-		return categoryService.deleteCategory(businessId, categoryId)
-	}
+    @DeleteMapping("{categoryId}")
+    fun deleteCategory(
+        @PathVariable("businessId") businessId: Long,
+        @PathVariable("categoryId") categoryId: Long
+    ) {
+        return categoryService.deleteCategory(businessId, categoryId)
+    }
 }

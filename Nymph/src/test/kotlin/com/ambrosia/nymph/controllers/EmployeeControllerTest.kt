@@ -31,136 +31,146 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
 @AutoConfigureMockMvc(addFilters = false)
 class EmployeeControllerTest {
 
-	val baseUrl = "/business/1/employee"
+    val baseUrl = "/business/1/employee"
 
-	@Autowired
-	private lateinit var mockMvc: MockMvc
+    @Autowired
+    private lateinit var mockMvc: MockMvc
 
-	@Autowired
-	private lateinit var objectMapper: ObjectMapper
+    @Autowired
+    private lateinit var objectMapper: ObjectMapper
 
-	@Autowired
-	private lateinit var translator: Translator
+    @Autowired
+    private lateinit var translator: Translator
 
-	@Autowired
-	private lateinit var runtimeExceptionHandler: RuntimeExceptionHandler
+    @Autowired
+    private lateinit var runtimeExceptionHandler: RuntimeExceptionHandler
 
-	@MockkBean
-	private lateinit var employeeService: EmployeeService
+    @MockkBean
+    private lateinit var employeeService: EmployeeService
 
-	@Test
-	fun `Add an employee to a business`() {
-		every { employeeService.addEmployee(any(), any()) } returns getEmployee().toDto()
-		val content = objectMapper.writeValueAsString(
-			getEmployee().toRegistrationEmployeeDto().apply { password = "password" }
-		)
-		mockMvc.perform(post(baseUrl).contentType(APPLICATION_JSON).content(content))
-			.andExpect(status().isOk)
-			.andExpect(content().contentType(APPLICATION_JSON))
-			.andExpect(content().json(objectMapper.writeValueAsString(getEmployee().toDto())))
-	}
+    @Test
+    fun `Add an employee to a business`() {
+        every { employeeService.addEmployee(any(), any()) } returns getEmployee().toDto()
+        val content =
+            objectMapper.writeValueAsString(
+                getEmployee().toRegistrationEmployeeDto().apply { password = "password" }
+            )
+        mockMvc
+            .perform(post(baseUrl).contentType(APPLICATION_JSON).content(content))
+            .andExpect(status().isOk)
+            .andExpect(content().contentType(APPLICATION_JSON))
+            .andExpect(content().json(objectMapper.writeValueAsString(getEmployee().toDto())))
+    }
 
-	@Test
-	fun `Add an employee with a blank password to a business`() {
-		every { employeeService.addEmployee(any(), any()) } returns getEmployee().toDto()
-		val content = objectMapper.writeValueAsString(getEmployee().toRegistrationEmployeeDto().apply { password = "" })
-		mockMvc.perform(
-			post(baseUrl)
-				.contentType(APPLICATION_JSON)
-				.content(content)
-		)
-			.andExpect(status().isBadRequest)
-			.andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON))
-			.andExpect(jsonPath("$.type", `is`<Any>(Urls.VIOLATIONS)))
-			.andExpect(jsonPath("$.title", `is`("Constraint Violation")))
-			.andExpect(jsonPath("$.status", `is`(400)))
-			.andExpect(jsonPath("$.violations", hasSize<Any>(2)))
-			.andExpect(jsonPath("$.violations[0].field", `is`("password")))
-			.andExpect(jsonPath("$.violations[1].field", `is`("password")))
-			.andExpect(
-				jsonPath(
-					"$.violations[0].message", `is`(translator.toLocale("error.employee.password.blank"))
-				)
-			)
-			.andExpect(
-				jsonPath(
-					"$.violations[1].message", `is`(translator.toLocale("error.employee.password.size.invalid"))
-				)
-			)
-	}
+    @Test
+    fun `Add an employee with a blank password to a business`() {
+        every { employeeService.addEmployee(any(), any()) } returns getEmployee().toDto()
+        val content =
+            objectMapper.writeValueAsString(
+                getEmployee().toRegistrationEmployeeDto().apply { password = "" }
+            )
+        mockMvc
+            .perform(post(baseUrl).contentType(APPLICATION_JSON).content(content))
+            .andExpect(status().isBadRequest)
+            .andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON))
+            .andExpect(jsonPath("$.type", `is`<Any>(Urls.VIOLATIONS)))
+            .andExpect(jsonPath("$.title", `is`("Constraint Violation")))
+            .andExpect(jsonPath("$.status", `is`(400)))
+            .andExpect(jsonPath("$.violations", hasSize<Any>(2)))
+            .andExpect(jsonPath("$.violations[0].field", `is`("password")))
+            .andExpect(jsonPath("$.violations[1].field", `is`("password")))
+            .andExpect(
+                jsonPath(
+                    "$.violations[0].message",
+                    `is`(translator.toLocale("error.employee.password.blank"))
+                )
+            )
+            .andExpect(
+                jsonPath(
+                    "$.violations[1].message",
+                    `is`(translator.toLocale("error.employee.password.size.invalid"))
+                )
+            )
+    }
 
-	@Test
-	fun `Edit an employee`() {
-		val employee = getEmployee().toDto();
-		every { employeeService.editEmployee(any(), any(), any()) } returns employee
-		val content = objectMapper.writeValueAsString(employee)
-		mockMvc.perform(put("$baseUrl/1").contentType(APPLICATION_JSON).content(content))
-			.andExpect(status().isOk)
-			.andExpect(content().contentType(APPLICATION_JSON))
-			.andExpect(content().json(objectMapper.writeValueAsString(employee)))
-	}
+    @Test
+    fun `Edit an employee`() {
+        val employee = getEmployee().toDto()
+        every { employeeService.editEmployee(any(), any(), any()) } returns employee
+        val content = objectMapper.writeValueAsString(employee)
+        mockMvc
+            .perform(put("$baseUrl/1").contentType(APPLICATION_JSON).content(content))
+            .andExpect(status().isOk)
+            .andExpect(content().contentType(APPLICATION_JSON))
+            .andExpect(content().json(objectMapper.writeValueAsString(employee)))
+    }
 
-	@Test
-	fun `Add an employee from a non existing business`() {
-		val exception = EntityNotFoundException(Business::class.java, "id", "1")
-		val expected = runtimeExceptionHandler.handleEntityNotFoundException(exception)
-		val content = objectMapper.writeValueAsString(getEmployee().toRegistrationEmployeeDto().apply {
-			password = "password"
-		})
-		every { employeeService.addEmployee(any(), any()) } throws exception
-		mockMvc.perform(post(baseUrl).contentType(APPLICATION_JSON).content(content))
-			.andExpect(status().`is`(HttpStatus.NOT_FOUND.value()))
-			.andExpect(content().contentType(APPLICATION_JSON))
-			.andExpect(content().json(objectMapper.writeValueAsString(expected.body)))
-	}
+    @Test
+    fun `Add an employee from a non existing business`() {
+        val exception = EntityNotFoundException(Business::class.java, "id", "1")
+        val expected = runtimeExceptionHandler.handleEntityNotFoundException(exception)
+        val content =
+            objectMapper.writeValueAsString(
+                getEmployee().toRegistrationEmployeeDto().apply { password = "password" }
+            )
+        every { employeeService.addEmployee(any(), any()) } throws exception
+        mockMvc
+            .perform(post(baseUrl).contentType(APPLICATION_JSON).content(content))
+            .andExpect(status().`is`(HttpStatus.NOT_FOUND.value()))
+            .andExpect(content().contentType(APPLICATION_JSON))
+            .andExpect(content().json(objectMapper.writeValueAsString(expected.body)))
+    }
 
-	@Test
-	fun `Edit an employee from an non existing business`() {
-		val exception = EntityNotFoundException(Business::class.java, "id", "1")
-		val expected = runtimeExceptionHandler.handleEntityNotFoundException(exception)
-		every { employeeService.editEmployee(any(), any(), any()) } throws exception
-		val content = objectMapper.writeValueAsString(getEmployee().toDto())
-		mockMvc.perform(put("$baseUrl/1").contentType(APPLICATION_JSON).content(content))
-			.andExpect(status().`is`(HttpStatus.NOT_FOUND.value()))
-			.andExpect(content().contentType(APPLICATION_JSON))
-			.andExpect(content().json(objectMapper.writeValueAsString(expected.body)))
-	}
+    @Test
+    fun `Edit an employee from an non existing business`() {
+        val exception = EntityNotFoundException(Business::class.java, "id", "1")
+        val expected = runtimeExceptionHandler.handleEntityNotFoundException(exception)
+        every { employeeService.editEmployee(any(), any(), any()) } throws exception
+        val content = objectMapper.writeValueAsString(getEmployee().toDto())
+        mockMvc
+            .perform(put("$baseUrl/1").contentType(APPLICATION_JSON).content(content))
+            .andExpect(status().`is`(HttpStatus.NOT_FOUND.value()))
+            .andExpect(content().contentType(APPLICATION_JSON))
+            .andExpect(content().json(objectMapper.writeValueAsString(expected.body)))
+    }
 
-	@Test
-	fun `Edit a non existing employee`() {
-		val exception = EntityNotFoundException(Employee::class.java, "id", "1")
-		val expected = runtimeExceptionHandler.handleEntityNotFoundException(exception)
-		every { employeeService.editEmployee(any(), any(), any()) } throws exception
-		val content = objectMapper.writeValueAsString(getEmployee().toDto())
-		mockMvc.perform(put("$baseUrl/1").contentType(APPLICATION_JSON).content(content))
-			.andExpect(status().`is`(HttpStatus.NOT_FOUND.value()))
-			.andExpect(content().contentType(APPLICATION_JSON))
-			.andExpect(content().json(objectMapper.writeValueAsString(expected.body)))
-	}
+    @Test
+    fun `Edit a non existing employee`() {
+        val exception = EntityNotFoundException(Employee::class.java, "id", "1")
+        val expected = runtimeExceptionHandler.handleEntityNotFoundException(exception)
+        every { employeeService.editEmployee(any(), any(), any()) } throws exception
+        val content = objectMapper.writeValueAsString(getEmployee().toDto())
+        mockMvc
+            .perform(put("$baseUrl/1").contentType(APPLICATION_JSON).content(content))
+            .andExpect(status().`is`(HttpStatus.NOT_FOUND.value()))
+            .andExpect(content().contentType(APPLICATION_JSON))
+            .andExpect(content().json(objectMapper.writeValueAsString(expected.body)))
+    }
 
-	@Test
-	fun `Delete an employee from a business`() {
-		every { employeeService.deleteEmployee(any(), any()) } returns Unit
-		mockMvc.perform(delete("$baseUrl/1").contentType(APPLICATION_JSON))
-			.andExpect(status().isOk)
-	}
+    @Test
+    fun `Delete an employee from a business`() {
+        every { employeeService.deleteEmployee(any(), any()) } returns Unit
+        mockMvc.perform(delete("$baseUrl/1").contentType(APPLICATION_JSON)).andExpect(status().isOk)
+    }
 
-	@Test
-	fun `Delete an employee from a non existing business`() {
-		val exception = EntityNotFoundException(Category::class.java, "id", "1")
-		val expected = runtimeExceptionHandler.handleEntityNotFoundException(exception)
-		every { employeeService.deleteEmployee(any(), any()) } throws exception
-		mockMvc.perform(delete("$baseUrl/1"))
-			.andExpect(status().`is`(HttpStatus.NOT_FOUND.value()))
-			.andExpect(content().contentType(APPLICATION_JSON))
-			.andExpect(content().json(objectMapper.writeValueAsString(expected.body)))
-	}
+    @Test
+    fun `Delete an employee from a non existing business`() {
+        val exception = EntityNotFoundException(Category::class.java, "id", "1")
+        val expected = runtimeExceptionHandler.handleEntityNotFoundException(exception)
+        every { employeeService.deleteEmployee(any(), any()) } throws exception
+        mockMvc
+            .perform(delete("$baseUrl/1"))
+            .andExpect(status().`is`(HttpStatus.NOT_FOUND.value()))
+            .andExpect(content().contentType(APPLICATION_JSON))
+            .andExpect(content().json(objectMapper.writeValueAsString(expected.body)))
+    }
 
-	private fun getEmployee() = Employee(
-		id = 1,
-		firstName = "firstName",
-		lastName = "lastName",
-		position = Role.MANAGER,
-		email = "email@email.com",
-	)
+    private fun getEmployee() =
+        Employee(
+            id = 1,
+            firstName = "firstName",
+            lastName = "lastName",
+            position = Role.MANAGER,
+            email = "email@email.com",
+        )
 }

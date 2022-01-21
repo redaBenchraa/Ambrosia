@@ -1,7 +1,8 @@
 pluginManagement {
-	repositories {
-		maven { url = uri("https://repo.spring.io/release") }
-		gradlePluginPortal()
-	}
+    repositories {
+        maven { url = uri("https://repo.spring.io/release") }
+        gradlePluginPortal()
+    }
 }
+
 rootProject.name = "Nymph"

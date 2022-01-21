@@ -20,39 +20,35 @@ import org.zalando.problem.spring.web.advice.security.SecurityProblemSupport
 @EnableWebSecurity
 @Import(SecurityProblemSupport::class)
 @EnableGlobalMethodSecurity(jsr250Enabled = true, prePostEnabled = true, securedEnabled = true)
-class KeycloakSecurityConfig(problemSupport: SecurityProblemSupport) : KeycloakWebSecurityConfigurerAdapter() {
+class KeycloakSecurityConfig(problemSupport: SecurityProblemSupport) :
+    KeycloakWebSecurityConfigurerAdapter() {
 
-	private val problemSupport: SecurityProblemSupport
+    private val problemSupport: SecurityProblemSupport
 
-	init {
-		this.problemSupport = problemSupport
-	}
+    init {
+        this.problemSupport = problemSupport
+    }
 
-	@Throws(Exception::class)
-	override fun configure(http: HttpSecurity) {
-		super.configure(http)
-		http.authorizeRequests()
-			.anyRequest()
-			.authenticated()
-		http.csrf()
-			.disable()
-		http.exceptionHandling()
-			.authenticationEntryPoint(problemSupport)
-			.accessDeniedHandler(problemSupport)
-	}
+    @Throws(Exception::class)
+    override fun configure(http: HttpSecurity) {
+        super.configure(http)
+        http.authorizeRequests().anyRequest().authenticated()
+        http.csrf().disable()
+        http.exceptionHandling()
+            .authenticationEntryPoint(problemSupport)
+            .accessDeniedHandler(problemSupport)
+    }
 
-	@Autowired
-	fun configureGlobal(auth: AuthenticationManagerBuilder) {
-		val keycloakAuthenticationProvider: KeycloakAuthenticationProvider =
-			keycloakAuthenticationProvider()
-		keycloakAuthenticationProvider.setGrantedAuthoritiesMapper(
-			SimpleAuthorityMapper()
-		)
-		auth.authenticationProvider(keycloakAuthenticationProvider)
-	}
+    @Autowired
+    fun configureGlobal(auth: AuthenticationManagerBuilder) {
+        val keycloakAuthenticationProvider: KeycloakAuthenticationProvider =
+            keycloakAuthenticationProvider()
+        keycloakAuthenticationProvider.setGrantedAuthoritiesMapper(SimpleAuthorityMapper())
+        auth.authenticationProvider(keycloakAuthenticationProvider)
+    }
 
-	@Bean
-	override fun sessionAuthenticationStrategy(): SessionAuthenticationStrategy {
-		return RegisterSessionAuthenticationStrategy(SessionRegistryImpl())
-	}
+    @Bean
+    override fun sessionAuthenticationStrategy(): SessionAuthenticationStrategy {
+        return RegisterSessionAuthenticationStrategy(SessionRegistryImpl())
+    }
 }

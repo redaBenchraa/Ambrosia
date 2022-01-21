@@ -15,33 +15,32 @@ import javax.persistence.EntityManager
 import javax.persistence.PersistenceContext
 import javax.transaction.Transactional
 
-
 @Service
 class BusinessService(
-	@Autowired private val businessRepository: BusinessRepository,
-	@Autowired private val employeeRepository: EmployeeRepository,
+    @Autowired private val businessRepository: BusinessRepository,
+    @Autowired private val employeeRepository: EmployeeRepository,
 ) {
 
-	@PersistenceContext
-	private lateinit var entityManager: EntityManager
+    @PersistenceContext
+    private lateinit var entityManager: EntityManager
 
-	@Transactional
-	fun createBusiness(businessRegistrationDto: BusinessRegistrationDto): BusinessRegistrationDto {
-		val saveBusiness = businessRepository.save(businessRegistrationDto.toEntity())
-		val result = saveBusiness.toDto()
-		if (businessRegistrationDto.employee != null) {
-			verifyIfEmployeeExists(businessRegistrationDto.employee!!)
-			val employee = businessRegistrationDto.employee!!.toEntity()
-			employee.business = saveBusiness
-			val savedEmployee = employeeRepository.save(employee)
-			result.employee = savedEmployee.toRegistrationEmployeeDto()
-		}
-		return result
-	}
+    @Transactional
+    fun createBusiness(businessRegistrationDto: BusinessRegistrationDto): BusinessRegistrationDto {
+        val saveBusiness = businessRepository.save(businessRegistrationDto.toEntity())
+        val result = saveBusiness.toDto()
+        if (businessRegistrationDto.employee != null) {
+            verifyIfEmployeeExists(businessRegistrationDto.employee!!)
+            val employee = businessRegistrationDto.employee!!.toEntity()
+            employee.business = saveBusiness
+            val savedEmployee = employeeRepository.save(employee)
+            result.employee = savedEmployee.toRegistrationEmployeeDto()
+        }
+        return result
+    }
 
-	fun verifyIfEmployeeExists(employeeDto: EmployeeRegistrationDto) {
-		if (employeeRepository.countByEmail(employeeDto.email!!) != 0L) {
-			throw EntityAlreadyExistsException(Employee::class.java, "email", employeeDto.email!!)
-		}
-	}
+    fun verifyIfEmployeeExists(employeeDto: EmployeeRegistrationDto) {
+        if (employeeRepository.countByEmail(employeeDto.email!!) != 0L) {
+            throw EntityAlreadyExistsException(Employee::class.java, "email", employeeDto.email!!)
+        }
+    }
 }

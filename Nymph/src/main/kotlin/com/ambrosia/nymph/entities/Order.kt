@@ -16,36 +16,36 @@ import javax.validation.constraints.NotNull
 @Entity
 @Table(name = "orders")
 class Order(
-	@Id
-	@Column(nullable = false)
-	@field:NotNull(message = "error.order.id.null")
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	var id: Long?,
-	@Column(nullable = false)
-	@CreatedDate
-	@ColumnDefault(NOW)
-	var createdAt: LocalDateTime = LocalDateTime.now(),
-	@Column(nullable = false)
-	@LastModifiedDate
-	@ColumnDefault(NOW)
-	var updatedAt: LocalDateTime = LocalDateTime.now(),
-	var deleted: Boolean = false,
-	@ManyToOne(fetch = FetchType.LAZY, optional = false)
-	@JoinColumn(name = "session_id", nullable = false)
-	@OnDelete(action = OnDeleteAction.NO_ACTION)
-	@JsonManagedReference
-	var session: Session,
-	@ManyToOne(fetch = FetchType.LAZY, optional = false)
-	@JoinColumn(name = "customer_id", nullable = false)
-	@OnDelete(action = OnDeleteAction.NO_ACTION)
-	@JsonManagedReference
-	var customer: Customer,
-	@OneToMany(
-		cascade = [CascadeType.ALL],
-		fetch = FetchType.LAZY,
-		mappedBy = "order",
-		targetEntity = OrderedItem::class
-	)
-	@JsonBackReference
-	var orderedItem: Set<OrderedItem> = HashSet(),
+    @Id
+    @Column(nullable = false)
+    @field:NotNull(message = "error.order.id.null")
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    var id: Long?,
+    @Column(nullable = false)
+    @CreatedDate
+    @ColumnDefault(NOW)
+    var createdAt: LocalDateTime = LocalDateTime.now(),
+    @Column(nullable = false)
+    @LastModifiedDate
+    @ColumnDefault(NOW)
+    var updatedAt: LocalDateTime = LocalDateTime.now(),
+    var deleted: Boolean = false,
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "session_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.NO_ACTION)
+    @JsonManagedReference
+    var session: Session,
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "customer_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.NO_ACTION)
+    @JsonManagedReference
+    var customer: Customer,
+    @OneToMany(
+        cascade = [CascadeType.ALL],
+        fetch = FetchType.LAZY,
+        mappedBy = "order",
+        targetEntity = OrderedItem::class
+    )
+    @JsonBackReference
+    var orderedItem: Set<OrderedItem> = HashSet(),
 )
