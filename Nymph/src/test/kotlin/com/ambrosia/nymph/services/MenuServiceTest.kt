@@ -1,13 +1,13 @@
 package com.ambrosia.nymph.services
 
+import com.ambrosia.nymph.dtos.AddMenuItemDto
 import com.ambrosia.nymph.entities.Business
+import com.ambrosia.nymph.entities.Category
+import com.ambrosia.nymph.entities.Item
 import com.ambrosia.nymph.entities.Menu
 import com.ambrosia.nymph.exceptions.EntityNotFoundException
 import com.ambrosia.nymph.mappers.toDto
-import com.ambrosia.nymph.repositories.BusinessRepository
-import com.ambrosia.nymph.repositories.CategoryRepository
-import com.ambrosia.nymph.repositories.ItemRepository
-import com.ambrosia.nymph.repositories.MenuRepository
+import com.ambrosia.nymph.repositories.*
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
@@ -22,7 +22,9 @@ class MenuServiceTest {
     private val menuRepository: MenuRepository = mockk()
     private val categoryRepository: CategoryRepository = mockk()
     private val itemRepository: ItemRepository = mockk()
-    private val menuService = MenuService(businessRepository, menuRepository, categoryRepository, itemRepository)
+    private val menuItemRepository: MenuItemRepository = mockk()
+    private val menuService =
+        MenuService(businessRepository, menuRepository, categoryRepository, itemRepository, menuItemRepository)
 
     @Test
     fun `Add a menu to a business`() {
@@ -85,19 +87,60 @@ class MenuServiceTest {
         assertThrows<EntityNotFoundException> { menuService.deleteMenu(1, 1) }
     }
 
-    private fun getBusiness(): Business =
-        Business(
-            name = "name",
-            currency = "EUR",
-            description = "desc",
-            email = "email",
-            phoneNumber = "phoneNumber",
-            location = "location",
-            logo = "logo",
-            slogan = "slogan",
-            id = 1,
-        )
+    @Test
+    fun `Add an item to a menu`() {
+        every { businessRepository.findById(any()) } returns Optional.of(getBusiness())
+        every { menuRepository.findById(any()) } returns Optional.of(getMenu())
+        every { categoryRepository.findById(any()) } returns Optional.of(getCategory())
+        every { itemRepository.findById(any()) } returns Optional.of(getItem())
+        every { menuRepository.save(any()) } returns getMenu()
+        menuService.addItemToMenu(1, 1, AddMenuItemDto(itemId = 1, categoryId = 1, extra = 10.0))
+        verify { menuRepository.save(any()) }
+    }
 
-    private fun getMenu(): Menu =
-        Menu(id = 1, name = "name", description = "description", image = "image", price = 10.0)
+    @Test
+    fun `Add an item to a menu to a non existing business`() {
+        every { businessRepository.findById(any()) } returns Optional.empty()
+        assertThrows<EntityNotFoundException> {
+            menuService.addItemToMenu(1, 1, AddMenuItemDto(itemId = 1, categoryId = 1, extra = 10.0))
+        }
+    }
+
+    @Test
+    fun `Add an item to a menu to a non existing menu`() {
+        every { businessRepository.findById(any()) } returns Optional.of(getBusiness())
+        every { menuRepository.findById(any()) } returns Optional.empty()
+        assertThrows<EntityNotFoundException> {
+            menuService.addItemToMenu(1, 1, AddMenuItemDto(itemId = 1, categoryId = 1, extra = 10.0))
+        }
+    }
+
+    @Test
+    fun `Add an item to a menu to a non existing category`() {
+        every { businessRepository.findById(any()) } returns Optional.of(getBusiness())
+        every { menuRepository.findById(any()) } returns Optional.of(getMenu())
+        every { categoryRepository.findById(any()) } returns Optional.empty()
+        assertThrows<EntityNotFoundException> {
+            menuService.addItemToMenu(1, 1, AddMenuItemDto(itemId = 1, categoryId = 1, extra = 10.0))
+        }
+    }
+
+
+    @Test
+    fun `Add a non existing item to a menu`() {
+        every { businessRepository.findById(any()) } returns Optional.of(getBusiness())
+        every { menuRepository.findById(any()) } returns Optional.of(getMenu())
+        every { categoryRepository.findById(any()) } returns Optional.of(getCategory())
+        every { itemRepository.findById(any()) } returns Optional.empty()
+        assertThrows<EntityNotFoundException> {
+            menuService.addItemToMenu(1, 1, AddMenuItemDto(itemId = 1, categoryId = 1, extra = 10.0))
+        }
+    }
+
+    private fun getBusiness(): Business =
+        Business(id = 1, name = "name", email = "email", phoneNumber = "phoneNumber")
+
+    private fun getItem(): Item = Item(id = 1, name = "name", price = 10.0)
+    private fun getCategory(): Category = Category(id = 1, name = "name")
+    private fun getMenu(): Menu = Menu(id = 1, name = "name", price = 10.0)
 }
