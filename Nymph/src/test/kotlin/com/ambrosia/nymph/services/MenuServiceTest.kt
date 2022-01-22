@@ -1,10 +1,8 @@
 package com.ambrosia.nymph.services
 
 import com.ambrosia.nymph.dtos.AddMenuItemDto
-import com.ambrosia.nymph.entities.Business
-import com.ambrosia.nymph.entities.Category
-import com.ambrosia.nymph.entities.Item
-import com.ambrosia.nymph.entities.Menu
+import com.ambrosia.nymph.dtos.EditMenuItemDto
+import com.ambrosia.nymph.entities.*
 import com.ambrosia.nymph.exceptions.EntityNotFoundException
 import com.ambrosia.nymph.mappers.toDto
 import com.ambrosia.nymph.repositories.*
@@ -125,7 +123,6 @@ class MenuServiceTest {
         }
     }
 
-
     @Test
     fun `Add a non existing item to a menu`() {
         every { businessRepository.findById(any()) } returns Optional.of(getBusiness())
@@ -137,9 +134,74 @@ class MenuServiceTest {
         }
     }
 
+    @Test
+    fun `Remove an item from a menu`() {
+        every { businessRepository.findById(any()) } returns Optional.of(getBusiness())
+        every { menuRepository.findById(any()) } returns Optional.of(getMenu())
+        every { menuItemRepository.findById(any()) } returns Optional.of(getMenuItem())
+        every { menuRepository.save(any()) } returns getMenu()
+        menuService.removeItemFromMenu(1, 1, 1)
+        verify { menuRepository.save(any()) }
+    }
+
+    @Test
+    fun `Remove an item to a menu from a non existing business`() {
+        every { businessRepository.findById(any()) } returns Optional.empty()
+        assertThrows<EntityNotFoundException> { menuService.removeItemFromMenu(1, 1, 1) }
+    }
+
+    @Test
+    fun `Remove an item to a menu from a non existing menu`() {
+        every { businessRepository.findById(any()) } returns Optional.of(getBusiness())
+        every { menuRepository.findById(any()) } returns Optional.empty()
+        assertThrows<EntityNotFoundException> { menuService.removeItemFromMenu(1, 1, 1) }
+    }
+
+
+    @Test
+    fun `Remove a non existing item from a menu`() {
+        every { businessRepository.findById(any()) } returns Optional.of(getBusiness())
+        every { menuRepository.findById(any()) } returns Optional.of(getMenu())
+        every { menuItemRepository.findById(any()) } returns Optional.empty()
+        assertThrows<EntityNotFoundException> { menuService.removeItemFromMenu(1, 1, 1) }
+    }
+
+    @Test
+    fun `Edit extra for a menu`() {
+        every { businessRepository.findById(any()) } returns Optional.of(getBusiness())
+        every { menuRepository.findById(any()) } returns Optional.of(getMenu())
+        every { menuItemRepository.findById(any()) } returns Optional.of(getMenuItem())
+        every { menuItemRepository.save(any()) } returns getMenuItem()
+        menuService.editMenuItemExtra(1, 1, 1, EditMenuItemDto(extra = 10.0))
+        verify { menuItemRepository.save(any()) }
+    }
+
+    @Test
+    fun `Edit extra for a menu with a non existing business`() {
+        every { businessRepository.findById(any()) } returns Optional.empty()
+        assertThrows<EntityNotFoundException> { menuService.editMenuItemExtra(1, 1, 1, EditMenuItemDto(extra = 10.0)) }
+    }
+
+    @Test
+    fun `Edit extra for a non existing menu`() {
+        every { businessRepository.findById(any()) } returns Optional.of(getBusiness())
+        every { menuRepository.findById(any()) } returns Optional.empty()
+        assertThrows<EntityNotFoundException> { menuService.editMenuItemExtra(1, 1, 1, EditMenuItemDto(extra = 10.0)) }
+    }
+
+    @Test
+    fun `Edit extra for a non existing item`() {
+        every { businessRepository.findById(any()) } returns Optional.of(getBusiness())
+        every { menuRepository.findById(any()) } returns Optional.of(getMenu())
+        every { menuItemRepository.findById(any()) } returns Optional.empty()
+        assertThrows<EntityNotFoundException> { menuService.editMenuItemExtra(1, 1, 1, EditMenuItemDto(extra = 10.0)) }
+    }
+
+
     private fun getBusiness(): Business =
         Business(id = 1, name = "name", email = "email", phoneNumber = "phoneNumber")
 
+    private fun getMenuItem(): MenuItem = MenuItem(id = 1, extra = 10.0)
     private fun getItem(): Item = Item(id = 1, name = "name", price = 10.0)
     private fun getCategory(): Category = Category(id = 1, name = "name")
     private fun getMenu(): Menu = Menu(id = 1, name = "name", price = 10.0)

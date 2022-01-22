@@ -1,6 +1,7 @@
 package com.ambrosia.nymph.services
 
 import com.ambrosia.nymph.dtos.AddMenuItemDto
+import com.ambrosia.nymph.dtos.EditMenuItemDto
 import com.ambrosia.nymph.dtos.MenuDto
 import com.ambrosia.nymph.entities.*
 import com.ambrosia.nymph.exceptions.EntityNotFoundException
@@ -79,7 +80,7 @@ class MenuService(
     }
 
     @Transactional
-    fun editMenuItemExtra(businessId: Long, menuId: Long, menuItemId: Long, menuDto: AddMenuItemDto): MenuDto {
+    fun editMenuItemExtra(businessId: Long, menuId: Long, menuItemId: Long, menuDto: EditMenuItemDto): MenuDto {
         businessRepository.findById(businessId)
             .orElseThrow { EntityNotFoundException(Business::class.java, "id", businessId) }
         val menu = menuRepository.findById(menuId)
