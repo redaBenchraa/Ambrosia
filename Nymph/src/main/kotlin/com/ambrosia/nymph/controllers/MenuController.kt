@@ -45,4 +45,23 @@ class MenuController(@Autowired private val menuService: MenuService) {
         return menuService.addItemToMenu(businessId, menuId, menuItem)
     }
 
+    @DeleteMapping("{menuId}/items/{menuItemId}")
+    fun removeItemFromMenus(
+        @PathVariable("businessId") businessId: Long,
+        @PathVariable("menuId") menuId: Long,
+        @PathVariable("menuItemId") menuItemId: Long,
+    ): MenuDto {
+        return menuService.removeItemFromMenu(businessId, menuId, menuItemId)
+    }
+
+    @PutMapping("{menuId}/items/{menuItemId}")
+    fun editItemToMenus(
+        @PathVariable("businessId") businessId: Long,
+        @PathVariable("menuId") menuId: Long,
+        @PathVariable("menuItemId") menuItemId: Long,
+        @Valid @RequestBody menuItem: AddMenuItemDto
+    ): MenuDto {
+        return menuService.editMenuItemExtra(businessId, menuId, menuItemId, menuItem)
+    }
+
 }

@@ -36,12 +36,15 @@ class Business(
     @field:Email(message = "error.business.email.format.invalid")
     @field:Size(max = EMAIL_MAX_SIZE, message = "error.business.email.size.invalid")
     var email: String,
-    @Column(columnDefinition = "text") var description: String?,
-    var slogan: String?,
-    var logo: String?,
-    var location: String?,
-    @Column(nullable = false) var currency: String = Currency.EUR.name,
-    @Column(nullable = false) var isAvailable: Boolean = true,
+    @Column(columnDefinition = "text")
+    var description: String? = null,
+    var slogan: String? = null,
+    var logo: String? = null,
+    var location: String? = null,
+    @Column(nullable = false)
+    var currency: String = Currency.EUR.name,
+    @Column(nullable = false)
+    var isAvailable: Boolean = true,
     @Column(nullable = false)
     @CreatedDate
     @ColumnDefault(NOW)
