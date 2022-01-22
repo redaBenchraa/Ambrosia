@@ -1,6 +1,7 @@
 package com.ambrosia.nymph.controllers
 
 import com.ambrosia.nymph.dtos.AddMenuItemDto
+import com.ambrosia.nymph.dtos.EditMenuItemDto
 import com.ambrosia.nymph.dtos.MenuDto
 import com.ambrosia.nymph.services.MenuService
 import org.springframework.beans.factory.annotation.Autowired
@@ -59,7 +60,7 @@ class MenuController(@Autowired private val menuService: MenuService) {
         @PathVariable("businessId") businessId: Long,
         @PathVariable("menuId") menuId: Long,
         @PathVariable("menuItemId") menuItemId: Long,
-        @Valid @RequestBody menuItem: AddMenuItemDto
+        @Valid @RequestBody menuItem: EditMenuItemDto
     ): MenuDto {
         return menuService.editMenuItemExtra(businessId, menuId, menuItemId, menuItem)
     }
