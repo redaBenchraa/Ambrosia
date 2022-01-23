@@ -52,7 +52,7 @@ class MenuController(@Autowired private val menuService: MenuService) {
         @PathVariable("menuId") menuId: Long,
         @PathVariable("menuItemId") menuItemId: Long,
     ): MenuDto {
-        return menuService.removeItemFromMenu(businessId, menuId, menuItemId)
+        return menuService.deleteMenuItem(businessId, menuId, menuItemId)
     }
 
     @PutMapping("{menuId}/items/{menuItemId}")

@@ -1,8 +1,9 @@
 package com.ambrosia.nymph.controllers
 
 import com.ambrosia.nymph.constants.Urls
-import com.ambrosia.nymph.entities.Business
-import com.ambrosia.nymph.entities.Menu
+import com.ambrosia.nymph.dtos.AddMenuItemDto
+import com.ambrosia.nymph.dtos.EditMenuItemDto
+import com.ambrosia.nymph.entities.*
 import com.ambrosia.nymph.exceptions.EntityAlreadyExistsException
 import com.ambrosia.nymph.exceptions.EntityNotFoundException
 import com.ambrosia.nymph.handlers.RuntimeExceptionHandler
@@ -60,7 +61,7 @@ class MenuControllerTest {
     }
 
     @Test
-    fun `Add an menu from a non existing business`() {
+    fun `Add a menu from a non existing business`() {
         val exception = EntityAlreadyExistsException(Business::class.java, "id", "1")
         val expected = runtimeExceptionHandler.handleEntityAlreadyExistsException(exception)
         val content = objectMapper.writeValueAsString(getMenu().toDto())
@@ -73,7 +74,7 @@ class MenuControllerTest {
     }
 
     @Test
-    fun `Add an menu with a blank name to a business`() {
+    fun `Add a menu with a blank name to a business`() {
         val menu = getMenu().toDto()
         every { menuService.addMenu(any(), any()) } returns menu
         val content = objectMapper.writeValueAsString(menu.apply { name = "" })
@@ -95,7 +96,7 @@ class MenuControllerTest {
     }
 
     @Test
-    fun `Edit an menu`() {
+    fun `Edit a menu`() {
         val menu = getMenu().toDto()
         every { menuService.editMenu(any(), any(), any()) } returns menu
         val content = objectMapper.writeValueAsString(menu)
@@ -120,7 +121,7 @@ class MenuControllerTest {
     }
 
     @Test
-    fun `Edit an menu from an non existing business`() {
+    fun `Edit a menu from an non existing business`() {
         val exception = EntityNotFoundException(Business::class.java, "id", "1")
         val expected = runtimeExceptionHandler.handleEntityNotFoundException(exception)
         every { menuService.editMenu(any(), any(), any()) } throws exception
@@ -139,7 +140,7 @@ class MenuControllerTest {
     }
 
     @Test
-    fun `Delete an menu from a non existing business`() {
+    fun `Delete a menu from a non existing business`() {
         val exception = EntityNotFoundException(Business::class.java, "id", "1")
         val expected = runtimeExceptionHandler.handleEntityNotFoundException(exception)
         every { menuService.deleteMenu(any(), any()) } throws exception
@@ -162,11 +163,252 @@ class MenuControllerTest {
             .andExpect(content().json(objectMapper.writeValueAsString(expected.body)))
     }
 
-    private fun getMenu() =
-        Menu(
-            name = "name",
-            description = "description",
-            image = "image",
-            price = 10.0,
-        )
+    @Test
+    fun `Add an item to a menu`() {
+        every { menuService.addItemToMenu(any(), any(), any()) } returns getMenu().toDto()
+        val content = objectMapper.writeValueAsString(getAddMenuItemDto())
+        mockMvc
+            .perform(post("$baseUrl/1/items").contentType(APPLICATION_JSON).content(content))
+            .andExpect(status().isOk)
+            .andExpect(content().contentType(APPLICATION_JSON))
+            .andExpect(content().json(objectMapper.writeValueAsString(getMenu().toDto())))
+    }
+
+    @Test
+    fun `Add a menu item with no extra `() {
+        every { menuService.addItemToMenu(any(), any(), any()) } returns getMenu().toDto()
+        val content = objectMapper.writeValueAsString(getAddMenuItemDto().copy(extra = null))
+        mockMvc
+            .perform(post("$baseUrl/1/items").contentType(APPLICATION_JSON).content(content))
+            .andExpect(status().isBadRequest)
+            .andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON))
+            .andExpect(jsonPath("$.type", `is`<Any>(Urls.VIOLATIONS)))
+            .andExpect(jsonPath("$.title", `is`("Constraint Violation")))
+            .andExpect(jsonPath("$.status", `is`(400)))
+            .andExpect(jsonPath("$.violations", hasSize<Any>(1)))
+            .andExpect(jsonPath("$.violations[0].field", `is`("extra")))
+            .andExpect(
+                jsonPath(
+                    "$.violations[0].message",
+                    `is`(translator.toLocale("error.menuItem.extra.null"))
+                )
+            )
+    }
+
+    @Test
+    fun `Add a menu item with a negative extra `() {
+        every { menuService.addItemToMenu(any(), any(), any()) } returns getMenu().toDto()
+        val content = objectMapper.writeValueAsString(getAddMenuItemDto().copy(extra = -1.0))
+        mockMvc
+            .perform(post("$baseUrl/1/items").contentType(APPLICATION_JSON).content(content))
+            .andExpect(status().isBadRequest)
+            .andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON))
+            .andExpect(jsonPath("$.type", `is`<Any>(Urls.VIOLATIONS)))
+            .andExpect(jsonPath("$.title", `is`("Constraint Violation")))
+            .andExpect(jsonPath("$.status", `is`(400)))
+            .andExpect(jsonPath("$.violations", hasSize<Any>(1)))
+            .andExpect(jsonPath("$.violations[0].field", `is`("extra")))
+            .andExpect(
+                jsonPath(
+                    "$.violations[0].message",
+                    `is`(translator.toLocale("error.menuItem.extra.negative"))
+                )
+            )
+    }
+
+    @Test
+    fun `Add an item to a non existing business`() {
+        val exception = EntityNotFoundException(Business::class.java, "id", "1")
+        val expected = runtimeExceptionHandler.handleEntityNotFoundException(exception)
+        every { menuService.addItemToMenu(any(), any(), any()) } throws exception
+        val content = objectMapper.writeValueAsString(getAddMenuItemDto())
+        mockMvc
+            .perform(post("$baseUrl/1/items").contentType(APPLICATION_JSON).content(content))
+            .andExpect(status().`is`(NOT_FOUND.value()))
+            .andExpect(content().contentType(APPLICATION_JSON))
+            .andExpect(content().json(objectMapper.writeValueAsString(expected.body)))
+    }
+
+    @Test
+    fun `Add an item to a non existing menu`() {
+        val exception = EntityNotFoundException(Menu::class.java, "id", "1")
+        val expected = runtimeExceptionHandler.handleEntityNotFoundException(exception)
+        every { menuService.addItemToMenu(any(), any(), any()) } throws exception
+        val content = objectMapper.writeValueAsString(getAddMenuItemDto())
+        mockMvc
+            .perform(post("$baseUrl/1/items").contentType(APPLICATION_JSON).content(content))
+            .andExpect(status().`is`(NOT_FOUND.value()))
+            .andExpect(content().contentType(APPLICATION_JSON))
+            .andExpect(content().json(objectMapper.writeValueAsString(expected.body)))
+    }
+
+    @Test
+    fun `Add a non existing item to a menu`() {
+        val exception = EntityNotFoundException(Item::class.java, "id", "1")
+        val expected = runtimeExceptionHandler.handleEntityNotFoundException(exception)
+        every { menuService.addItemToMenu(any(), any(), any()) } throws exception
+        val content = objectMapper.writeValueAsString(getAddMenuItemDto())
+        mockMvc
+            .perform(post("$baseUrl/1/items").contentType(APPLICATION_JSON).content(content))
+            .andExpect(status().`is`(NOT_FOUND.value()))
+            .andExpect(content().contentType(APPLICATION_JSON))
+            .andExpect(content().json(objectMapper.writeValueAsString(expected.body)))
+    }
+
+    @Test
+    fun `Add an item with a non existing category`() {
+        val exception = EntityNotFoundException(Category::class.java, "id", "1")
+        val expected = runtimeExceptionHandler.handleEntityNotFoundException(exception)
+        every { menuService.addItemToMenu(any(), any(), any()) } throws exception
+        val content = objectMapper.writeValueAsString(getAddMenuItemDto())
+        mockMvc
+            .perform(post("$baseUrl/1/items").contentType(APPLICATION_JSON).content(content))
+            .andExpect(status().`is`(NOT_FOUND.value()))
+            .andExpect(content().contentType(APPLICATION_JSON))
+            .andExpect(content().json(objectMapper.writeValueAsString(expected.body)))
+    }
+
+    @Test
+    fun `Edit a menu item extra `() {
+        every { menuService.editMenuItemExtra(any(), any(), any(), any()) } returns getMenu().toDto()
+        val content = objectMapper.writeValueAsString(getEditMenuItemDto())
+        mockMvc
+            .perform(put("$baseUrl/1/items/1").contentType(APPLICATION_JSON).content(content))
+            .andExpect(status().isOk)
+            .andExpect(content().contentType(APPLICATION_JSON))
+            .andExpect(content().json(objectMapper.writeValueAsString(getMenu().toDto())))
+    }
+
+    @Test
+    fun `Edit a menu item with no extra `() {
+        every { menuService.editMenuItemExtra(any(), any(), any(), any()) } returns getMenu().toDto()
+        val content = objectMapper.writeValueAsString(getEditMenuItemDto().copy(extra = null))
+        mockMvc
+            .perform(put("$baseUrl/1/items/1").contentType(APPLICATION_JSON).content(content))
+            .andExpect(status().isBadRequest)
+            .andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON))
+            .andExpect(jsonPath("$.type", `is`<Any>(Urls.VIOLATIONS)))
+            .andExpect(jsonPath("$.title", `is`("Constraint Violation")))
+            .andExpect(jsonPath("$.status", `is`(400)))
+            .andExpect(jsonPath("$.violations", hasSize<Any>(1)))
+            .andExpect(jsonPath("$.violations[0].field", `is`("extra")))
+            .andExpect(
+                jsonPath(
+                    "$.violations[0].message",
+                    `is`(translator.toLocale("error.menuItem.extra.null"))
+                )
+            )
+    }
+
+    @Test
+    fun `Edit a menu item with a negative extra `() {
+        every { menuService.editMenuItemExtra(any(), any(), any(), any()) } returns getMenu().toDto()
+        val content = objectMapper.writeValueAsString(getEditMenuItemDto().copy(extra = -1.0))
+        mockMvc
+            .perform(put("$baseUrl/1/items/1").contentType(APPLICATION_JSON).content(content))
+            .andExpect(status().isBadRequest)
+            .andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON))
+            .andExpect(jsonPath("$.type", `is`<Any>(Urls.VIOLATIONS)))
+            .andExpect(jsonPath("$.title", `is`("Constraint Violation")))
+            .andExpect(jsonPath("$.status", `is`(400)))
+            .andExpect(jsonPath("$.violations", hasSize<Any>(1)))
+            .andExpect(jsonPath("$.violations[0].field", `is`("extra")))
+            .andExpect(
+                jsonPath(
+                    "$.violations[0].message",
+                    `is`(translator.toLocale("error.menuItem.extra.negative"))
+                )
+            )
+    }
+
+    @Test
+    fun `Edit a menu item of a non existing business`() {
+        val exception = EntityNotFoundException(Business::class.java, "id", "1")
+        val expected = runtimeExceptionHandler.handleEntityNotFoundException(exception)
+        every { menuService.editMenuItemExtra(any(), any(), any(), any()) } throws exception
+        val content = objectMapper.writeValueAsString(getEditMenuItemDto())
+        mockMvc
+            .perform(put("$baseUrl/1/items/1").contentType(APPLICATION_JSON).content(content))
+            .andExpect(status().`is`(NOT_FOUND.value()))
+            .andExpect(content().contentType(APPLICATION_JSON))
+            .andExpect(content().json(objectMapper.writeValueAsString(expected.body)))
+    }
+
+    @Test
+    fun `Edit a menu item of a non existing menu`() {
+        val exception = EntityNotFoundException(Menu::class.java, "id", "1")
+        val expected = runtimeExceptionHandler.handleEntityNotFoundException(exception)
+        every { menuService.editMenuItemExtra(any(), any(), any(), any()) } throws exception
+        val content = objectMapper.writeValueAsString(getEditMenuItemDto())
+        mockMvc
+            .perform(put("$baseUrl/1/items/1").contentType(APPLICATION_JSON).content(content))
+            .andExpect(status().`is`(NOT_FOUND.value()))
+            .andExpect(content().contentType(APPLICATION_JSON))
+            .andExpect(content().json(objectMapper.writeValueAsString(expected.body)))
+    }
+
+    @Test
+    fun `Edit a non existing menu item`() {
+        val exception = EntityNotFoundException(MenuItem::class.java, "id", "1")
+        val expected = runtimeExceptionHandler.handleEntityNotFoundException(exception)
+        every { menuService.editMenuItemExtra(any(), any(), any(), any()) } throws exception
+        val content = objectMapper.writeValueAsString(getEditMenuItemDto())
+        mockMvc
+            .perform(put("$baseUrl/1/items/1").contentType(APPLICATION_JSON).content(content))
+            .andExpect(status().`is`(NOT_FOUND.value()))
+            .andExpect(content().contentType(APPLICATION_JSON))
+            .andExpect(content().json(objectMapper.writeValueAsString(expected.body)))
+    }
+
+
+    @Test
+    fun `Delete a menu item`() {
+        every { menuService.deleteMenuItem(any(), any(), any()) } returns getMenu().toDto()
+        mockMvc
+            .perform(delete("$baseUrl/1/items/1").contentType(APPLICATION_JSON))
+            .andExpect(status().isOk)
+            .andExpect(content().contentType(APPLICATION_JSON))
+            .andExpect(content().json(objectMapper.writeValueAsString(getMenu().toDto())))
+    }
+
+    @Test
+    fun `Delete a menu item from a non existing business`() {
+        val exception = EntityNotFoundException(Business::class.java, "id", "1")
+        val expected = runtimeExceptionHandler.handleEntityNotFoundException(exception)
+        every { menuService.deleteMenuItem(any(), any(), any()) } throws exception
+        mockMvc
+            .perform(delete("$baseUrl/1/items/1").contentType(APPLICATION_JSON))
+            .andExpect(status().`is`(NOT_FOUND.value()))
+            .andExpect(content().contentType(APPLICATION_JSON))
+            .andExpect(content().json(objectMapper.writeValueAsString(expected.body)))
+    }
+
+    @Test
+    fun `Delete a menu item from a non existing menu`() {
+        val exception = EntityNotFoundException(Menu::class.java, "id", "1")
+        val expected = runtimeExceptionHandler.handleEntityNotFoundException(exception)
+        every { menuService.deleteMenuItem(any(), any(), any()) } throws exception
+        mockMvc
+            .perform(delete("$baseUrl/1/items/1").contentType(APPLICATION_JSON))
+            .andExpect(status().`is`(NOT_FOUND.value()))
+            .andExpect(content().contentType(APPLICATION_JSON))
+            .andExpect(content().json(objectMapper.writeValueAsString(expected.body)))
+    }
+
+    @Test
+    fun `Delete a non existing menu item`() {
+        val exception = EntityNotFoundException(MenuItem::class.java, "id", "1")
+        val expected = runtimeExceptionHandler.handleEntityNotFoundException(exception)
+        every { menuService.deleteMenuItem(any(), any(), any()) } throws exception
+        mockMvc
+            .perform(delete("$baseUrl/1/items/1").contentType(APPLICATION_JSON))
+            .andExpect(status().`is`(NOT_FOUND.value()))
+            .andExpect(content().contentType(APPLICATION_JSON))
+            .andExpect(content().json(objectMapper.writeValueAsString(expected.body)))
+    }
+
+
+    private fun getMenu() = Menu(name = "name", price = 10.0)
+    private fun getAddMenuItemDto() = AddMenuItemDto(itemId = 1, categoryId = 1, extra = 10.0)
+    private fun getEditMenuItemDto() = EditMenuItemDto(id = 1, extra = 10.0)
 }

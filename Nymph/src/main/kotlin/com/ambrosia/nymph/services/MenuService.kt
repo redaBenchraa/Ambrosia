@@ -63,12 +63,12 @@ class MenuService(
             .orElseThrow { EntityNotFoundException(Category::class.java, "id", menuDto.categoryId!!) }
         val item = itemRepository.findById(menuDto.itemId!!)
             .orElseThrow { EntityNotFoundException(Item::class.java, "id", menuDto.itemId!!) }
-        menu.menuItems.add(MenuItem(extra = menuDto.extra, menu = menu, item = item, category = category))
+        menu.menuItems.add(MenuItem(extra = menuDto.extra!!, menu = menu, item = item, category = category))
         return menuRepository.save(menu).toDto()
     }
 
     @Transactional
-    fun removeItemFromMenu(businessId: Long, menuId: Long, menuItemId: Long): MenuDto {
+    fun deleteMenuItem(businessId: Long, menuId: Long, menuItemId: Long): MenuDto {
         businessRepository.findById(businessId)
             .orElseThrow { EntityNotFoundException(Business::class.java, "id", businessId) }
         val menu = menuRepository.findById(menuId)
@@ -87,7 +87,7 @@ class MenuService(
             .orElseThrow { EntityNotFoundException(Menu::class.java, "id", businessId) }
         val menuItem = menuItemRepository.findById(menuItemId)
             .orElseThrow { EntityNotFoundException(MenuItem::class.java, "id", menuItemId) }
-        menuItem.extra = menuDto.extra
+        menuItem.extra = menuDto.extra!!
         menuItemRepository.save(menuItem)
         return menu.toDto()
     }
