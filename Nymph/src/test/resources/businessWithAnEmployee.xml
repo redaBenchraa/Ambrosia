@@ -1,0 +1,21 @@
+<dataset>
+    <business
+            id="1000"
+            name="name"
+            currency="EUR"
+            email="email@email.com"
+            description="description"
+            phone_number="phone_number"
+            location="location"
+            slogan="slogan"
+            logo="logo"
+    />
+    <employee
+            id="1001"
+            business_id="1000"
+            first_name="firstName"
+            last_name="lastName"
+            position="0"
+            email="email@email.com"
+    />
+</dataset>

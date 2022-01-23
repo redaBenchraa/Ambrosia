@@ -20,5 +20,6 @@ open class BaseEntity(
     @LastModifiedDate
     @ColumnDefault(NOW)
     var updatedAt: LocalDateTime = LocalDateTime.now(),
+    @Column(columnDefinition = "boolean default 0")
     var deleted: Boolean = false,
 )

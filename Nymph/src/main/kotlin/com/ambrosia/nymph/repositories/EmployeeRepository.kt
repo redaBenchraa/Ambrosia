@@ -7,4 +7,5 @@ import org.springframework.stereotype.Repository
 @Repository
 interface EmployeeRepository : JpaRepository<Employee, Long> {
     fun countByEmail(email: String): Long
+    fun findByBusinessId(businessId: Long): List<Employee>
 }

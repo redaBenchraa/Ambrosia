@@ -1,11 +1,10 @@
 spring:
   liquibase:
+    change-log: classpath:db/changelog/liquibase.xml
     enabled: false
   datasource:
     initialization-mode: embedded
   jpa:
+    database-platform: com.ambrosia.nymph.configs.H2DialectExtended
     hibernate:
-      ddl-auto: none
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.H2Dialect
+      ddl-auto: create-drop

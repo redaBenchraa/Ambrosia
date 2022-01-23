@@ -6,6 +6,8 @@ import com.ambrosia.nymph.constants.Constants.Companion.NOW
 import com.ambrosia.nymph.constants.Currency
 import com.fasterxml.jackson.annotation.JsonBackReference
 import org.hibernate.annotations.ColumnDefault
+import org.hibernate.annotations.SQLDelete
+import org.hibernate.annotations.Where
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedDate
 import java.time.LocalDateTime
@@ -16,11 +18,13 @@ import javax.validation.constraints.NotNull
 import javax.validation.constraints.Size
 
 @Entity
+@SQLDelete(sql = "UPDATE business SET deleted = true WHERE id=?")
+@Where(clause = "deleted = false")
 class Business(
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(nullable = false)
     @field:NotNull(message = "error.business.id.null")
-    @GeneratedValue(strategy = GenerationType.AUTO)
     var id: Long?,
     @field:NotNull(message = "error.business.name.null")
     @field:NotBlank(message = "error.business.name.blank")
@@ -44,6 +48,7 @@ class Business(
     @Column(nullable = false)
     var currency: String = Currency.EUR.name,
     @Column(nullable = false)
+    @ColumnDefault("true")
     var isAvailable: Boolean = true,
     @Column(nullable = false)
     @CreatedDate
@@ -53,6 +58,7 @@ class Business(
     @LastModifiedDate
     @ColumnDefault(NOW)
     var updatedAt: LocalDateTime = LocalDateTime.now(),
+    @Column(columnDefinition = "boolean default 0")
     var deleted: Boolean = false,
     @OneToMany(
         cascade = [CascadeType.ALL],

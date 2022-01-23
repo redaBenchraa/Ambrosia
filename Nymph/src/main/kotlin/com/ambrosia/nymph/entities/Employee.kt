@@ -17,16 +17,12 @@ import javax.validation.constraints.Size
 
 @Entity
 @SQLDelete(sql = "UPDATE employee SET deleted = true WHERE id=?")
-@FilterDef(
-    name = "deletedEmployeeFilter",
-    parameters = [ParamDef(name = "isDeleted", type = "boolean")]
-)
-@Filter(name = "deletedEmployeeFilter", condition = "deleted = :isDeleted")
+@Where(clause = "deleted = false")
 class Employee(
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(nullable = false)
     @field:NotNull(message = "error.employee.id.null")
-    @GeneratedValue(strategy = GenerationType.AUTO)
     var id: Long? = null,
     @field:NotNull(message = "error.employee.firstName.null")
     @field:NotBlank(message = "error.employee.firstName.blank")
@@ -51,10 +47,11 @@ class Employee(
     @LastModifiedDate
     @ColumnDefault(NOW)
     var updatedAt: LocalDateTime = LocalDateTime.now(),
+    @Column(columnDefinition = "boolean default 0")
     var deleted: Boolean = false,
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "business_id", nullable = false)
-    @OnDelete(action = OnDeleteAction.NO_ACTION)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonManagedReference
     var business: Business? = null,
 )
