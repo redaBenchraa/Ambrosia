@@ -5,27 +5,16 @@ import org.springframework.stereotype.Component
 
 @Component
 class EnvironmentProperties(private val env: Environment) {
-	fun realm(): String? {
-		return env.getProperty("keycloak.realm")
-	}
 
-	fun clientId(): String? {
-		return env.getProperty("keycloak.resource")
-	}
+    fun realm(): String? = env.getProperty("keycloak.realm")
 
-	fun authServerUrl(): String? {
-		return env.getProperty("keycloak.auth-server-url")
-	}
+    fun clientId(): String? = env.getProperty("keycloak.resource")
 
-	fun clientSecret(): String? {
-		return env.getProperty("keycloak.credentials.secret")
-	}
+    fun authServerUrl(): String? = env.getProperty("keycloak.auth-server-url")
 
-	fun realmManagerUsername(): String? {
-		return env.getProperty("realm-manager-username")
-	}
+    fun clientSecret(): String? = env.getProperty("keycloak.credentials.secret")
 
-	fun realmManagerPassword(): String? {
-		return env.getProperty("realm-manager-password")
-	}
+    fun realmManagerUsername(): String? = env.getProperty("realm-manager-username")
+
+    fun realmManagerPassword(): String? = env.getProperty("realm-manager-password")
 }

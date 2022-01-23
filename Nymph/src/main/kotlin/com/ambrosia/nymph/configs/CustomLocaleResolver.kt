@@ -8,27 +8,20 @@ import org.springframework.web.servlet.i18n.AcceptHeaderLocaleResolver
 import java.util.*
 import javax.servlet.http.HttpServletRequest
 
-
 @Configuration
 class CustomLocaleResolver : AcceptHeaderLocaleResolver(), WebMvcConfigurer {
-	final var locales = listOf(
-		Locale("en"),
-		Locale("fr")
-	)
-	
-	override fun resolveLocale(request: HttpServletRequest): Locale {
-		val headerLang = request.getHeader("Accept-Language")
-		return if (Objects.isNull(headerLang) || headerLang.isEmpty())
-			Locale.getDefault()
-		else Locale.lookup(Locale.LanguageRange.parse(headerLang), locales)
-	}
+    final var locales = listOf(Locale("en"), Locale("fr"))
 
-	@Bean
-	fun messageSource(): ResourceBundleMessageSource {
-		val rs = ResourceBundleMessageSource()
-		rs.setBasename("messages")
-		rs.setDefaultEncoding("windows-1252")
-		rs.setUseCodeAsDefaultMessage(true)
-		return rs
-	}
+    override fun resolveLocale(request: HttpServletRequest): Locale {
+        val headerLang = request.getHeader("Accept-Language")
+        return if (Objects.isNull(headerLang) || headerLang.isEmpty()) Locale.getDefault()
+        else Locale.lookup(Locale.LanguageRange.parse(headerLang), locales)
+    }
+
+    @Bean
+    fun messageSource(): ResourceBundleMessageSource = ResourceBundleMessageSource().apply {
+        setBasename("messages")
+        setDefaultEncoding("windows-1252")
+        setUseCodeAsDefaultMessage(true)
+    }
 }
