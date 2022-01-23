@@ -4,7 +4,7 @@ spring:
   main:
     allow-bean-definition-overriding: true
   liquibase:
-    change-log: classpath:db/changelog/liquibase-changeLog.xml
+    change-log: classpath:db/changelog/liquibase.xml
     enabled: true
   datasource:
     continue-on-error: false
