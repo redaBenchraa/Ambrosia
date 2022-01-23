@@ -23,8 +23,12 @@ class Table(
     @Column(nullable = false)
     @field:NotNull(message = "error.table.id.null")
     var id: Long?,
-    @field:NotNull(message = "error.table.isAvailable.null") var isAvailable: Boolean = true,
-    @field:NotNull(message = "error.table.number.null") var number: Int,
+    @Column(nullable = false)
+    @field:NotNull(message = "error.table.number.null")
+    var number: Int,
+    @field:NotNull(message = "error.table.isAvailable.null")
+    @ColumnDefault("true")
+    var isAvailable: Boolean = true,
     @Column(nullable = false)
     @CreatedDate
     @ColumnDefault(NOW)
@@ -39,7 +43,7 @@ class Table(
     @JoinColumn(name = "business_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonManagedReference
-    var business: Business,
+    var business: Business? = null,
     @OneToMany(
         cascade = [CascadeType.ALL],
         fetch = FetchType.LAZY,
@@ -47,5 +51,5 @@ class Table(
         targetEntity = Session::class
     )
     @JsonBackReference
-    var sessions: MutableSet<Session>,
+    var sessions: MutableSet<Session> = HashSet(),
 )

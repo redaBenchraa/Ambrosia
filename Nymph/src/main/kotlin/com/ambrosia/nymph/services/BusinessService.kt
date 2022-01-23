@@ -37,7 +37,8 @@ class BusinessService(
         businessRegistrationDto.slogan?.let { business.slogan = it }
         businessRegistrationDto.logo?.let { business.logo = it }
         businessRegistrationDto.location?.let { business.location = it }
-        businessRegistrationDto.currency.let { business.currency = it }
+        businessRegistrationDto.currency?.let { business.currency = it }
+        businessRegistrationDto.isAvailable?.let { business.isAvailable = it }
         businessRepository.save(business)
         return business.toDto()
     }
