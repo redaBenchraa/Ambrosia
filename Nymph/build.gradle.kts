@@ -58,6 +58,8 @@ dependencies {
     implementation("org.keycloak:keycloak-admin-client:16.1.0")
     implementation("org.zalando:problem-spring-web:0.27.0")
     implementation("org.apache.commons:commons-collections4:4.4")
+    implementation("com.github.springtestdbunit:spring-test-dbunit:1.3.0")
+    implementation("org.dbunit:dbunit:2.7.2")
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
     liquibaseRuntime("org.postgresql:postgresql")
     liquibaseRuntime("org.liquibase:liquibase-core:4.4.3")
@@ -67,7 +69,7 @@ dependencies {
         exclude(module = "mockito-core")
     }
     testImplementation("org.springframework.security:spring-security-test")
-    testImplementation("com.h2database:h2:2.0.206")
+    testImplementation("com.h2database:h2:2.1.210")
     testImplementation("com.ninja-squad:springmockk:3.1.0")
     testImplementation("org.junit.jupiter:junit-jupiter-api")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
