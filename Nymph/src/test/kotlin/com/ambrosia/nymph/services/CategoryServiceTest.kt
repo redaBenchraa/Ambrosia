@@ -35,9 +35,7 @@ class CategoryServiceTest {
     @Test
     fun `Add category to a non existing business`() {
         every { businessRepository.findById(any()) } returns Optional.empty()
-        assertThrows<EntityNotFoundException> {
-            categoryService.addCategory(1, getCategory().toDto())
-        }
+        assertThrows<EntityNotFoundException> { categoryService.addCategory(1, getCategory().toDto()) }
     }
 
     @Test

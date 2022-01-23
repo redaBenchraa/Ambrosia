@@ -5,36 +5,56 @@ import com.ambrosia.nymph.dtos.BusinessRegistrationDto
 import com.ambrosia.nymph.dtos.EmployeeRegistrationDto
 import com.ambrosia.nymph.entities.Business
 import com.ambrosia.nymph.entities.Employee
+import com.ambrosia.nymph.exceptions.EntityNotFoundException
+import com.ambrosia.nymph.mappers.toDto
 import com.ambrosia.nymph.repositories.BusinessRepository
-import com.ambrosia.nymph.repositories.EmployeeRepository
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
+import java.util.*
 
 class BusinessServiceTest {
 
     private val businessRepository: BusinessRepository = mockk()
-    private val employeeRepository: EmployeeRepository = mockk()
-
-    private val businessService: BusinessService =
-        BusinessService(businessRepository, employeeRepository)
+    private val employeeService: EmployeeService = mockk()
+    private val businessService: BusinessService = BusinessService(businessRepository, employeeService)
 
     @Test
     fun `Register a business with an employee`() {
         every { businessRepository.save(any()) } returns getBusiness()
-        every { employeeRepository.save(any()) } returns getEmployee()
-        every { employeeRepository.countByEmail(any()) } returns 0
+        every { employeeService.addEmployee(any(), any()) } returns getEmployee().toDto()
         val result = businessService.createBusiness(getBusinessRegistrationDto())
         verify {
             businessRepository.save(any())
-            employeeRepository.save(any())
+            employeeService.addEmployee(any(), any())
         }
         assertEquals(1, result.id)
         assertNotNull(result.employee)
         assertEquals(1, result.employee?.id)
+    }
+
+    @Test
+    fun `Edit business`() {
+        every { businessRepository.findById(any()) } returns Optional.of(getBusiness())
+        every { businessRepository.save(any()) } returns getBusiness()
+        val result = businessService.editBusiness(1, getBusinessRegistrationDto().copy(name = "new name"))
+        assertEquals("new name", result.name)
+        verify {
+            businessRepository.findById(any())
+            businessRepository.save(any())
+        }
+    }
+
+    @Test
+    fun `Edit a non existing business`() {
+        every { businessRepository.findById(any()) } returns Optional.empty()
+        assertThrows<EntityNotFoundException> {
+            businessService.editBusiness(1, getBusinessRegistrationDto())
+        }
     }
 
     private fun getBusinessRegistrationDto(): BusinessRegistrationDto {
