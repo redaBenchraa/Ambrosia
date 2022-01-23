@@ -3,23 +3,25 @@ package com.ambrosia.nymph.entities
 import com.ambrosia.nymph.constants.Constants.Companion.NOW
 import com.fasterxml.jackson.annotation.JsonBackReference
 import com.fasterxml.jackson.annotation.JsonManagedReference
-import org.hibernate.annotations.ColumnDefault
-import org.hibernate.annotations.OnDelete
-import org.hibernate.annotations.OnDeleteAction
+import org.hibernate.annotations.*
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedDate
 import java.time.LocalDateTime
 import javax.persistence.*
+import javax.persistence.CascadeType
+import javax.persistence.Entity
 import javax.persistence.Table
 import javax.validation.constraints.NotNull
 
 @Entity
 @Table(name = "tables")
+@SQLDelete(sql = "UPDATE tables SET deleted = true WHERE id=?")
+@Where(clause = "deleted = false")
 class Table(
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(nullable = false)
     @field:NotNull(message = "error.table.id.null")
-    @GeneratedValue(strategy = GenerationType.AUTO)
     var id: Long?,
     @field:NotNull(message = "error.table.isAvailable.null") var isAvailable: Boolean = true,
     @field:NotNull(message = "error.table.number.null") var number: Int,
@@ -31,10 +33,11 @@ class Table(
     @LastModifiedDate
     @ColumnDefault(NOW)
     var updatedAt: LocalDateTime = LocalDateTime.now(),
+    @Column(columnDefinition = "boolean default 0")
     var deleted: Boolean = false,
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "business_id", nullable = false)
-    @OnDelete(action = OnDeleteAction.NO_ACTION)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonManagedReference
     var business: Business,
     @OneToMany(
