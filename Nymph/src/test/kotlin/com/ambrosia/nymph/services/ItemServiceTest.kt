@@ -84,17 +84,7 @@ class ItemServiceTest {
     }
 
     private fun getBusiness(): Business =
-        Business(
-            name = "name",
-            currency = "EUR",
-            description = "desc",
-            email = "email",
-            phoneNumber = "phoneNumber",
-            location = "location",
-            logo = "logo",
-            slogan = "slogan",
-            id = 1,
-        )
+        Business(name = "name", currency = "EUR", email = "email", phoneNumber = "phoneNumber", id = 1)
 
     private fun getItem(): Item =
         Item(id = 1, name = "name", description = "description", image = "image", price = 10.0)

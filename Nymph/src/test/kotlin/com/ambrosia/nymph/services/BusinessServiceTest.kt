@@ -81,17 +81,7 @@ class BusinessServiceTest {
         )
 
     private fun getBusiness(): Business =
-        Business(
-            name = "name",
-            currency = "EUR",
-            description = "desc",
-            email = "email",
-            phoneNumber = "phoneNumber",
-            location = "location",
-            logo = "logo",
-            slogan = "slogan",
-            id = 1,
-        )
+        Business(name = "name", currency = "EUR", email = "email", phoneNumber = "phoneNumber", id = 1)
 
     private fun getEmployee(): Employee =
         Employee(

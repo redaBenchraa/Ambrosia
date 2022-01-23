@@ -26,7 +26,8 @@ data class BusinessRegistrationDto(
     var slogan: String?,
     var logo: String?,
     var location: String?,
-    var currency: String = Currency.EUR.name,
+    var currency: String? = Currency.EUR.name,
+    var isAvailable: Boolean? = true,
     @field:Valid
     @field:NotNull(message = "error.business.employee.null")
     var employee: EmployeeRegistrationDto? = null,
