@@ -28,7 +28,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
 @AutoConfigureMockMvc(addFilters = false)
 class TableControllerTest {
 
-    val baseUrl = "/businesses/1/categories"
+    val baseUrl = "/businesses/1/tables"
 
     @Autowired
     private lateinit var mockMvc: MockMvc
@@ -108,11 +108,11 @@ class TableControllerTest {
             .andExpect(jsonPath("$.title", `is`("Constraint Violation")))
             .andExpect(jsonPath("$.status", `is`(400)))
             .andExpect(jsonPath("$.violations", hasSize<Any>(1)))
-            .andExpect(jsonPath("$.violations[0].field", `is`("name")))
+            .andExpect(jsonPath("$.violations[0].field", `is`("number")))
             .andExpect(
                 jsonPath(
                     "$.violations[0].message",
-                    `is`(translator.toLocale("error.table.name.null"))
+                    `is`(translator.toLocale("error.table.number.null"))
                 )
             )
     }
