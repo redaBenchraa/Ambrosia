@@ -11,16 +11,14 @@ import javax.persistence.GenerationType
 import javax.persistence.Id
 
 open class BaseEntity(
-	@Id @Column(nullable = false)
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	var id: Long?,
-	@Column(nullable = false)
-	@CreatedDate
-	@ColumnDefault(NOW)
-	var createdAt: LocalDateTime = LocalDateTime.now(),
-	@Column(nullable = false)
-	@LastModifiedDate
-	@ColumnDefault(NOW)
-	var updatedAt: LocalDateTime = LocalDateTime.now(),
-	var deleted: Boolean = false,
+    @Id @Column(nullable = false) @GeneratedValue(strategy = GenerationType.AUTO) var id: Long?,
+    @Column(nullable = false)
+    @CreatedDate
+    @ColumnDefault(NOW)
+    var createdAt: LocalDateTime = LocalDateTime.now(),
+    @Column(nullable = false)
+    @LastModifiedDate
+    @ColumnDefault(NOW)
+    var updatedAt: LocalDateTime = LocalDateTime.now(),
+    var deleted: Boolean = false,
 )

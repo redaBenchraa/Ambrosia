@@ -17,38 +17,37 @@ import javax.validation.constraints.Size
 
 @Entity
 class OrderedItem(
-	@Id
-	@Column(nullable = false)
-	@field:NotNull(message = "error.orderedItem.id.null")
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	var id: Long?,
-	@field:NotNull(message = "error.orderedItem.name.null")
-	@field:NotBlank(message = "error.orderedItem.name.blank")
-	@field:Size(max = NAME_MAX_SIZE, message = "error.orderedItem.name.size.invalid")
-	@Column(nullable = false)
-	var name: String,
-	@Column(columnDefinition = "text")
-	var description: String?,
-	@field:NotNull(message = "error.orderedItem.price.null")
-	@field:Min(0, message = "error.orderedItem.price.negative")
-	var price: Double,
-	@Column(nullable = false)
-	@CreatedDate
-	@ColumnDefault(Constants.NOW)
-	var createdAt: LocalDateTime = LocalDateTime.now(),
-	@Column(nullable = false)
-	@LastModifiedDate
-	@ColumnDefault(Constants.NOW)
-	var updatedAt: LocalDateTime = LocalDateTime.now(),
-	var deleted: Boolean = false,
-	@ManyToOne(fetch = FetchType.LAZY, optional = false)
-	@JoinColumn(name = "order_id", nullable = false)
-	@OnDelete(action = OnDeleteAction.NO_ACTION)
-	@JsonManagedReference
-	var order: Order,
-	@OneToOne(fetch = FetchType.LAZY, optional = false)
-	@JoinColumn(name = "item_id", nullable = true)
-	@OnDelete(action = OnDeleteAction.NO_ACTION)
-	@JsonManagedReference
-	var item: Item?,
+    @Id
+    @Column(nullable = false)
+    @field:NotNull(message = "error.orderedItem.id.null")
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    var id: Long?,
+    @field:NotNull(message = "error.orderedItem.name.null")
+    @field:NotBlank(message = "error.orderedItem.name.blank")
+    @field:Size(max = NAME_MAX_SIZE, message = "error.orderedItem.name.size.invalid")
+    @Column(nullable = false)
+    var name: String,
+    @Column(columnDefinition = "text") var description: String?,
+    @field:NotNull(message = "error.orderedItem.price.null")
+    @field:Min(0, message = "error.orderedItem.price.negative")
+    var price: Double,
+    @Column(nullable = false)
+    @CreatedDate
+    @ColumnDefault(Constants.NOW)
+    var createdAt: LocalDateTime = LocalDateTime.now(),
+    @Column(nullable = false)
+    @LastModifiedDate
+    @ColumnDefault(Constants.NOW)
+    var updatedAt: LocalDateTime = LocalDateTime.now(),
+    var deleted: Boolean = false,
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "order_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.NO_ACTION)
+    @JsonManagedReference
+    var order: Order,
+    @OneToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "item_id", nullable = true)
+    @OnDelete(action = OnDeleteAction.NO_ACTION)
+    @JsonManagedReference
+    var item: Item?,
 )

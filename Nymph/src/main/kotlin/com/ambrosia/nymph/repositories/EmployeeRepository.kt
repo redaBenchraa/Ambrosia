@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository
 
 @Repository
 interface EmployeeRepository : JpaRepository<Employee, Long> {
-	fun countByEmail(email: String): Long
+    fun countByEmail(email: String): Long
 }
