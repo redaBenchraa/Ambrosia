@@ -35,9 +35,7 @@ class CategoryServiceTest {
     @Test
     fun `Add category to a non existing business`() {
         every { businessRepository.findById(any()) } returns Optional.empty()
-        assertThrows<EntityNotFoundException> {
-            categoryService.addCategory(1, getCategory().toDto())
-        }
+        assertThrows<EntityNotFoundException> { categoryService.addCategory(1, getCategory().toDto()) }
     }
 
     @Test
@@ -88,17 +86,7 @@ class CategoryServiceTest {
     }
 
     private fun getBusiness(): Business =
-        Business(
-            name = "name",
-            currency = "EUR",
-            description = "desc",
-            email = "email",
-            phoneNumber = "phoneNumber",
-            location = "location",
-            logo = "logo",
-            slogan = "slogan",
-            id = 1,
-        )
+        Business(name = "name", currency = "EUR", email = "email", phoneNumber = "phoneNumber", id = 1)
 
     private fun getCategory(): Category =
         Category(
