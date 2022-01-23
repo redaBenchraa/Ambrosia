@@ -140,21 +140,21 @@ class MenuServiceTest {
         every { menuRepository.findById(any()) } returns Optional.of(getMenu())
         every { menuItemRepository.findById(any()) } returns Optional.of(getMenuItem())
         every { menuRepository.save(any()) } returns getMenu()
-        menuService.removeItemFromMenu(1, 1, 1)
+        menuService.deleteMenuItem(1, 1, 1)
         verify { menuRepository.save(any()) }
     }
 
     @Test
     fun `Remove an item to a menu from a non existing business`() {
         every { businessRepository.findById(any()) } returns Optional.empty()
-        assertThrows<EntityNotFoundException> { menuService.removeItemFromMenu(1, 1, 1) }
+        assertThrows<EntityNotFoundException> { menuService.deleteMenuItem(1, 1, 1) }
     }
 
     @Test
     fun `Remove an item to a menu from a non existing menu`() {
         every { businessRepository.findById(any()) } returns Optional.of(getBusiness())
         every { menuRepository.findById(any()) } returns Optional.empty()
-        assertThrows<EntityNotFoundException> { menuService.removeItemFromMenu(1, 1, 1) }
+        assertThrows<EntityNotFoundException> { menuService.deleteMenuItem(1, 1, 1) }
     }
 
 
@@ -163,7 +163,7 @@ class MenuServiceTest {
         every { businessRepository.findById(any()) } returns Optional.of(getBusiness())
         every { menuRepository.findById(any()) } returns Optional.of(getMenu())
         every { menuItemRepository.findById(any()) } returns Optional.empty()
-        assertThrows<EntityNotFoundException> { menuService.removeItemFromMenu(1, 1, 1) }
+        assertThrows<EntityNotFoundException> { menuService.deleteMenuItem(1, 1, 1) }
     }
 
     @Test

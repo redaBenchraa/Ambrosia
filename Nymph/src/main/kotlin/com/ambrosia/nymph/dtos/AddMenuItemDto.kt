@@ -12,5 +12,5 @@ data class AddMenuItemDto(
     var categoryId: Long?,
     @field:NotNull(message = "error.menuItem.extra.null")
     @field:Min(PRICE_MIN, message = "error.menuItem.extra.negative")
-    var extra: Double = 0.0,
+    var extra: Double? = 0.0,
 )
