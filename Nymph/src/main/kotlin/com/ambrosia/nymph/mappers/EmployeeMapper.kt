@@ -13,3 +13,6 @@ fun Employee.toRegistrationEmployeeDto(): EmployeeRegistrationDto =
 
 fun EmployeeRegistrationDto.toEntity(): Employee =
     Employee(id, firstName!!, lastName!!, email!!, position)
+
+fun EmployeeDto.toEmployeeRegistrationDto(): EmployeeRegistrationDto =
+    EmployeeRegistrationDto(id, firstName!!, lastName!!, email!!, position)

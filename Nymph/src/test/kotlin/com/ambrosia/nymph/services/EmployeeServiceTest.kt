@@ -21,7 +21,6 @@ class EmployeeServiceTest {
 
     private val businessRepository: BusinessRepository = mockk()
     private val employeeRepository: EmployeeRepository = mockk()
-
     private val employeeService = EmployeeService(businessRepository, employeeRepository)
 
     @Test

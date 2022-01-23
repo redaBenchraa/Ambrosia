@@ -6,6 +6,7 @@ import com.ambrosia.nymph.dtos.BusinessRegistrationDto
 import com.ambrosia.nymph.dtos.EmployeeRegistrationDto
 import com.ambrosia.nymph.entities.Business
 import com.ambrosia.nymph.exceptions.EntityAlreadyExistsException
+import com.ambrosia.nymph.exceptions.EntityNotFoundException
 import com.ambrosia.nymph.handlers.RuntimeExceptionHandler
 import com.ambrosia.nymph.services.BusinessService
 import com.ambrosia.nymph.utils.Translator
@@ -18,11 +19,13 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.http.HttpStatus
 import org.springframework.http.HttpStatus.CONFLICT
 import org.springframework.http.MediaType
 import org.springframework.http.MediaType.APPLICATION_JSON
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
 
 @SpringBootTest
@@ -73,6 +76,26 @@ class BusinessControllerTest {
     }
 
     @Test
+    fun `Register a business with no employee`() {
+        every { businessService.createBusiness(any()) } returns getBusinessRegistrationDto()
+        val content = objectMapper.writeValueAsString(getBusinessRegistrationDto().apply { employee = null })
+        mockMvc
+            .perform(post("$baseUrl/register").contentType(APPLICATION_JSON).content(content))
+            .andExpect(status().isBadRequest)
+            .andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON))
+            .andExpect(jsonPath("$.type", `is`<Any>(Urls.VIOLATIONS)))
+            .andExpect(jsonPath("$.title", `is`("Constraint Violation")))
+            .andExpect(jsonPath("$.status", `is`(400)))
+            .andExpect(jsonPath("$.violations", hasSize<Any>(1)))
+            .andExpect(jsonPath("$.violations[0].field", `is`("employee")))
+            .andExpect(
+                jsonPath(
+                    "$.violations[0].message", `is`(translator.toLocale("error.business.employee.null"))
+                )
+            )
+    }
+
+    @Test
     fun `Register a business with blank name`() {
         val invalidBusinessDto = getBusinessRegistrationDto().apply { name = "" }
         every { businessService.createBusiness(any()) } returns getBusinessRegistrationDto()
@@ -91,8 +114,7 @@ class BusinessControllerTest {
             .andExpect(jsonPath("$.violations[0].field", `is`("name")))
             .andExpect(
                 jsonPath(
-                    "$.violations[0].message",
-                    `is`(translator.toLocale("error.business.name.blank"))
+                    "$.violations[0].message", `is`(translator.toLocale("error.business.name.blank"))
                 )
             )
     }
@@ -100,7 +122,7 @@ class BusinessControllerTest {
     @Test
     fun `Register a business with invalid employee name`() {
         val content = objectMapper.writeValueAsString(getBusinessRegistrationDto().apply { employee?.email = "email" })
-        every { businessService.createBusiness(any()) } returns getBusinessRegistrationDto()
+        every { businessService.editBusiness(any(), any()) } returns getBusinessRegistrationDto()
         mockMvc
             .perform(post("$baseUrl/register").contentType(APPLICATION_JSON).content(content))
             .andExpect(status().isBadRequest)
@@ -112,10 +134,57 @@ class BusinessControllerTest {
             .andExpect(jsonPath("$.violations[0].field", `is`("employee.email")))
             .andExpect(
                 jsonPath(
-                    "$.violations[0].message",
-                    `is`(translator.toLocale("error.employee.email.format.invalid"))
+                    "$.violations[0].message", `is`(translator.toLocale("error.employee.email.format.invalid"))
                 )
             )
+    }
+
+    @Test
+    fun `Edit a business`() {
+        every { businessService.editBusiness(any(), any()) } returns getBusinessRegistrationDto()
+        val content = objectMapper.writeValueAsString(getBusinessRegistrationDto())
+        mockMvc
+            .perform(put("$baseUrl/1").contentType(APPLICATION_JSON).content(content))
+            .andExpect(status().isOk)
+            .andExpect(content().contentType(APPLICATION_JSON))
+            .andExpect(
+                content().json(objectMapper.writeValueAsString(getBusinessRegistrationDto()))
+            )
+    }
+
+    @Test
+    fun `Edit a business with invalid name`() {
+        val content = objectMapper.writeValueAsString(getBusinessRegistrationDto().apply { name = "" })
+        every { businessService.createBusiness(any()) } returns getBusinessRegistrationDto()
+        mockMvc
+            .perform(put("$baseUrl/1").contentType(APPLICATION_JSON).content(content))
+            .andExpect(status().isBadRequest)
+            .andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON))
+            .andExpect(jsonPath("$.type", `is`<Any>(Urls.VIOLATIONS)))
+            .andExpect(jsonPath("$.title", `is`("Constraint Violation")))
+            .andExpect(jsonPath("$.status", `is`(400)))
+            .andExpect(jsonPath("$.violations", hasSize<Any>(1)))
+            .andExpect(jsonPath("$.violations[0].field", `is`("name")))
+            .andExpect(
+                jsonPath(
+                    "$.violations[0].message", `is`(translator.toLocale("error.business.name.blank"))
+                )
+            )
+    }
+
+    @Test
+    fun `Edit a non existing business`() {
+        val exception = EntityNotFoundException(Business::class.java, "id", "1")
+        val expected = runtimeExceptionHandler.handleEntityNotFoundException(exception)
+        every { businessService.editBusiness(any(), any()) } throws exception
+        mockMvc
+            .perform(
+                put("$baseUrl/1").contentType(APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(getBusinessRegistrationDto()))
+            )
+            .andExpect(status().`is`(HttpStatus.NOT_FOUND.value()))
+            .andExpect(content().contentType(APPLICATION_JSON))
+            .andExpect(content().json(objectMapper.writeValueAsString(expected.body)))
     }
 
     private fun getBusinessRegistrationDto() =
