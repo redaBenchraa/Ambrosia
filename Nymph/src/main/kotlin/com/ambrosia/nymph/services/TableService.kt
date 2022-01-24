@@ -2,7 +2,7 @@ package com.ambrosia.nymph.services
 
 import com.ambrosia.nymph.dtos.TableDto
 import com.ambrosia.nymph.entities.Business
-import com.ambrosia.nymph.entities.Employee
+import com.ambrosia.nymph.entities.Table
 import com.ambrosia.nymph.exceptions.EntityNotFoundException
 import com.ambrosia.nymph.mappers.toDto
 import com.ambrosia.nymph.mappers.toEntity
@@ -32,7 +32,7 @@ class TableService(
         businessRepository.findById(businessId)
             .orElseThrow { EntityNotFoundException(Business::class.java, "id", businessId) }
         val table = tableRepository.findById(tableId)
-            .orElseThrow { EntityNotFoundException(Employee::class.java, "id", tableId) }
+            .orElseThrow { EntityNotFoundException(Table::class.java, "id", tableId) }
         tableDto.number?.let { table.number = it }
         tableDto.isAvailable?.let { table.isAvailable = it }
         tableRepository.save(table)
@@ -44,7 +44,7 @@ class TableService(
         businessRepository.findById(businessId)
             .orElseThrow { EntityNotFoundException(Business::class.java, "id", businessId) }
         val table = tableRepository.findById(tableId)
-            .orElseThrow { EntityNotFoundException(Employee::class.java, "id", tableId) }
+            .orElseThrow { EntityNotFoundException(Table::class.java, "id", tableId) }
         tableRepository.delete(table)
     }
 }

@@ -58,7 +58,7 @@ class MenuService(
         businessRepository.findById(businessId)
             .orElseThrow { EntityNotFoundException(Business::class.java, "id", businessId) }
         val menu = menuRepository.findById(menuId)
-            .orElseThrow { EntityNotFoundException(Menu::class.java, "id", businessId) }
+            .orElseThrow { EntityNotFoundException(Menu::class.java, "id", menuId) }
         val category = categoryRepository.findById(menuDto.categoryId!!)
             .orElseThrow { EntityNotFoundException(Category::class.java, "id", menuDto.categoryId!!) }
         val item = itemRepository.findById(menuDto.itemId!!)
@@ -72,11 +72,12 @@ class MenuService(
         businessRepository.findById(businessId)
             .orElseThrow { EntityNotFoundException(Business::class.java, "id", businessId) }
         val menu = menuRepository.findById(menuId)
-            .orElseThrow { EntityNotFoundException(Menu::class.java, "id", businessId) }
+            .orElseThrow { EntityNotFoundException(Menu::class.java, "id", menuId) }
         val menuItem = menuItemRepository.findById(menuItemId)
             .orElseThrow { EntityNotFoundException(MenuItem::class.java, "id", menuItemId) }
+        menuItemRepository.delete(menuItem)
         menu.menuItems.remove(menuItem)
-        return menuRepository.save(menu).toDto()
+        return menu.toDto()
     }
 
     @Transactional
@@ -84,7 +85,7 @@ class MenuService(
         businessRepository.findById(businessId)
             .orElseThrow { EntityNotFoundException(Business::class.java, "id", businessId) }
         val menu = menuRepository.findById(menuId)
-            .orElseThrow { EntityNotFoundException(Menu::class.java, "id", businessId) }
+            .orElseThrow { EntityNotFoundException(Menu::class.java, "id", menuId) }
         val menuItem = menuItemRepository.findById(menuItemId)
             .orElseThrow { EntityNotFoundException(MenuItem::class.java, "id", menuItemId) }
         menuItem.extra = menuDto.extra!!

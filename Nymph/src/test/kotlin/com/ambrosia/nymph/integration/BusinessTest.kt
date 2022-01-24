@@ -13,8 +13,7 @@ import com.ambrosia.nymph.repositories.EmployeeRepository
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.github.springtestdbunit.TransactionDbUnitTestExecutionListener
 import com.github.springtestdbunit.annotation.DatabaseSetup
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertNotNull
+import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
@@ -35,10 +34,11 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 @TestExecutionListeners(
     listeners = [DependencyInjectionTestExecutionListener::class, TransactionDbUnitTestExecutionListener::class]
 )
-@DatabaseSetup("classpath:businessWithAnEmployee.xml")
+@DatabaseSetup("classpath:business.xml")
 class BusinessTest {
 
-    val baseUrl = "/businesses"
+    private val id: Long = 1000
+    private val baseUrl = "/businesses"
 
     @Autowired
     lateinit var mockMvc: MockMvc
@@ -96,7 +96,7 @@ class BusinessTest {
             .andExpect(content().contentType(APPLICATION_JSON))
             .andExpect(content().json(objectMapper.writeValueAsString(expected.body)))
 
-        assertEquals(1, employeeRepository.countByEmail("email@email.com"))
+        assertTrue(employeeRepository.existsByEmail("email@email.com"))
 
         val businesses = businessRepository.findAll()
         assertEquals(1, businesses.size)
@@ -109,13 +109,13 @@ class BusinessTest {
     fun `Edit a business`() {
         val content = objectMapper.writeValueAsString(getBusinessRegistrationDto().copy(name = "new name"))
         mockMvc
-            .perform(put("$baseUrl/1000").contentType(APPLICATION_JSON).content(content))
+            .perform(put("$baseUrl/$id").contentType(APPLICATION_JSON).content(content))
             .andExpect(status().isOk)
             .andExpect(content().contentType(APPLICATION_JSON))
 
-        val businesses = businessRepository.findAll()
-        assertEquals(1, businesses.size)
-        assertEquals("new name", businesses[0].name)
+        val business = businessRepository.findById(id)
+        assertTrue(business.isPresent)
+        assertEquals("new name", business.get().name)
     }
 
     @Test
@@ -128,8 +128,6 @@ class BusinessTest {
             .andExpect(status().`is`(NOT_FOUND.value()))
             .andExpect(content().contentType(APPLICATION_JSON))
             .andExpect(content().json(objectMapper.writeValueAsString(expected.body)))
-
-        assertEquals(1, businessRepository.count())
     }
 
 

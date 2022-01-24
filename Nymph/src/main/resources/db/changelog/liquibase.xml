@@ -140,7 +140,7 @@
             <column name="name" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
-            <column name="only_for_menu" type="BOOLEAN">
+            <column name="only_for_menu" type="BOOLEAN" defaultValue="false">
                 <constraints nullable="false"/>
             </column>
             <column name="price" type="FLOAT8">
@@ -271,7 +271,7 @@
             <column defaultValueComputed="now()" name="created_at" type="TIMESTAMP WITHOUT TIME ZONE">
                 <constraints nullable="false"/>
             </column>
-            <column name="is_available" type="BOOLEAN">
+            <column name="is_available" type="BOOLEAN" defaultValue="true">
                 <constraints nullable="false"/>
             </column>
             <column name="number" type="INTEGER">

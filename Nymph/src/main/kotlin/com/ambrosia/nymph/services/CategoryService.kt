@@ -2,7 +2,7 @@ package com.ambrosia.nymph.services
 
 import com.ambrosia.nymph.dtos.CategoryDto
 import com.ambrosia.nymph.entities.Business
-import com.ambrosia.nymph.entities.Employee
+import com.ambrosia.nymph.entities.Category
 import com.ambrosia.nymph.exceptions.EntityNotFoundException
 import com.ambrosia.nymph.mappers.toDto
 import com.ambrosia.nymph.mappers.toEntity
@@ -32,7 +32,7 @@ class CategoryService(
         businessRepository.findById(businessId)
             .orElseThrow { EntityNotFoundException(Business::class.java, "id", businessId) }
         val category = categoryRepository.findById(categoryId)
-            .orElseThrow { EntityNotFoundException(Employee::class.java, "id", categoryId) }
+            .orElseThrow { EntityNotFoundException(Category::class.java, "id", categoryId) }
         categoryDto.name?.let { category.name = it }
         categoryDto.description?.let { category.description = it }
         categoryDto.image?.let { category.image = it }
@@ -45,7 +45,7 @@ class CategoryService(
         businessRepository.findById(businessId)
             .orElseThrow { EntityNotFoundException(Business::class.java, "id", businessId) }
         val category = categoryRepository.findById(categoryId)
-            .orElseThrow { EntityNotFoundException(Employee::class.java, "id", categoryId) }
+            .orElseThrow { EntityNotFoundException(Category::class.java, "id", categoryId) }
         categoryRepository.delete(category)
     }
 }
