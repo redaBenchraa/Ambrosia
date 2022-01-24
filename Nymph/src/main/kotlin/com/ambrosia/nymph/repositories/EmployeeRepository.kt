@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository
 
 @Repository
 interface EmployeeRepository : JpaRepository<Employee, Long> {
-    fun countByEmail(email: String): Long
+    fun existsByEmail(email: String): Boolean
     fun findByBusinessId(businessId: Long): List<Employee>
 }

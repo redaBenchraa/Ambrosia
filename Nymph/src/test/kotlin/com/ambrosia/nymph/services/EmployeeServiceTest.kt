@@ -26,7 +26,7 @@ class EmployeeServiceTest {
     @Test
     fun `Add an employee to a business`() {
         every { businessRepository.findById(any()) } returns Optional.of(getBusiness())
-        every { employeeRepository.countByEmail(any()) } returns 0
+        every { employeeRepository.existsByEmail(any()) } returns false
         every { employeeRepository.save(any()) } returns getEmployee()
         val result = employeeService.addEmployee(1, getEmployeeRegistrationDto())
         verify {
@@ -39,7 +39,7 @@ class EmployeeServiceTest {
     @Test
     fun `Add an employee to a business with an existing email`() {
         every { businessRepository.findById(any()) } returns Optional.of(getBusiness())
-        every { employeeRepository.countByEmail(any()) } returns 1
+        every { employeeRepository.existsByEmail(any()) } returns true
         assertThrows<EntityAlreadyExistsException> {
             employeeService.addEmployee(1, getEmployeeRegistrationDto())
         }

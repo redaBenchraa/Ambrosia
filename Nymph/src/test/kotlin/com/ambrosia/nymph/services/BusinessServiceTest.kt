@@ -89,6 +89,6 @@ class BusinessServiceTest {
             lastName = "lastName",
             position = Role.MANAGER,
             id = 1,
-            email = "email@field:Email.com"
+            email = "email@email.com"
         )
 }

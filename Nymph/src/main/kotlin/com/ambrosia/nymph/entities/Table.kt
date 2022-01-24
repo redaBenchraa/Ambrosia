@@ -22,7 +22,7 @@ class Table(
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(nullable = false)
     @field:NotNull(message = "error.table.id.null")
-    var id: Long?,
+    var id: Long? = null,
     @Column(nullable = false)
     @field:NotNull(message = "error.table.number.null")
     var number: Int,
