@@ -1,10 +1,13 @@
 package com.ambrosia.nymph.services
 
 import com.ambrosia.nymph.configs.EnvironmentProperties
+import com.ambrosia.nymph.exceptions.KeycloakException
 import com.ambrosia.nymph.models.KeycloakUser
 import org.keycloak.OAuth2Constants
 import org.keycloak.admin.client.Keycloak
 import org.keycloak.admin.client.KeycloakBuilder
+import org.keycloak.admin.client.resource.RealmResource
+import org.keycloak.admin.client.resource.UsersResource
 import org.keycloak.representations.AccessTokenResponse
 import org.keycloak.representations.idm.CredentialRepresentation
 import org.keycloak.representations.idm.UserRepresentation
@@ -12,7 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
 @Service
-class KeycloakService(@Autowired private val env: EnvironmentProperties) {
+class KeycloakService(@Autowired private val environmentProperties: EnvironmentProperties) {
+
     fun getAccessToken(user: KeycloakUser): AccessTokenResponse {
         return getRealmUser(user).tokenManager().accessToken
     }
@@ -29,35 +33,40 @@ class KeycloakService(@Autowired private val env: EnvironmentProperties) {
         return userRepresentation
     }
 
-    val realmManager: Keycloak
-        get() =
-            KeycloakBuilder.builder()
-                .serverUrl(env.authServerUrl())
-                .realm(env.realm())
-                .grantType(OAuth2Constants.PASSWORD)
-                .clientId(env.clientId())
-                .clientSecret(env.clientSecret())
-                .username(env.realmManagerUsername())
-                .password(env.realmManagerPassword())
-                .build()
+    final fun getReamResource(): RealmResource = realmManager().realm(environmentProperties.realm())
 
-    fun getRealmUser(user: KeycloakUser): Keycloak {
-        return KeycloakBuilder.builder()
-            .serverUrl(env.authServerUrl())
-            .realm(env.realm())
-            .grantType(OAuth2Constants.PASSWORD)
-            .clientId(env.clientId())
-            .clientSecret(env.clientSecret())
-            .username(user.email)
-            .password(user.password)
-            .build()
-    }
+    final fun realmManager(): Keycloak = KeycloakBuilder.builder()
+        .serverUrl(environmentProperties.authServerUrl())
+        .realm(environmentProperties.realm())
+        .grantType(OAuth2Constants.PASSWORD)
+        .clientId(environmentProperties.clientId())
+        .clientSecret(environmentProperties.clientSecret())
+        .username(environmentProperties.realmManagerUsername())
+        .password(environmentProperties.realmManagerPassword())
+        .build()
 
-    fun getPasswordRepresentation(password: String?): CredentialRepresentation {
-        val passwordCred = CredentialRepresentation()
-        passwordCred.isTemporary = false
-        passwordCred.type = CredentialRepresentation.PASSWORD
-        passwordCred.value = password
-        return passwordCred
+    fun getRealmUser(user: KeycloakUser): Keycloak = KeycloakBuilder.builder()
+        .serverUrl(environmentProperties.authServerUrl())
+        .realm(environmentProperties.realm())
+        .grantType(OAuth2Constants.PASSWORD)
+        .clientId(environmentProperties.clientId())
+        .clientSecret(environmentProperties.clientSecret())
+        .username(user.email)
+        .password(user.password)
+        .build()
+
+    fun getPasswordRepresentation(password: String?): CredentialRepresentation =
+        CredentialRepresentation().apply {
+            isTemporary = false
+            type = CredentialRepresentation.PASSWORD
+            value = password
+        }
+
+    fun getUsersResource(): UsersResource {
+        try {
+            return getReamResource().users()
+        } catch (e: Exception) {
+            throw KeycloakException("error.keycloak.retrieveUserResource")
+        }
     }
 }

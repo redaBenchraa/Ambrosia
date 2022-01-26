@@ -21,6 +21,7 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.HttpStatus.CONFLICT
 import org.springframework.http.HttpStatus.NOT_FOUND
 import org.springframework.http.MediaType.APPLICATION_JSON
+import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.TestExecutionListeners
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener
 import org.springframework.test.web.servlet.MockMvc
@@ -35,6 +36,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
     listeners = [DependencyInjectionTestExecutionListener::class, TransactionDbUnitTestExecutionListener::class]
 )
 @DatabaseSetup("classpath:business.xml")
+@ActiveProfiles("test")
 class BusinessTest {
 
     private val id: Long = 1000
@@ -54,6 +56,7 @@ class BusinessTest {
 
     @Autowired
     private lateinit var employeeRepository: EmployeeRepository
+
 
     @Test
     fun `Create a business with a manager`() {
