@@ -15,6 +15,6 @@ jobs:
     - name: Grant execute permission for gradlew
       run: chmod +x ./Nymph/gradlew
     - name: Test coverage with Gradle
+      working-directory: ./Nymph
       run: >
-        ./Nymph/gradlew build
-        ./Nymph/gradlew test
+        ./gradlew test
