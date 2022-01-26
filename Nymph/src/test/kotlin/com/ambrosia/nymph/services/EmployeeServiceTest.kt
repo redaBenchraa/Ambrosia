@@ -1,11 +1,15 @@
 package com.ambrosia.nymph.services
 
-import com.ambrosia.nymph.constants.Role
+import com.ambrosia.nymph.constants.Role.EMPLOYEE
+import com.ambrosia.nymph.constants.Role.MANAGER
+import com.ambrosia.nymph.dtos.EditEmailDto
+import com.ambrosia.nymph.dtos.EditPositionDto
 import com.ambrosia.nymph.dtos.EmployeeRegistrationDto
 import com.ambrosia.nymph.entities.Business
 import com.ambrosia.nymph.entities.Employee
 import com.ambrosia.nymph.exceptions.EntityAlreadyExistsException
 import com.ambrosia.nymph.exceptions.EntityNotFoundException
+import com.ambrosia.nymph.exceptions.KeycloakException
 import com.ambrosia.nymph.mappers.toDto
 import com.ambrosia.nymph.repositories.BusinessRepository
 import com.ambrosia.nymph.repositories.EmployeeRepository
@@ -21,19 +25,32 @@ class EmployeeServiceTest {
 
     private val businessRepository: BusinessRepository = mockk()
     private val employeeRepository: EmployeeRepository = mockk()
-    private val employeeService = EmployeeService(businessRepository, employeeRepository)
+    private val userService: UserService = mockk()
+    private val employeeService = EmployeeService(businessRepository, employeeRepository, userService)
 
     @Test
     fun `Add an employee to a business`() {
         every { businessRepository.findById(any()) } returns Optional.of(getBusiness())
         every { employeeRepository.existsByEmail(any()) } returns false
         every { employeeRepository.save(any()) } returns getEmployee()
+        every { userService.createKeycloakUser(any()) } returns Unit
         val result = employeeService.addEmployee(1, getEmployeeRegistrationDto())
         verify {
             businessRepository.findById(any())
             employeeRepository.save(any())
         }
         assertEquals(1, result.id)
+    }
+
+    @Test
+    fun `Add an employee with keycloak exception`() {
+        every { businessRepository.findById(any()) } returns Optional.of(getBusiness())
+        every { employeeRepository.existsByEmail(any()) } returns false
+        every { employeeRepository.save(any()) } returns getEmployee()
+        every { userService.createKeycloakUser(any()) } throws KeycloakException(message = "error.keycloak.createUser")
+        assertThrows<KeycloakException> {
+            employeeService.addEmployee(1, getEmployeeRegistrationDto())
+        }
     }
 
     @Test
@@ -64,6 +81,38 @@ class EmployeeServiceTest {
         verify {
             businessRepository.findById(any())
             employeeRepository.findById(any())
+            employeeRepository.save(any())
+        }
+    }
+
+    @Test
+    fun `Edit an employee email`() {
+        every { businessRepository.findById(any()) } returns Optional.of(getBusiness())
+        every { employeeRepository.findById(any()) } returns Optional.of(getEmployee())
+        every { userService.updateEmail(any(), any()) } returns Unit
+        every { employeeRepository.save(any()) } returns getEmployee()
+        val result = employeeService.editEmployeeEmail(1, 1, EditEmailDto(email = "email2@email.com"))
+        assertEquals("email2@email.com", result.email)
+        verify {
+            businessRepository.findById(any())
+            employeeRepository.findById(any())
+            userService.updateEmail(any(), any())
+            employeeRepository.save(any())
+        }
+    }
+
+    @Test
+    fun `Edit an employee position`() {
+        every { businessRepository.findById(any()) } returns Optional.of(getBusiness())
+        every { employeeRepository.findById(any()) } returns Optional.of(getEmployee())
+        every { userService.updateRoles(any()) } returns Unit
+        every { employeeRepository.save(any()) } returns getEmployee()
+        val result = employeeService.editEmployeePosition(1, 1, EditPositionDto(position = EMPLOYEE))
+        assertEquals(EMPLOYEE, result.position)
+        verify {
+            businessRepository.findById(any())
+            employeeRepository.findById(any())
+            userService.updateRoles(any())
             employeeRepository.save(any())
         }
     }
@@ -106,7 +155,7 @@ class EmployeeServiceTest {
             lastName = "lastName",
             password = "password",
             email = "email@email.com",
-            position = Role.MANAGER,
+            position = MANAGER,
         )
 
     private fun getBusiness(): Business =
@@ -116,7 +165,7 @@ class EmployeeServiceTest {
         Employee(
             firstName = "firstName",
             lastName = "lastName",
-            position = Role.MANAGER,
+            position = MANAGER,
             id = 1,
             email = "email@email.com"
         )
