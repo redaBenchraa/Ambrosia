@@ -24,7 +24,8 @@ data class EmployeeRegistrationDto(
     @field:Email(message = "error.employee.email.format.invalid")
     @field:Size(max = EMAIL_MAX_SIZE, message = "error.employee.email.size.invalid")
     var email: String? = null,
-    @field:NotNull(message = "error.employee.position.null") var position: Role = Role.MANAGER,
+    @field:NotNull(message = "error.employee.position.null")
+    var position: Role = Role.MANAGER,
     @field:NotNull(message = "error.employee.password.null")
     @field:NotBlank(message = "error.employee.password.blank")
     @field:Size(min = PASSWORD_MIN_SIZE, message = "error.employee.password.size.invalid")

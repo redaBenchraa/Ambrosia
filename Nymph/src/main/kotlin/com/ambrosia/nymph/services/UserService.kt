@@ -1,31 +1,25 @@
 package com.ambrosia.nymph.services
 
-import com.ambrosia.nymph.configs.EnvironmentProperties
 import com.ambrosia.nymph.exceptions.KeycloakException
 import com.ambrosia.nymph.models.KeycloakUser
 import org.apache.commons.collections4.CollectionUtils.isNotEmpty
 import org.apache.commons.collections4.CollectionUtils.subtract
-import org.keycloak.admin.client.resource.RealmResource
-import org.keycloak.admin.client.resource.UsersResource
 import org.keycloak.representations.idm.RoleRepresentation
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Service
 import java.util.*
-import java.util.Objects.isNull
 import java.util.stream.Collectors
 
 @Service
-class UserService(
-    @Autowired private val keycloakService: KeycloakService,
-    @Autowired private val environmentProperties: EnvironmentProperties
-) {
+@Profile("default")
+class UserService(@Autowired private val keycloakService: KeycloakService) : AbstractUserService() {
     val logger: Logger = LoggerFactory.getLogger(UserService::class.java)
 
-    fun createKeycloakUser(user: KeycloakUser) {
-        val realmResource = realmResource
-        val usersResource = getUsersResource(realmResource)
+    override fun createKeycloakUser(user: KeycloakUser) {
+        val usersResource = keycloakService.getUsersResource()
         val userRepresentation = keycloakService.getUserRepresentation(user)
         try {
             usersResource.create(userRepresentation).use { response ->
@@ -38,14 +32,22 @@ class UserService(
         }
     }
 
-    fun updateRoles(user: KeycloakUser) {
-        val realmResource = realmResource
-        val usersResource = getUsersResource(realmResource)
+
+    override fun updateEmail(user: KeycloakUser, email: String) {
+        val usersResource = keycloakService.getUsersResource()
         val currentUser =
-            usersResource.search(user.username).stream().findFirst().orElseThrow {
-                KeycloakException("error.keycloak.userNotFound")
-            }
-        val realmRoles = realmResource.roles().list()
+            usersResource.search(user.username).stream().findFirst()
+                .orElseThrow { KeycloakException("error.keycloak.userNotFound") }
+        currentUser.email = email
+        usersResource[currentUser.id].update(currentUser)
+    }
+
+    override fun updateRoles(user: KeycloakUser) {
+        val usersResource = keycloakService.getUsersResource()
+        val currentUser =
+            usersResource.search(user.username).stream().findFirst()
+                .orElseThrow { KeycloakException("error.keycloak.userNotFound") }
+        val realmRoles = keycloakService.getReamResource().roles().list()
         val currentRoles =
             usersResource[currentUser.id]
                 .roles()
@@ -89,30 +91,11 @@ class UserService(
         }
     }
 
-    fun deleteKeycloakUser(user: KeycloakUser) {
-        val realmResource = realmResource
-        val usersResource = getUsersResource(realmResource)
+    override fun deleteKeycloakUser(user: KeycloakUser) {
+        val usersResource = keycloakService.getUsersResource()
         val currentUser = usersResource.search(user.username).stream().findFirst().orElse(null)
         if (Objects.nonNull(currentUser)) {
             usersResource.delete(currentUser.id)
         }
-    }
-
-    private val realmResource: RealmResource
-        get() {
-            val realmResource: RealmResource =
-                keycloakService.realmManager.realm(environmentProperties.realm())
-            if (isNull(realmResource)) {
-                throw KeycloakException("error.keycloak.retrieveRealm")
-            }
-            return realmResource
-        }
-
-    private fun getUsersResource(realmResource: RealmResource): UsersResource {
-        val usersResource = realmResource.users()
-        if (isNull(usersResource)) {
-            throw KeycloakException("error.keycloak.retrieveUserResource")
-        }
-        return usersResource
     }
 }

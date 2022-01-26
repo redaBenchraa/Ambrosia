@@ -139,9 +139,9 @@ class MenuServiceTest {
         every { businessRepository.findById(any()) } returns Optional.of(getBusiness())
         every { menuRepository.findById(any()) } returns Optional.of(getMenu())
         every { menuItemRepository.findById(any()) } returns Optional.of(getMenuItem())
-        every { menuRepository.save(any()) } returns getMenu()
+        every { menuItemRepository.delete(any()) } returns Unit
         menuService.deleteMenuItem(1, 1, 1)
-        verify { menuRepository.save(any()) }
+        verify { menuItemRepository.delete(any()) }
     }
 
     @Test

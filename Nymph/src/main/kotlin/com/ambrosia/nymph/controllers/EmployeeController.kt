@@ -1,5 +1,7 @@
 package com.ambrosia.nymph.controllers
 
+import com.ambrosia.nymph.dtos.EditEmailDto
+import com.ambrosia.nymph.dtos.EditPositionDto
 import com.ambrosia.nymph.dtos.EmployeeDto
 import com.ambrosia.nymph.dtos.EmployeeRegistrationDto
 import com.ambrosia.nymph.services.EmployeeService
@@ -34,5 +36,23 @@ class EmployeeController(@Autowired private val employeeService: EmployeeService
         @PathVariable("employeeId") employeeId: Long
     ) {
         employeeService.deleteEmployee(businessId, employeeId)
+    }
+
+    @PutMapping("{employeeId}/email")
+    fun editEmployeeEmail(
+        @PathVariable("businessId") businessId: Long,
+        @PathVariable("employeeId") employeeId: Long,
+        @Valid @RequestBody editEmailDto: EditEmailDto
+    ): EmployeeDto {
+        return employeeService.editEmployeeEmail(businessId, employeeId, editEmailDto)
+    }
+
+    @PutMapping("{employeeId}/position")
+    fun editEmployeePosition(
+        @PathVariable("businessId") businessId: Long,
+        @PathVariable("employeeId") employeeId: Long,
+        @Valid @RequestBody editPositionDto: EditPositionDto
+    ): EmployeeDto {
+        return employeeService.editEmployeePosition(businessId, employeeId, editPositionDto)
     }
 }
