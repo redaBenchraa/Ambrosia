@@ -7,5 +7,5 @@ data class KeycloakUser(
     val email: String,
     val firstName: String,
     val lastName: String,
-    val roles: List<String>,
+    val roles: List<String>
 )
