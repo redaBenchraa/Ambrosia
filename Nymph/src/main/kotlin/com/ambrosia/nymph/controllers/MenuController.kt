@@ -70,5 +70,4 @@ class MenuController(@Autowired private val menuService: MenuService) {
     ): MenuDto {
         return menuService.editMenuItemExtra(businessId, menuId, menuItemId, menuItem)
     }
-
 }

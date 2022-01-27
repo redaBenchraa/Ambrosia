@@ -17,7 +17,7 @@ fun EmployeeDto.toEmployeeRegistrationDto(): EmployeeRegistrationDto =
     EmployeeRegistrationDto(id, firstName!!, lastName!!, email!!, position)
 
 fun EmployeeRegistrationDto.toKeyCloakUser() = KeycloakUser(
-    username = "${firstName}.${lastName}",
+    username = "$firstName.$lastName",
     email = email!!,
     password = password!!,
     firstName = firstName!!,
@@ -26,7 +26,7 @@ fun EmployeeRegistrationDto.toKeyCloakUser() = KeycloakUser(
 )
 
 fun EmployeeDto.toKeyCloakUser() = KeycloakUser(
-    username = "${firstName}.${lastName}",
+    username = "$firstName.$lastName",
     email = email!!,
     firstName = firstName!!,
     lastName = lastName!!,
