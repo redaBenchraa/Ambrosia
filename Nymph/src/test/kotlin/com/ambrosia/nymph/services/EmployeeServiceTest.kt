@@ -17,6 +17,7 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import java.util.*
@@ -170,6 +171,23 @@ class EmployeeServiceTest {
         every { businessRepository.findById(any()) } returns Optional.empty()
         assertThrows<EntityNotFoundException> { employeeService.deleteEmployee(1, 1) }
     }
+
+    @Test
+    fun `Get business employees`() {
+        every { businessRepository.findById(any()) } returns Optional.of(getBusiness())
+        every { employeeRepository.findByBusinessId(any()) } returns mutableListOf(getEmployee())
+        val result = employeeService.getEmployees(1)
+        assertNotNull(result)
+        assertEquals(1, result.size)
+        assertEquals(getEmployee().toDto(), result[0])
+    }
+
+    @Test
+    fun `Get employees from a non existing business`() {
+        every { businessRepository.findById(any()) } returns Optional.empty()
+        assertThrows<EntityNotFoundException> { employeeService.getEmployees(1) }
+    }
+
 
     private fun getEmployeeRegistrationDto(): EmployeeRegistrationDto =
         EmployeeRegistrationDto(
