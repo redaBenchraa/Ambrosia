@@ -36,7 +36,7 @@ class MenuServiceTest {
     fun `Add a menu to a business`() {
         every { businessRepository.findById(any()) } returns Optional.of(getBusiness())
         every { menuRepository.save(any()) } returns getMenu()
-        val result = menuService.addMenu(1, getMenu().toDto())
+        menuService.addMenu(1, getMenu().toDto())
         verify {
             businessRepository.findById(any())
             menuRepository.save(any())

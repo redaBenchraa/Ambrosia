@@ -25,7 +25,7 @@ class ItemServiceTest {
     fun `Add a item to a business`() {
         every { businessRepository.findById(any()) } returns Optional.of(getBusiness())
         every { itemRepository.save(any()) } returns getItem()
-        val result = itemService.addItem(1, getItem().toDto())
+        itemService.addItem(1, getItem().toDto())
         verify {
             businessRepository.findById(any())
             itemRepository.save(any())

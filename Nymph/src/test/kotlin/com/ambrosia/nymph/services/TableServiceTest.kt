@@ -24,7 +24,7 @@ class TableServiceTest {
     fun `Add a table to a business`() {
         every { businessRepository.findById(any()) } returns Optional.of(getBusiness())
         every { tableRepository.save(any()) } returns getTable()
-        val result = tableService.addTable(1, getTable().toDto())
+        tableService.addTable(1, getTable().toDto())
         verify {
             businessRepository.findById(any())
             tableRepository.save(any())

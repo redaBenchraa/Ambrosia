@@ -24,7 +24,7 @@ class CategoryServiceTest {
     fun `Add a category to a business`() {
         every { businessRepository.findById(any()) } returns Optional.of(getBusiness())
         every { categoryRepository.save(any()) } returns getCategory()
-        val result = categoryService.addCategory(1, getCategory().toDto())
+        categoryService.addCategory(1, getCategory().toDto())
         verify {
             businessRepository.findById(any())
             categoryRepository.save(any())

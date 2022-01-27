@@ -34,7 +34,7 @@ class EmployeeServiceTest {
         every { employeeRepository.existsByEmail(any()) } returns false
         every { employeeRepository.save(any()) } returns getEmployee()
         every { userService.createKeycloakUser(any()) } returns Unit
-        val result = employeeService.addEmployee(1, getEmployeeRegistrationDto())
+        employeeService.addEmployee(1, getEmployeeRegistrationDto())
         verify {
             businessRepository.findById(any())
             employeeRepository.save(any())
