@@ -2,16 +2,16 @@ package com.ambrosia.nymph.entities
 
 import com.ambrosia.nymph.constants.Constants.Companion.EMAIL_MAX_SIZE
 import com.ambrosia.nymph.constants.Constants.Companion.NAME_MAX_SIZE
-import com.ambrosia.nymph.constants.Constants.Companion.NOW
 import com.ambrosia.nymph.constants.Currency
 import com.fasterxml.jackson.annotation.JsonBackReference
 import org.hibernate.annotations.ColumnDefault
 import org.hibernate.annotations.SQLDelete
 import org.hibernate.annotations.Where
-import org.springframework.data.annotation.CreatedDate
-import org.springframework.data.annotation.LastModifiedDate
-import java.time.LocalDateTime
-import javax.persistence.*
+import javax.persistence.CascadeType
+import javax.persistence.Column
+import javax.persistence.Entity
+import javax.persistence.FetchType
+import javax.persistence.OneToMany
 import javax.validation.constraints.Email
 import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotNull
@@ -21,11 +21,6 @@ import javax.validation.constraints.Size
 @SQLDelete(sql = "UPDATE business SET deleted = true WHERE id=?")
 @Where(clause = "deleted = false")
 class Business(
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(nullable = false)
-    @field:NotNull(message = "error.business.id.null")
-    var id: Long?,
     @field:NotNull(message = "error.business.name.null")
     @field:NotBlank(message = "error.business.name.blank")
     @field:Size(max = NAME_MAX_SIZE, message = "error.business.name.size.invalid")
@@ -50,16 +45,6 @@ class Business(
     @Column(nullable = false)
     @ColumnDefault("true")
     var isAvailable: Boolean = true,
-    @Column(nullable = false)
-    @CreatedDate
-    @ColumnDefault(NOW)
-    var createdAt: LocalDateTime = LocalDateTime.now(),
-    @Column(nullable = false)
-    @LastModifiedDate
-    @ColumnDefault(NOW)
-    var updatedAt: LocalDateTime = LocalDateTime.now(),
-    @Column(columnDefinition = "boolean default 0")
-    var deleted: Boolean = false,
     @OneToMany(
         cascade = [CascadeType.ALL],
         fetch = FetchType.LAZY,
@@ -108,4 +93,4 @@ class Business(
     )
     @JsonBackReference
     var sessions: MutableSet<Session> = HashSet(),
-)
+) : BaseEntity()

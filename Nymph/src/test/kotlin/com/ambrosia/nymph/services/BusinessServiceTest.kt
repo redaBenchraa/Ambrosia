@@ -59,6 +59,7 @@ class BusinessServiceTest {
 
     private fun getBusinessRegistrationDto(): BusinessRegistrationDto {
         return BusinessRegistrationDto(
+            id = 1,
             name = "name",
             currency = "EUR",
             description = "desc",
@@ -81,14 +82,13 @@ class BusinessServiceTest {
         )
 
     private fun getBusiness(): Business =
-        Business(name = "name", currency = "EUR", email = "email", phoneNumber = "phoneNumber", id = 1)
+        Business(name = "name", currency = "EUR", email = "email", phoneNumber = "phoneNumber").apply { id = 1 }
 
     private fun getEmployee(): Employee =
         Employee(
             firstName = "firstName",
             lastName = "lastName",
             position = Role.MANAGER,
-            id = 1,
             email = "email@email.com"
-        )
+        ).apply { id = 1 }
 }

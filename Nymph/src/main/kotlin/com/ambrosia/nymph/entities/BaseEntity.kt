@@ -9,17 +9,22 @@ import javax.persistence.Column
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
 import javax.persistence.Id
+import javax.persistence.MappedSuperclass
 
-open class BaseEntity(
-    @Id @Column(nullable = false) @GeneratedValue(strategy = GenerationType.AUTO) var id: Long?,
+@MappedSuperclass
+class BaseEntity(
+    @Id
+    @Column(nullable = false)
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    open var id: Long? = null,
     @Column(nullable = false)
     @CreatedDate
     @ColumnDefault(NOW)
-    var createdAt: LocalDateTime = LocalDateTime.now(),
+    open var createdAt: LocalDateTime = LocalDateTime.now(),
     @Column(nullable = false)
     @LastModifiedDate
     @ColumnDefault(NOW)
-    var updatedAt: LocalDateTime = LocalDateTime.now(),
+    open var updatedAt: LocalDateTime = LocalDateTime.now(),
     @Column(columnDefinition = "boolean default 0")
-    var deleted: Boolean = false,
+    open var deleted: Boolean = false
 )

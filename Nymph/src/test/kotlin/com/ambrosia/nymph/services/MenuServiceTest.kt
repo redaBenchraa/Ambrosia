@@ -2,10 +2,18 @@ package com.ambrosia.nymph.services
 
 import com.ambrosia.nymph.dtos.AddMenuItemDto
 import com.ambrosia.nymph.dtos.EditMenuItemDto
-import com.ambrosia.nymph.entities.*
+import com.ambrosia.nymph.entities.Business
+import com.ambrosia.nymph.entities.Category
+import com.ambrosia.nymph.entities.Item
+import com.ambrosia.nymph.entities.Menu
+import com.ambrosia.nymph.entities.MenuItem
 import com.ambrosia.nymph.exceptions.EntityNotFoundException
 import com.ambrosia.nymph.mappers.toDto
-import com.ambrosia.nymph.repositories.*
+import com.ambrosia.nymph.repositories.BusinessRepository
+import com.ambrosia.nymph.repositories.CategoryRepository
+import com.ambrosia.nymph.repositories.ItemRepository
+import com.ambrosia.nymph.repositories.MenuItemRepository
+import com.ambrosia.nymph.repositories.MenuRepository
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
@@ -33,7 +41,6 @@ class MenuServiceTest {
             businessRepository.findById(any())
             menuRepository.save(any())
         }
-        assertEquals(1, result.id)
     }
 
     @Test
@@ -199,10 +206,10 @@ class MenuServiceTest {
 
 
     private fun getBusiness(): Business =
-        Business(id = 1, name = "name", email = "email", phoneNumber = "phoneNumber")
+        Business(name = "name", email = "email", phoneNumber = "phoneNumber")
 
-    private fun getMenuItem(): MenuItem = MenuItem(id = 1, extra = 10.0)
-    private fun getItem(): Item = Item(id = 1, name = "name", price = 10.0)
-    private fun getCategory(): Category = Category(id = 1, name = "name")
-    private fun getMenu(): Menu = Menu(id = 1, name = "name", price = 10.0)
+    private fun getMenuItem(): MenuItem = MenuItem(extra = 10.0)
+    private fun getItem(): Item = Item(name = "name", price = 10.0)
+    private fun getCategory(): Category = Category(name = "name")
+    private fun getMenu(): Menu = Menu(name = "name", price = 10.0)
 }

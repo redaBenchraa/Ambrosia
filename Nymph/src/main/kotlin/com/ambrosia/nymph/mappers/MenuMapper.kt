@@ -8,7 +8,7 @@ import com.ambrosia.nymph.entities.MenuItem
 
 fun Menu.toDto(): MenuDto = MenuDto(id, name, description, image, price, categories = getCategories(menuItems))
 
-fun MenuDto.toEntity(): Menu = Menu(id, name!!, description, image, price!!)
+fun MenuDto.toEntity(): Menu = Menu(name!!, description, image, price!!)
 
 fun getCategories(menuItems: MutableSet<MenuItem>): MutableSet<MenuCategory> {
     return menuItems

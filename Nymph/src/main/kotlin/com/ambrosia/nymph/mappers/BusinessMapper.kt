@@ -9,4 +9,4 @@ fun Business.toDto(): BusinessRegistrationDto =
     )
 
 fun BusinessRegistrationDto.toEntity(): Business =
-    Business(id, name!!, phoneNumber!!, email!!, description, slogan, logo, location, currency!!)
+    Business(name!!, phoneNumber!!, email!!, description, slogan, logo, location, currency!!).apply { id }

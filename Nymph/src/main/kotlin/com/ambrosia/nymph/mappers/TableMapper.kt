@@ -5,4 +5,4 @@ import com.ambrosia.nymph.entities.Table
 
 fun Table.toDto(): TableDto = TableDto(id, number, isAvailable)
 
-fun TableDto.toEntity(): Table = Table(id, number!!, isAvailable!!)
+fun TableDto.toEntity(): Table = Table(number!!, isAvailable!!).apply { id }
