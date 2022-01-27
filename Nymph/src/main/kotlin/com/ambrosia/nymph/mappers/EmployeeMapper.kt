@@ -7,13 +7,13 @@ import com.ambrosia.nymph.models.KeycloakUser
 
 fun Employee.toDto(): EmployeeDto = EmployeeDto(id, firstName, lastName, email, position, deleted)
 
-fun EmployeeDto.toEntity(): Employee = Employee(id, firstName!!, lastName!!, email!!, position)
+fun EmployeeDto.toEntity(): Employee = Employee(firstName!!, lastName!!, email!!, position).apply { id }
 
 fun Employee.toRegistrationEmployeeDto(): EmployeeRegistrationDto =
     EmployeeRegistrationDto(id, firstName, lastName, email, position)
 
 fun EmployeeRegistrationDto.toEntity(): Employee =
-    Employee(id, firstName!!, lastName!!, email!!, position)
+    Employee(firstName!!, lastName!!, email!!, position).apply { id }
 
 fun EmployeeDto.toEmployeeRegistrationDto(): EmployeeRegistrationDto =
     EmployeeRegistrationDto(id, firstName!!, lastName!!, email!!, position)

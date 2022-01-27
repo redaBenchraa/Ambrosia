@@ -29,7 +29,6 @@ class TableServiceTest {
             businessRepository.findById(any())
             tableRepository.save(any())
         }
-        assertEquals(1, result.id)
     }
 
     @Test
@@ -86,7 +85,7 @@ class TableServiceTest {
     }
 
     private fun getBusiness(): Business =
-        Business(name = "name", currency = "EUR", email = "email", phoneNumber = "phoneNumber", id = 1)
+        Business(name = "name", currency = "EUR", email = "email", phoneNumber = "phoneNumber")
 
-    private fun getTable(): Table = Table(id = 1, number = 1, isAvailable = true)
+    private fun getTable(): Table = Table(number = 1, isAvailable = true)
 }

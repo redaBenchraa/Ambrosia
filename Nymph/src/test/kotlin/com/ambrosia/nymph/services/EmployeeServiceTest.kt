@@ -39,7 +39,6 @@ class EmployeeServiceTest {
             businessRepository.findById(any())
             employeeRepository.save(any())
         }
-        assertEquals(1, result.id)
     }
 
     @Test
@@ -159,14 +158,13 @@ class EmployeeServiceTest {
         )
 
     private fun getBusiness(): Business =
-        Business(name = "name", currency = "EUR", email = "email", phoneNumber = "phoneNumber", id = 1)
+        Business(name = "name", currency = "EUR", email = "email", phoneNumber = "phoneNumber")
 
     private fun getEmployee(): Employee =
         Employee(
             firstName = "firstName",
             lastName = "lastName",
             position = MANAGER,
-            id = 1,
             email = "email@email.com"
         )
 }

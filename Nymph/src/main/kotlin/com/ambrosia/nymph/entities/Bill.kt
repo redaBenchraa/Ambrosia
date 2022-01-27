@@ -13,7 +13,7 @@ import javax.persistence.ManyToOne
 @Entity
 @SQLDelete(sql = "UPDATE bill SET deleted = true WHERE id=?")
 @Where(clause = "deleted = false")
-class Bill(
+data class Bill(
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "customer_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)

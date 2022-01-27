@@ -41,7 +41,6 @@ class MenuServiceTest {
             businessRepository.findById(any())
             menuRepository.save(any())
         }
-        assertEquals(1, result.id)
     }
 
     @Test
@@ -207,10 +206,10 @@ class MenuServiceTest {
 
 
     private fun getBusiness(): Business =
-        Business(id = 1, name = "name", email = "email", phoneNumber = "phoneNumber")
+        Business(name = "name", email = "email", phoneNumber = "phoneNumber")
 
-    private fun getMenuItem(): MenuItem = MenuItem(id = 1, extra = 10.0)
-    private fun getItem(): Item = Item(id = 1, name = "name", price = 10.0)
-    private fun getCategory(): Category = Category(id = 1, name = "name")
-    private fun getMenu(): Menu = Menu(id = 1, name = "name", price = 10.0)
+    private fun getMenuItem(): MenuItem = MenuItem(extra = 10.0)
+    private fun getItem(): Item = Item(name = "name", price = 10.0)
+    private fun getCategory(): Category = Category(name = "name")
+    private fun getMenu(): Menu = Menu(name = "name", price = 10.0)
 }

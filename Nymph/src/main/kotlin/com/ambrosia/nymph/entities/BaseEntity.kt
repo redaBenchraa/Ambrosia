@@ -9,8 +9,10 @@ import javax.persistence.Column
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
 import javax.persistence.Id
+import javax.persistence.MappedSuperclass
 
-open class BaseEntity(
+@MappedSuperclass
+class BaseEntity(
     @Id
     @Column(nullable = false)
     @GeneratedValue(strategy = GenerationType.AUTO)
