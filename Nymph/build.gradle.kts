@@ -4,10 +4,13 @@ plugins {
     id("org.springframework.boot") version "2.6.2"
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
     id("org.liquibase.gradle") version "2.0.3"
+    id("org.sonarqube") version "3.3"
+    id("io.gitlab.arturbosch.detekt").version("1.19.0")
     kotlin("jvm") version "1.6.10"
     kotlin("plugin.spring") version "1.6.10"
     kotlin("plugin.jpa") version "1.6.10"
     kotlin("plugin.allopen") version "1.4.32"
+    jacoco
 }
 
 allOpen {
@@ -76,6 +79,50 @@ dependencies {
     runtimeOnly("com.h2database:h2")
 }
 
+tasks.test {
+    finalizedBy(tasks.jacocoTestReport)
+}
+tasks.jacocoTestReport {
+    dependsOn(tasks.test)
+}
+
+jacoco {
+    toolVersion = "0.8.7"
+}
+
+detekt {
+    buildUponDefaultConfig = true // preconfigure defaults
+    allRules = false // activate all available (even unstable) rules.
+}
+
+tasks.withType<io.gitlab.arturbosch.detekt.Detekt>().configureEach {
+    reports {
+        html.required.set(true) // observe findings in your browser with structure and code snippets
+        xml.required.set(true) // checkstyle like format mainly for integrations like Jenkins
+        txt.required.set(true) // similar to the console output, contains issue signature to manually edit baseline files
+        sarif.required.set(true) // standardized SARIF format (https://sarifweb.azurewebsites.net/) to support integrations with Github Code Scanning
+    }
+}
+
+tasks.withType<io.gitlab.arturbosch.detekt.Detekt>().configureEach {
+    jvmTarget = "17"
+}
+tasks.withType<io.gitlab.arturbosch.detekt.DetektCreateBaselineTask>().configureEach {
+    jvmTarget = "17"
+}
+
+sonarqube {
+    properties {
+        property("sonar.host.url", "http://localhost:9000")
+        property("sonar.projectName", "Nymph")
+        property("sonar.projectKey", "Nymph")
+        property("sonar.login", "3202c74ae585cbae4134b6b9d00330f1ad4ec0a5")
+        property("sonar.language", "kotlin")
+        property("sonar.kotlin.detekt.reportPaths", "build/reports/detekt/detekt.xml")
+        property("sonar.coverage.jacoco.xmlReportPaths", "${project.buildDir}/reports/detekt/detekt.xml")
+    }
+}
+
 tasks.withType<KotlinCompile> {
     kotlinOptions {
         freeCompilerArgs = listOf("-Xjsr305=strict")
@@ -83,4 +130,22 @@ tasks.withType<KotlinCompile> {
     }
 }
 
+tasks.withType<JacocoReport> {
+    reports {
+        xml.apply {
+            isEnabled = true
+        }
+
+    }
+}
+
+
 tasks.withType<Test> { useJUnitPlatform() }
+
+fun findAllReports(): String {
+    val file = "${rootProject.buildDir}/reports"
+    return rootProject.subprojects
+        .stream()
+        .map { "$file/jacocoTestReport-${name}.xml" }
+        .toList().joinToString(",")
+}
