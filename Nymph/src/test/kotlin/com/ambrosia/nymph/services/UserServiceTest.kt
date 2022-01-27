@@ -90,7 +90,7 @@ class UserServiceTest {
         every { usersResource.get(any()) } returns userResource
         every { userResource.roles() } returns roleMappingResource
         every { roleMappingResource.realmLevel() } returns roleScopeResource
-        assertDoesNotThrow { userService.updateEmail(getKeycloakUser(ADMIN), "email") }
+        assertDoesNotThrow { userService.updateEmail(getKeycloakUser(ADMIN)) }
     }
 
     @Test

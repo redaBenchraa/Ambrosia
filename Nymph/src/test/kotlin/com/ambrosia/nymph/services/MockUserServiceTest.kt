@@ -20,7 +20,7 @@ class MockUserServiceTest {
 
     @Test
     fun updateEmail() {
-        assertDoesNotThrow { userService.updateEmail(getKeycloakUser(), "") }
+        assertDoesNotThrow { userService.updateEmail(getKeycloakUser()) }
     }
 
     @Test

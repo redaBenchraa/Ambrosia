@@ -41,7 +41,7 @@ class EmployeeService(
         val employee = employeeRepository.findById(employeeId)
             .orElseThrow { EntityNotFoundException(Employee::class.java, "id", employeeId) }
         editEmailDto.email?.let {
-            userService.updateEmail(employee.toDto().toKeyCloakUser(), it)
+            userService.updateEmail(employee.toDto().toKeyCloakUser().copy(email = it))
             employee.email = it
         }
         employeeRepository.save(employee)

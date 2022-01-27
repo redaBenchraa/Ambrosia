@@ -88,14 +88,14 @@ class EmployeeServiceTest {
     fun `Edit an employee email`() {
         every { businessRepository.findById(any()) } returns Optional.of(getBusiness())
         every { employeeRepository.findById(any()) } returns Optional.of(getEmployee())
-        every { userService.updateEmail(any(), any()) } returns Unit
+        every { userService.updateEmail(any()) } returns Unit
         every { employeeRepository.save(any()) } returns getEmployee()
         val result = employeeService.editEmployeeEmail(1, 1, EditEmailDto(email = "email2@email.com"))
         assertEquals("email2@email.com", result.email)
         verify {
             businessRepository.findById(any())
             employeeRepository.findById(any())
-            userService.updateEmail(any(), any())
+            userService.updateEmail(any())
             employeeRepository.save(any())
         }
     }

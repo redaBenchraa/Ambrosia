@@ -33,12 +33,11 @@ class UserService(@Autowired private val keycloakService: KeycloakService) : IUs
         }
     }
 
-    override fun updateEmail(user: KeycloakUser, email: String) {
+    override fun updateEmail(user: KeycloakUser) {
         val usersResource = keycloakService.getUsersResource()
         val currentUser =
             usersResource.search(user.username).stream().findFirst()
                 .orElseThrow { KeycloakException("error.keycloak.userNotFound") }
-        currentUser.email = email
         usersResource[currentUser.id].update(currentUser)
     }
 
