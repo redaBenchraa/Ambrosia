@@ -1,4 +1,4 @@
 package com.ambrosia.nymph.exceptions
 
-class EntityNotFoundException(entityClass: Class<*>, vararg searchParamsMap: Any) :
-    EntityException(entityClass, *searchParamsMap)
+class EntityNotFoundException(val entityClass: Class<*>, val parameters: MutableMap<String, Any>) :
+    RuntimeException()

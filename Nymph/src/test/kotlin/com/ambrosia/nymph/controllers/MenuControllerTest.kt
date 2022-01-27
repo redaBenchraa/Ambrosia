@@ -70,7 +70,7 @@ class MenuControllerTest {
 
     @Test
     fun `Add a menu from a non existing business`() {
-        val exception = EntityAlreadyExistsException(Business::class.java, "id", "1")
+        val exception = EntityAlreadyExistsException(Business::class.java, mutableMapOf("id" to 1))
         val expected = runtimeExceptionHandler.handleEntityAlreadyExistsException(exception)
         val content = objectMapper.writeValueAsString(getMenu().toDto())
         every { menuService.addMenu(any(), any()) } throws exception
@@ -117,7 +117,7 @@ class MenuControllerTest {
 
     @Test
     fun `Edit a non existing menu`() {
-        val exception = EntityNotFoundException(Menu::class.java, "id", "1")
+        val exception = EntityNotFoundException(Menu::class.java, mutableMapOf("id" to 1))
         val expected = runtimeExceptionHandler.handleEntityNotFoundException(exception)
         every { menuService.editMenu(any(), any(), any()) } throws exception
         val content = objectMapper.writeValueAsString(getMenu().toDto())
@@ -130,7 +130,7 @@ class MenuControllerTest {
 
     @Test
     fun `Edit a menu from an non existing business`() {
-        val exception = EntityNotFoundException(Business::class.java, "id", "1")
+        val exception = EntityNotFoundException(Business::class.java, mutableMapOf("id" to 1))
         val expected = runtimeExceptionHandler.handleEntityNotFoundException(exception)
         every { menuService.editMenu(any(), any(), any()) } throws exception
         val content = objectMapper.writeValueAsString(getMenu().toDto())
@@ -149,7 +149,7 @@ class MenuControllerTest {
 
     @Test
     fun `Delete a menu from a non existing business`() {
-        val exception = EntityNotFoundException(Business::class.java, "id", "1")
+        val exception = EntityNotFoundException(Business::class.java, mutableMapOf("id" to 1))
         val expected = runtimeExceptionHandler.handleEntityNotFoundException(exception)
         every { menuService.deleteMenu(any(), any()) } throws exception
         mockMvc
@@ -161,7 +161,7 @@ class MenuControllerTest {
 
     @Test
     fun `Delete a non existing menu`() {
-        val exception = EntityNotFoundException(Menu::class.java, "id", "1")
+        val exception = EntityNotFoundException(Menu::class.java, mutableMapOf("id" to 1))
         val expected = runtimeExceptionHandler.handleEntityNotFoundException(exception)
         every { menuService.deleteMenu(any(), any()) } throws exception
         mockMvc
@@ -226,7 +226,7 @@ class MenuControllerTest {
 
     @Test
     fun `Add an item to a non existing business`() {
-        val exception = EntityNotFoundException(Business::class.java, "id", "1")
+        val exception = EntityNotFoundException(Business::class.java, mutableMapOf("id" to 1))
         val expected = runtimeExceptionHandler.handleEntityNotFoundException(exception)
         every { menuService.addItemToMenu(any(), any(), any()) } throws exception
         val content = objectMapper.writeValueAsString(getAddMenuItemDto())
@@ -239,7 +239,7 @@ class MenuControllerTest {
 
     @Test
     fun `Add an item to a non existing menu`() {
-        val exception = EntityNotFoundException(Menu::class.java, "id", "1")
+        val exception = EntityNotFoundException(Menu::class.java, mutableMapOf("id" to 1))
         val expected = runtimeExceptionHandler.handleEntityNotFoundException(exception)
         every { menuService.addItemToMenu(any(), any(), any()) } throws exception
         val content = objectMapper.writeValueAsString(getAddMenuItemDto())
@@ -252,7 +252,7 @@ class MenuControllerTest {
 
     @Test
     fun `Add a non existing item to a menu`() {
-        val exception = EntityNotFoundException(Item::class.java, "id", "1")
+        val exception = EntityNotFoundException(Item::class.java, mutableMapOf("id" to 1))
         val expected = runtimeExceptionHandler.handleEntityNotFoundException(exception)
         every { menuService.addItemToMenu(any(), any(), any()) } throws exception
         val content = objectMapper.writeValueAsString(getAddMenuItemDto())
@@ -265,7 +265,7 @@ class MenuControllerTest {
 
     @Test
     fun `Add an item with a non existing category`() {
-        val exception = EntityNotFoundException(Category::class.java, "id", "1")
+        val exception = EntityNotFoundException(Category::class.java, mutableMapOf("id" to 1))
         val expected = runtimeExceptionHandler.handleEntityNotFoundException(exception)
         every { menuService.addItemToMenu(any(), any(), any()) } throws exception
         val content = objectMapper.writeValueAsString(getAddMenuItemDto())
@@ -331,7 +331,7 @@ class MenuControllerTest {
 
     @Test
     fun `Edit a menu item of a non existing business`() {
-        val exception = EntityNotFoundException(Business::class.java, "id", "1")
+        val exception = EntityNotFoundException(Business::class.java, mutableMapOf("id" to 1))
         val expected = runtimeExceptionHandler.handleEntityNotFoundException(exception)
         every { menuService.editMenuItemExtra(any(), any(), any(), any()) } throws exception
         val content = objectMapper.writeValueAsString(getEditMenuItemDto())
@@ -344,7 +344,7 @@ class MenuControllerTest {
 
     @Test
     fun `Edit a menu item of a non existing menu`() {
-        val exception = EntityNotFoundException(Menu::class.java, "id", "1")
+        val exception = EntityNotFoundException(Menu::class.java, mutableMapOf("id" to 1))
         val expected = runtimeExceptionHandler.handleEntityNotFoundException(exception)
         every { menuService.editMenuItemExtra(any(), any(), any(), any()) } throws exception
         val content = objectMapper.writeValueAsString(getEditMenuItemDto())
@@ -357,7 +357,7 @@ class MenuControllerTest {
 
     @Test
     fun `Edit a non existing menu item`() {
-        val exception = EntityNotFoundException(MenuItem::class.java, "id", "1")
+        val exception = EntityNotFoundException(MenuItem::class.java, mutableMapOf("id" to 1))
         val expected = runtimeExceptionHandler.handleEntityNotFoundException(exception)
         every { menuService.editMenuItemExtra(any(), any(), any(), any()) } throws exception
         val content = objectMapper.writeValueAsString(getEditMenuItemDto())
@@ -381,7 +381,7 @@ class MenuControllerTest {
 
     @Test
     fun `Delete a menu item from a non existing business`() {
-        val exception = EntityNotFoundException(Business::class.java, "id", "1")
+        val exception = EntityNotFoundException(Business::class.java, mutableMapOf("id" to 1))
         val expected = runtimeExceptionHandler.handleEntityNotFoundException(exception)
         every { menuService.deleteMenuItem(any(), any(), any()) } throws exception
         mockMvc
@@ -393,7 +393,7 @@ class MenuControllerTest {
 
     @Test
     fun `Delete a menu item from a non existing menu`() {
-        val exception = EntityNotFoundException(Menu::class.java, "id", "1")
+        val exception = EntityNotFoundException(Menu::class.java, mutableMapOf("id" to 1))
         val expected = runtimeExceptionHandler.handleEntityNotFoundException(exception)
         every { menuService.deleteMenuItem(any(), any(), any()) } throws exception
         mockMvc
@@ -405,7 +405,7 @@ class MenuControllerTest {
 
     @Test
     fun `Delete a non existing menu item`() {
-        val exception = EntityNotFoundException(MenuItem::class.java, "id", "1")
+        val exception = EntityNotFoundException(MenuItem::class.java, mutableMapOf("id" to 1))
         val expected = runtimeExceptionHandler.handleEntityNotFoundException(exception)
         every { menuService.deleteMenuItem(any(), any(), any()) } throws exception
         mockMvc

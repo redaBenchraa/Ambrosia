@@ -77,7 +77,7 @@ class TableTest {
 
     @Test
     fun `Edit a non existing table`() {
-        val exception = EntityNotFoundException(Table::class.java, "id", "1")
+        val exception = EntityNotFoundException(Table::class.java, mutableMapOf("id" to 1))
         val expected = runtimeExceptionHandler.handleEntityNotFoundException(exception)
         val content = objectMapper.writeValueAsString(getTable().toDto())
         mockMvc
@@ -89,7 +89,7 @@ class TableTest {
 
     @Test
     fun `Edit a table from an non existing business`() {
-        val exception = EntityNotFoundException(Business::class.java, "id", "1")
+        val exception = EntityNotFoundException(Business::class.java, mutableMapOf("id" to 1))
         val expected = runtimeExceptionHandler.handleEntityNotFoundException(exception)
         val content = objectMapper.writeValueAsString(getTable().toDto())
         mockMvc
@@ -108,7 +108,7 @@ class TableTest {
 
     @Test
     fun `Delete a non existing table`() {
-        val exception = EntityNotFoundException(Table::class.java, "id", "1")
+        val exception = EntityNotFoundException(Table::class.java, mutableMapOf("id" to 1))
         val expected = runtimeExceptionHandler.handleEntityNotFoundException(exception)
         mockMvc
             .perform(delete("$baseUrl/1"))
@@ -119,7 +119,7 @@ class TableTest {
 
     @Test
     fun `Delete a table from a non existing business`() {
-        val exception = EntityNotFoundException(Business::class.java, "id", "1")
+        val exception = EntityNotFoundException(Business::class.java, mutableMapOf("id" to 1))
         val expected = runtimeExceptionHandler.handleEntityNotFoundException(exception)
         mockMvc
             .perform(delete("/businesses/1/tables/1"))

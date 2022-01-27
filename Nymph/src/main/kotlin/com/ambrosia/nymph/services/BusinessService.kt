@@ -29,7 +29,7 @@ class BusinessService(
     @Transactional
     fun editBusiness(businessId: Long, businessRegistrationDto: BusinessRegistrationDto): BusinessRegistrationDto {
         val business = businessRepository.findById(businessId)
-            .orElseThrow { EntityNotFoundException(Business::class.java, "id", businessId) }
+            .orElseThrow { EntityNotFoundException(Business::class.java, mutableMapOf("id" to businessId)) }
         businessRegistrationDto.name?.let { business.name = it }
         businessRegistrationDto.phoneNumber?.let { business.phoneNumber = it }
         businessRegistrationDto.email?.let { business.email = it }

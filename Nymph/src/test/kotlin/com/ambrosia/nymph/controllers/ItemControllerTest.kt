@@ -65,7 +65,7 @@ class ItemControllerTest {
 
     @Test
     fun `Add an item from a non existing business`() {
-        val exception = EntityAlreadyExistsException(Business::class.java, "id", "1")
+        val exception = EntityAlreadyExistsException(Business::class.java, mutableMapOf("id" to 1))
         val expected = runtimeExceptionHandler.handleEntityAlreadyExistsException(exception)
         val content = objectMapper.writeValueAsString(getItem().toDto())
         every { itemService.addItem(any(), any()) } throws exception
@@ -112,7 +112,7 @@ class ItemControllerTest {
 
     @Test
     fun `Edit a non existing item`() {
-        val exception = EntityNotFoundException(Item::class.java, "id", "1")
+        val exception = EntityNotFoundException(Item::class.java, mutableMapOf("id" to 1))
         val expected = runtimeExceptionHandler.handleEntityNotFoundException(exception)
         every { itemService.editItem(any(), any(), any()) } throws exception
         val content = objectMapper.writeValueAsString(getItem().toDto())
@@ -125,7 +125,7 @@ class ItemControllerTest {
 
     @Test
     fun `Edit an item from an non existing business`() {
-        val exception = EntityNotFoundException(Business::class.java, "id", "1")
+        val exception = EntityNotFoundException(Business::class.java, mutableMapOf("id" to 1))
         val expected = runtimeExceptionHandler.handleEntityNotFoundException(exception)
         every { itemService.editItem(any(), any(), any()) } throws exception
         val content = objectMapper.writeValueAsString(getItem().toDto())
@@ -144,7 +144,7 @@ class ItemControllerTest {
 
     @Test
     fun `Delete an item from a non existing business`() {
-        val exception = EntityNotFoundException(Business::class.java, "id", "1")
+        val exception = EntityNotFoundException(Business::class.java, mutableMapOf("id" to 1))
         val expected = runtimeExceptionHandler.handleEntityNotFoundException(exception)
         every { itemService.deleteItem(any(), any()) } throws exception
         mockMvc
@@ -156,7 +156,7 @@ class ItemControllerTest {
 
     @Test
     fun `Delete a non existing item`() {
-        val exception = EntityNotFoundException(Item::class.java, "id", "1")
+        val exception = EntityNotFoundException(Item::class.java, mutableMapOf("id" to 1))
         val expected = runtimeExceptionHandler.handleEntityNotFoundException(exception)
         every { itemService.deleteItem(any(), any()) } throws exception
         mockMvc

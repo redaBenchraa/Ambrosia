@@ -21,7 +21,7 @@ class TableService(
     @Transactional
     fun addTable(businessId: Long, tableDto: TableDto): TableDto {
         val business = businessRepository.findById(businessId)
-            .orElseThrow { EntityNotFoundException(Business::class.java, "id", businessId) }
+            .orElseThrow { EntityNotFoundException(Business::class.java, mutableMapOf("id" to businessId)) }
         val table = tableDto.toEntity()
         table.business = business
         return tableRepository.save(table).toDto()
@@ -30,9 +30,9 @@ class TableService(
     @Transactional
     fun editTable(businessId: Long, tableId: Long, tableDto: TableDto): TableDto {
         businessRepository.findById(businessId)
-            .orElseThrow { EntityNotFoundException(Business::class.java, "id", businessId) }
+            .orElseThrow { EntityNotFoundException(Business::class.java, mutableMapOf("id" to businessId)) }
         val table = tableRepository.findById(tableId)
-            .orElseThrow { EntityNotFoundException(Table::class.java, "id", tableId) }
+            .orElseThrow { EntityNotFoundException(Table::class.java, mutableMapOf("id" to tableId)) }
         tableDto.number?.let { table.number = it }
         tableDto.isAvailable?.let { table.isAvailable = it }
         tableRepository.save(table)
@@ -42,9 +42,9 @@ class TableService(
     @Transactional
     fun deleteTable(businessId: Long, tableId: Long) {
         businessRepository.findById(businessId)
-            .orElseThrow { EntityNotFoundException(Business::class.java, "id", businessId) }
+            .orElseThrow { EntityNotFoundException(Business::class.java, mutableMapOf("id" to businessId)) }
         val table = tableRepository.findById(tableId)
-            .orElseThrow { EntityNotFoundException(Table::class.java, "id", tableId) }
+            .orElseThrow { EntityNotFoundException(Table::class.java, mutableMapOf("id" to tableId)) }
         tableRepository.delete(table)
     }
 }

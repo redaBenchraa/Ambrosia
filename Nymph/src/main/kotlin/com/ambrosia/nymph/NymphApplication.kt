@@ -7,6 +7,6 @@ import org.springframework.boot.runApplication
 @SpringBootApplication(exclude = [ErrorMvcAutoConfiguration::class])
 class NymphApplication
 
-fun main(args: Array<String>) {
-    runApplication<NymphApplication>(*args)
+fun main() {
+    runApplication<NymphApplication>()
 }

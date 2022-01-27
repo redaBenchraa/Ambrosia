@@ -1,4 +1,4 @@
 package com.ambrosia.nymph.exceptions
 
-class EntityAlreadyExistsException(entityClass: Class<*>, vararg searchParamsMap: Any) :
-    EntityException(entityClass, *searchParamsMap)
+class EntityAlreadyExistsException(val entityClass: Class<*>, val parameters: MutableMap<String, Any>) :
+    RuntimeException()

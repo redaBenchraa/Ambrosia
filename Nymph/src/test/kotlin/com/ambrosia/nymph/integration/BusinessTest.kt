@@ -93,7 +93,7 @@ class BusinessTest {
     fun `Create a business with an existing employee email`() {
         val content =
             objectMapper.writeValueAsString(getBusinessRegistrationDto().apply { employee?.email = "email@email.com" })
-        val exception = EntityAlreadyExistsException(Employee::class.java, "email", "email@email.com")
+        val exception = EntityAlreadyExistsException(Employee::class.java, mutableMapOf("email" to "email@email.com"))
         val expected = runtimeExceptionHandler.handleEntityAlreadyExistsException(exception)
         mockMvc
             .perform(post("$baseUrl/register").contentType(APPLICATION_JSON).content(content))
@@ -126,7 +126,7 @@ class BusinessTest {
     @Test
     fun `Edit a non existing business`() {
         val content = objectMapper.writeValueAsString(getBusinessRegistrationDto())
-        val exception = EntityNotFoundException(Business::class.java, "id", "1")
+        val exception = EntityNotFoundException(Business::class.java, mutableMapOf("id" to 1))
         val expected = runtimeExceptionHandler.handleEntityNotFoundException(exception)
         mockMvc
             .perform(put("$baseUrl/1").contentType(APPLICATION_JSON).content(content))

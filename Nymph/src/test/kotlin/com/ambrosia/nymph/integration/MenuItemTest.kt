@@ -71,7 +71,7 @@ class MenuItemTest {
 
     @Test
     fun `Add an item to a non existing business`() {
-        val exception = EntityNotFoundException(Business::class.java, "id", "1")
+        val exception = EntityNotFoundException(Business::class.java, mutableMapOf("id" to 1))
         val expected = runtimeExceptionHandler.handleEntityNotFoundException(exception)
         val content = objectMapper.writeValueAsString(getAddMenuItemDto())
         mockMvc
@@ -84,7 +84,7 @@ class MenuItemTest {
 
     @Test
     fun `Add an item to a non existing menu`() {
-        val exception = EntityNotFoundException(Menu::class.java, "id", "1")
+        val exception = EntityNotFoundException(Menu::class.java, mutableMapOf("id" to 1))
         val expected = runtimeExceptionHandler.handleEntityNotFoundException(exception)
         val content = objectMapper.writeValueAsString(getAddMenuItemDto())
         mockMvc
@@ -97,7 +97,7 @@ class MenuItemTest {
 
     @Test
     fun `Add a non existing item to a menu`() {
-        val exception = EntityNotFoundException(Item::class.java, "id", "1")
+        val exception = EntityNotFoundException(Item::class.java, mutableMapOf("id" to 1))
         val expected = runtimeExceptionHandler.handleEntityNotFoundException(exception)
         val content = objectMapper.writeValueAsString(getAddMenuItemDto().apply { itemId = 1 })
         mockMvc
@@ -110,7 +110,7 @@ class MenuItemTest {
 
     @Test
     fun `Add an item with a non existing category`() {
-        val exception = EntityNotFoundException(Category::class.java, "id", "1")
+        val exception = EntityNotFoundException(Category::class.java, mutableMapOf("id" to 1))
         val expected = runtimeExceptionHandler.handleEntityNotFoundException(exception)
         val content = objectMapper.writeValueAsString(getAddMenuItemDto().apply { categoryId = 1 })
         mockMvc
@@ -135,7 +135,7 @@ class MenuItemTest {
 
     @Test
     fun `Edit a menu item of a non existing business`() {
-        val exception = EntityNotFoundException(Business::class.java, "id", "1")
+        val exception = EntityNotFoundException(Business::class.java, mutableMapOf("id" to 1))
         val expected = runtimeExceptionHandler.handleEntityNotFoundException(exception)
         val content = objectMapper.writeValueAsString(getEditMenuItemDto())
         mockMvc
@@ -150,7 +150,7 @@ class MenuItemTest {
 
     @Test
     fun `Edit a menu item of a non existing menu`() {
-        val exception = EntityNotFoundException(Menu::class.java, "id", "1")
+        val exception = EntityNotFoundException(Menu::class.java, mutableMapOf("id" to 1))
         val expected = runtimeExceptionHandler.handleEntityNotFoundException(exception)
         val content = objectMapper.writeValueAsString(getEditMenuItemDto())
         mockMvc
@@ -165,7 +165,7 @@ class MenuItemTest {
 
     @Test
     fun `Edit a non existing menu item`() {
-        val exception = EntityNotFoundException(MenuItem::class.java, "id", "1")
+        val exception = EntityNotFoundException(MenuItem::class.java, mutableMapOf("id" to 1))
         val expected = runtimeExceptionHandler.handleEntityNotFoundException(exception)
         val content = objectMapper.writeValueAsString(getEditMenuItemDto())
         mockMvc
@@ -190,7 +190,7 @@ class MenuItemTest {
 
     @Test
     fun `Delete a menu item from a non existing business`() {
-        val exception = EntityNotFoundException(Business::class.java, "id", "1")
+        val exception = EntityNotFoundException(Business::class.java, mutableMapOf("id" to 1))
         val expected = runtimeExceptionHandler.handleEntityNotFoundException(exception)
         mockMvc
             .perform(delete("/businesses/1/menus/1/items/1").contentType(APPLICATION_JSON))
@@ -202,7 +202,7 @@ class MenuItemTest {
 
     @Test
     fun `Delete a menu item from a non existing menu`() {
-        val exception = EntityNotFoundException(Menu::class.java, "id", "1")
+        val exception = EntityNotFoundException(Menu::class.java, mutableMapOf("id" to 1))
         val expected = runtimeExceptionHandler.handleEntityNotFoundException(exception)
         mockMvc
             .perform(delete("/businesses/1000/menus/1/items/1").contentType(APPLICATION_JSON))
@@ -214,7 +214,7 @@ class MenuItemTest {
 
     @Test
     fun `Delete a non existing menu item`() {
-        val exception = EntityNotFoundException(MenuItem::class.java, "id", "1")
+        val exception = EntityNotFoundException(MenuItem::class.java, mutableMapOf("id" to 1))
         val expected = runtimeExceptionHandler.handleEntityNotFoundException(exception)
         mockMvc
             .perform(delete("$baseUrl/1").contentType(APPLICATION_JSON))
