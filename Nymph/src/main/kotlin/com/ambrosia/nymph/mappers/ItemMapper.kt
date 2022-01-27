@@ -6,7 +6,7 @@ import com.ambrosia.nymph.entities.Item
 fun Item.toDto(): ItemDto = ItemDto(id, name, description, image, price, onlyForMenu, deleted)
 
 fun ItemDto.toEntity(): Item =
-    Item(name!!, description, image, price!!, onlyForMenu).apply {
+    Item(name!!, description, image, price!!, onlyForMenu!!).apply {
         id
         deleted
     }

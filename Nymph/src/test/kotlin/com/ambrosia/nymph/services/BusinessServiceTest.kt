@@ -1,5 +1,6 @@
 package com.ambrosia.nymph.services
 
+import com.ambrosia.nymph.constants.Currency
 import com.ambrosia.nymph.constants.Role
 import com.ambrosia.nymph.dtos.BusinessRegistrationDto
 import com.ambrosia.nymph.dtos.EmployeeRegistrationDto
@@ -41,8 +42,58 @@ class BusinessServiceTest {
     fun `Edit business`() {
         every { businessRepository.findById(any()) } returns Optional.of(getBusiness())
         every { businessRepository.save(any()) } returns getBusiness()
-        val result = businessService.editBusiness(1, getBusinessRegistrationDto().copy(name = "new name"))
+        val result = businessService.editBusiness(1, getBusinessRegistrationDto()
+            .apply {
+                name = "new name"
+                phoneNumber = "new phoneNumber"
+                email = "new email"
+                description = "new description"
+                slogan = "new slogan"
+                logo = "new logo"
+                location = "new location"
+                currency = Currency.USD.name
+                isAvailable = false
+            })
         assertEquals("new name", result.name)
+        assertEquals("new phoneNumber", result.phoneNumber)
+        assertEquals("new email", result.email)
+        assertEquals("new description", result.description)
+        assertEquals("new slogan", result.slogan)
+        assertEquals("new logo", result.logo)
+        assertEquals("new location", result.location)
+        assertEquals(Currency.USD.name, result.currency)
+        assertEquals(false, result.isAvailable)
+        verify {
+            businessRepository.findById(any())
+            businessRepository.save(any())
+        }
+    }
+
+    @Test
+    fun `Edit business with null data`() {
+        every { businessRepository.findById(any()) } returns Optional.of(getBusiness())
+        every { businessRepository.save(any()) } returns getBusiness()
+        val result = businessService.editBusiness(1, getBusinessRegistrationDto()
+            .apply {
+                name = null
+                phoneNumber = null
+                email = null
+                description = null
+                slogan = null
+                logo = null
+                location = null
+                currency = null
+                isAvailable = null
+            })
+        assertEquals(getBusiness().name, result.name)
+        assertEquals(getBusiness().phoneNumber, result.phoneNumber)
+        assertEquals(getBusiness().email, result.email)
+        assertEquals(getBusiness().description, result.description)
+        assertEquals(getBusiness().slogan, result.slogan)
+        assertEquals(getBusiness().logo, result.logo)
+        assertEquals(getBusiness().location, result.location)
+        assertEquals(Currency.EUR.name, result.currency)
+        assertEquals(true, result.isAvailable)
         verify {
             businessRepository.findById(any())
             businessRepository.save(any())
@@ -62,7 +113,7 @@ class BusinessServiceTest {
             id = 1,
             name = "name",
             currency = "EUR",
-            description = "desc",
+            description = "description",
             email = "email",
             phoneNumber = "phoneNumber",
             location = "location",
@@ -82,7 +133,17 @@ class BusinessServiceTest {
         )
 
     private fun getBusiness(): Business =
-        Business(name = "name", currency = "EUR", email = "email", phoneNumber = "phoneNumber").apply { id = 1 }
+        Business(
+            name = "name",
+            phoneNumber = "phoneNumber",
+            email = "email",
+            description = "description",
+            slogan = "slogan",
+            logo = "logo",
+            location = "location",
+            currency = "EUR",
+            isAvailable = true
+        ).apply { id = 1 }
 
     private fun getEmployee(): Employee =
         Employee(

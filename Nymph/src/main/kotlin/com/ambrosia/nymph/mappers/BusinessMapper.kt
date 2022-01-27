@@ -5,8 +5,18 @@ import com.ambrosia.nymph.entities.Business
 
 fun Business.toDto(): BusinessRegistrationDto =
     BusinessRegistrationDto(
-        id, name, phoneNumber, email, description, slogan, logo, location, currency
+        id, name, phoneNumber, email, description, slogan, logo, location, currency, isAvailable
     )
 
 fun BusinessRegistrationDto.toEntity(): Business =
-    Business(name!!, phoneNumber!!, email!!, description, slogan, logo, location, currency!!).apply { id }
+    Business(
+        name!!,
+        phoneNumber!!,
+        email!!,
+        description,
+        slogan,
+        logo,
+        location,
+        currency!!,
+        isAvailable!!
+    ).apply { id }

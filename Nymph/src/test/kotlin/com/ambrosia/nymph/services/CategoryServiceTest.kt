@@ -42,9 +42,35 @@ class CategoryServiceTest {
         every { businessRepository.findById(any()) } returns Optional.of(getBusiness())
         every { categoryRepository.findById(any()) } returns Optional.of(getCategory())
         every { categoryRepository.save(any()) } returns getCategory()
-        val categoryDto = getCategory().toDto().apply { name = "new name" }
+        val categoryDto = getCategory().toDto().apply {
+            name = "new name"
+            description = "new description"
+            image = "new image"
+
+        }
         val result = categoryService.editCategory(1, 4, categoryDto)
         assertEquals("new name", result.name)
+        assertEquals("new description", result.description)
+        assertEquals("new image", result.image)
+        verify {
+            businessRepository.findById(any())
+            categoryRepository.findById(any())
+            categoryRepository.save(any())
+        }
+    }
+
+    @Test
+    fun `Edit a category with null data`() {
+        every { businessRepository.findById(any()) } returns Optional.of(getBusiness())
+        every { categoryRepository.findById(any()) } returns Optional.of(getCategory())
+        every { categoryRepository.save(any()) } returns getCategory()
+        val categoryDto = getCategory().toDto().apply {
+            name = null
+            description = null
+            image = null
+        }
+        val result = categoryService.editCategory(1, 4, categoryDto)
+        assertEquals("name", result.name)
         verify {
             businessRepository.findById(any())
             categoryRepository.findById(any())

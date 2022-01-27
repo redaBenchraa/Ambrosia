@@ -37,7 +37,7 @@ class ItemService(
         itemDto.description?.let { item.description = it }
         itemDto.image?.let { item.image = it }
         itemDto.price?.let { item.price = it }
-        itemDto.onlyForMenu.let { item.onlyForMenu = it }
+        itemDto.onlyForMenu?.let { item.onlyForMenu = it }
         itemRepository.save(item)
         return item.toDto()
     }

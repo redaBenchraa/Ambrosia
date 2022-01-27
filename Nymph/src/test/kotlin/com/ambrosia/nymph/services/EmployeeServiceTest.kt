@@ -74,9 +74,32 @@ class EmployeeServiceTest {
         every { businessRepository.findById(any()) } returns Optional.of(getBusiness())
         every { employeeRepository.findById(any()) } returns Optional.of(getEmployee())
         every { employeeRepository.save(any()) } returns getEmployee()
-        val employee = getEmployee().toDto().copy(firstName = "new name", lastName = null)
+        val employee = getEmployee().toDto().apply {
+            firstName = "new firstName"
+            lastName = "new lastName"
+        }
         val result = employeeService.editEmployee(1, 1, employee)
-        assertEquals("new name", result.firstName)
+        assertEquals("new firstName", result.firstName)
+        assertEquals("new lastName", result.lastName)
+        verify {
+            businessRepository.findById(any())
+            employeeRepository.findById(any())
+            employeeRepository.save(any())
+        }
+    }
+
+    @Test
+    fun `Edit an employee with null values`() {
+        every { businessRepository.findById(any()) } returns Optional.of(getBusiness())
+        every { employeeRepository.findById(any()) } returns Optional.of(getEmployee())
+        every { employeeRepository.save(any()) } returns getEmployee()
+        val employee = getEmployee().toDto().apply {
+            firstName = null
+            lastName = null
+        }
+        val result = employeeService.editEmployee(1, 1, employee)
+        assertEquals("firstName", result.firstName)
+        assertEquals("lastName", result.lastName)
         verify {
             businessRepository.findById(any())
             employeeRepository.findById(any())

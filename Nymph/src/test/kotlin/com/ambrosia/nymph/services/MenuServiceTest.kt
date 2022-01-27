@@ -54,15 +54,47 @@ class MenuServiceTest {
         every { businessRepository.findById(any()) } returns Optional.of(getBusiness())
         every { menuRepository.findById(any()) } returns Optional.of(getMenu())
         every { menuRepository.save(any()) } returns getMenu()
-        val menuDto = getMenu().toDto().copy(name = "new name")
+        val menuDto = getMenu().toDto().apply {
+            name = "new name"
+            description = "new description"
+            image = "new image"
+            price = 42.0
+        }
         val result = menuService.editMenu(1, 4, menuDto)
         assertEquals("new name", result.name)
+        assertEquals("new description", result.description)
+        assertEquals("new image", result.image)
+        assertEquals(42.0, result.price)
         verify {
             businessRepository.findById(any())
             menuRepository.findById(any())
             menuRepository.save(any())
         }
     }
+
+    @Test
+    fun `Edit a menu with null values`() {
+        every { businessRepository.findById(any()) } returns Optional.of(getBusiness())
+        every { menuRepository.findById(any()) } returns Optional.of(getMenu())
+        every { menuRepository.save(any()) } returns getMenu()
+        val menuDto = getMenu().toDto().apply {
+            name = null
+            description = null
+            image = null
+            price = null
+        }
+        val result = menuService.editMenu(1, 4, menuDto)
+        assertEquals("name", result.name)
+        assertEquals("description", result.description)
+        assertEquals("image", result.image)
+        assertEquals(10.0, result.price)
+        verify {
+            businessRepository.findById(any())
+            menuRepository.findById(any())
+            menuRepository.save(any())
+        }
+    }
+
 
     @Test
     fun `Edit a menu from a non existing business`() {
@@ -211,5 +243,5 @@ class MenuServiceTest {
     private fun getMenuItem(): MenuItem = MenuItem(extra = 10.0)
     private fun getItem(): Item = Item(name = "name", price = 10.0)
     private fun getCategory(): Category = Category(name = "name")
-    private fun getMenu(): Menu = Menu(name = "name", price = 10.0)
+    private fun getMenu(): Menu = Menu(name = "name", price = 10.0, image = "image", description = "description")
 }

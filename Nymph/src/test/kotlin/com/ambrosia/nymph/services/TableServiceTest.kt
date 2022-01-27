@@ -42,9 +42,32 @@ class TableServiceTest {
         every { businessRepository.findById(any()) } returns Optional.of(getBusiness())
         every { tableRepository.findById(any()) } returns Optional.of(getTable())
         every { tableRepository.save(any()) } returns getTable()
-        val tableDto = getTable().toDto().apply { number = 42 }
+        val tableDto = getTable().toDto().apply {
+            number = 42
+            isAvailable = false
+        }
         val result = tableService.editTable(1, 4, tableDto)
         assertEquals(42, result.number)
+        assertEquals(false, result.isAvailable)
+        verify {
+            businessRepository.findById(any())
+            tableRepository.findById(any())
+            tableRepository.save(any())
+        }
+    }
+
+    @Test
+    fun `Edit a table with null values`() {
+        every { businessRepository.findById(any()) } returns Optional.of(getBusiness())
+        every { tableRepository.findById(any()) } returns Optional.of(getTable())
+        every { tableRepository.save(any()) } returns getTable()
+        val tableDto = getTable().toDto().apply {
+            number = null
+            isAvailable = null
+        }
+        val result = tableService.editTable(1, 4, tableDto)
+        assertEquals(1, result.number)
+        assertEquals(true, result.isAvailable)
         verify {
             businessRepository.findById(any())
             tableRepository.findById(any())

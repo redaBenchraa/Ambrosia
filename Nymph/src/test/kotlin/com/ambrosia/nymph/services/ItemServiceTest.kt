@@ -10,7 +10,6 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import java.util.*
@@ -43,10 +42,44 @@ class ItemServiceTest {
         every { businessRepository.findById(any()) } returns Optional.of(getBusiness())
         every { itemRepository.findById(any()) } returns Optional.of(getItem())
         every { itemRepository.save(any()) } returns getItem()
-        val itemDto = getItem().toDto().copy(name = "new name", onlyForMenu = true)
+        val itemDto = getItem().toDto().apply {
+            name = "new name"
+            description = "new description"
+            image = "new image"
+            price = 42.0
+            onlyForMenu = false
+        }
         val result = itemService.editItem(1, 1, itemDto)
         assertEquals("new name", result.name)
-        assertTrue(result.onlyForMenu)
+        assertEquals("new description", result.description)
+        assertEquals("new image", result.image)
+        assertEquals(42.0, result.price)
+        assertEquals(false, result.onlyForMenu)
+        verify {
+            businessRepository.findById(any())
+            itemRepository.findById(any())
+            itemRepository.save(any())
+        }
+    }
+
+    @Test
+    fun `Edit a item with null values`() {
+        every { businessRepository.findById(any()) } returns Optional.of(getBusiness())
+        every { itemRepository.findById(any()) } returns Optional.of(getItem())
+        every { itemRepository.save(any()) } returns getItem()
+        val itemDto = getItem().toDto().apply {
+            name = null
+            description = null
+            image = null
+            price = null
+            onlyForMenu = null
+        }
+        val result = itemService.editItem(1, 1, itemDto)
+        assertEquals("name", result.name)
+        assertEquals("description", result.description)
+        assertEquals("image", result.image)
+        assertEquals(10.0, result.price)
+        assertEquals(true, result.onlyForMenu)
         verify {
             businessRepository.findById(any())
             itemRepository.findById(any())
@@ -86,5 +119,5 @@ class ItemServiceTest {
         Business(name = "name", currency = "EUR", email = "email", phoneNumber = "phoneNumber")
 
     private fun getItem(): Item =
-        Item(name = "name", description = "description", image = "image", price = 10.0)
+        Item(name = "name", description = "description", image = "image", price = 10.0, onlyForMenu = true)
 }

@@ -17,6 +17,6 @@ data class ItemDto(
     @field:NotNull(message = "error.item.price.null")
     @field:Min(0, message = "error.item.price.negative")
     var price: Double?,
-    var onlyForMenu: Boolean = false,
+    var onlyForMenu: Boolean? = false,
     var deleted: Boolean = false
 )
