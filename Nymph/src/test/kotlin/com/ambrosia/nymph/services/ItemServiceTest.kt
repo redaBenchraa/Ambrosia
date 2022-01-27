@@ -30,7 +30,6 @@ class ItemServiceTest {
             businessRepository.findById(any())
             itemRepository.save(any())
         }
-        assertEquals(1, result.id)
     }
 
     @Test
@@ -84,8 +83,8 @@ class ItemServiceTest {
     }
 
     private fun getBusiness(): Business =
-        Business(name = "name", currency = "EUR", email = "email", phoneNumber = "phoneNumber", id = 1)
+        Business(name = "name", currency = "EUR", email = "email", phoneNumber = "phoneNumber")
 
     private fun getItem(): Item =
-        Item(id = 1, name = "name", description = "description", image = "image", price = 10.0)
+        Item(name = "name", description = "description", image = "image", price = 10.0)
 }

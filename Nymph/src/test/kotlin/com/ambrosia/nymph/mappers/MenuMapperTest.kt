@@ -10,24 +10,23 @@ import org.junit.jupiter.api.Test
 class MenuMapperTest {
     @Test
     fun `Get menu categories list`() {
-        val item1 = Item(id = 1, name = "item1", price = 10.0)
-        val item2 = Item(id = 2, name = "item2", price = 10.0)
-        val item3 = Item(id = 3, name = "item3", price = 10.0)
-        val item4 = Item(id = 4, name = "item4", price = 10.0)
-        val category1 = Category(id = 5, name = "category1")
-        val category2 = Category(id = 6, name = "category2")
-        val category3 = Category(id = 7, name = "category3")
+        val item1 = Item(name = "item1", price = 10.0).apply { id = 1 }
+        val item2 = Item(name = "item2", price = 10.0).apply { id = 2 }
+        val item3 = Item(name = "item3", price = 10.0).apply { id = 3 }
+        val item4 = Item(name = "item4", price = 10.0).apply { id = 4 }
+        val category1 = Category(name = "category1").apply { id = 5 }
+        val category2 = Category(name = "category2").apply { id = 6 }
+        val category3 = Category(name = "category3").apply { id = 7 }
         val menu = Menu(
-            id = 8,
             name = "name",
             price = 10.0,
             menuItems = mutableSetOf(
-                MenuItem(id = 9, item = item1, category = category1, extra = 10.0),
-                MenuItem(id = 10, item = item2, category = category2),
-                MenuItem(id = 11, item = item3, category = category3),
-                MenuItem(id = 12, item = item4, category = category3),
+                MenuItem(item = item1, category = category1, extra = 10.0).apply { id = 9 },
+                MenuItem(item = item2, category = category2).apply { id = 10 },
+                MenuItem(item = item3, category = category3).apply { id = 11 },
+                MenuItem(item = item4, category = category3).apply { id = 12 },
             )
-        )
+        ).apply { id = 8 }
         val result = menu.toDto()
         assertEquals(3, result.categories.size)
         assertEquals(5, result.categories.first().category.id)

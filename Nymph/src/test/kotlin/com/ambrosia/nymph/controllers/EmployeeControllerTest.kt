@@ -171,7 +171,6 @@ class EmployeeControllerTest {
 
     private fun getEmployee() =
         Employee(
-            id = 1,
             firstName = "firstName",
             lastName = "lastName",
             position = Role.MANAGER,

@@ -29,7 +29,6 @@ class CategoryServiceTest {
             businessRepository.findById(any())
             categoryRepository.save(any())
         }
-        assertEquals(1, result.id)
     }
 
     @Test
@@ -86,11 +85,10 @@ class CategoryServiceTest {
     }
 
     private fun getBusiness(): Business =
-        Business(name = "name", currency = "EUR", email = "email", phoneNumber = "phoneNumber", id = 1)
+        Business(name = "name", currency = "EUR", email = "email", phoneNumber = "phoneNumber")
 
     private fun getCategory(): Category =
         Category(
-            id = 1,
             name = "name",
             description = "description",
             image = "image",
