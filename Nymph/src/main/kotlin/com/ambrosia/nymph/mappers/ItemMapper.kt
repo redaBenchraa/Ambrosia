@@ -10,4 +10,3 @@ fun ItemDto.toEntity(): Item =
         id
         deleted
     }
-

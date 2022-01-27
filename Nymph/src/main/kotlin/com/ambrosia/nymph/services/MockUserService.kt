@@ -12,10 +12,8 @@ class MockUserService : IUserService {
         return
     }
 
-
     override fun updateEmail(user: KeycloakUser, email: String) {
         return
-
     }
 
     override fun updateRoles(user: KeycloakUser) {

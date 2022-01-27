@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Service
-import java.util.*
+import java.util.Objects.nonNull
 import java.util.stream.Collectors
 
 @Service
@@ -32,7 +32,6 @@ class UserService(@Autowired private val keycloakService: KeycloakService) : IUs
             throw KeycloakException("error.keycloak.createUser")
         }
     }
-
 
     override fun updateEmail(user: KeycloakUser, email: String) {
         val usersResource = keycloakService.getUsersResource()
@@ -95,7 +94,7 @@ class UserService(@Autowired private val keycloakService: KeycloakService) : IUs
     override fun deleteKeycloakUser(user: KeycloakUser) {
         val usersResource = keycloakService.getUsersResource()
         val currentUser = usersResource.search(user.username).stream().findFirst().orElse(null)
-        if (Objects.nonNull(currentUser)) {
+        if (nonNull(currentUser)) {
             usersResource.delete(currentUser.id)
         }
     }
