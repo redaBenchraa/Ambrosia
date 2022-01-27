@@ -31,6 +31,12 @@ services:
     depends_on:
       - postgres
 
+  sonarqube:
+    build: sonarqube
+    container_name: sonarqube
+    ports:
+      - "9000:9000"
+
 #  Nymph:
 #    image: com.ambrosia.nymph:0.0.1-SNAPSHOT
 #    name: Nymph

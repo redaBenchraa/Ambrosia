@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service
 
 @Service
 @Profile("test")
-class MockUserService : AbstractUserService() {
+class MockUserService : IUserService {
 
     override fun createKeycloakUser(user: KeycloakUser) {
         return

@@ -8,6 +8,8 @@ import org.springframework.context.annotation.Configuration
 import org.zalando.problem.jackson.ProblemModule
 import org.zalando.problem.violations.ConstraintViolationProblemModule
 
+private const val REFLECTION_CACHE_SIZE = 512
+
 @Configuration
 class ObjectMapperConfiguration {
 
@@ -15,7 +17,7 @@ class ObjectMapperConfiguration {
     fun objectMapper(): ObjectMapper = ObjectMapper()
         .registerModules(
             KotlinModule.Builder()
-                .withReflectionCacheSize(512)
+                .withReflectionCacheSize(REFLECTION_CACHE_SIZE)
                 .configure(KotlinFeature.NullToEmptyCollection, false)
                 .configure(KotlinFeature.NullToEmptyMap, false)
                 .configure(KotlinFeature.NullIsSameAsDefault, false)

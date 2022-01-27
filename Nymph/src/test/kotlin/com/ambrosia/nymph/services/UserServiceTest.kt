@@ -1,7 +1,10 @@
 package com.ambrosia.nymph.services
 
 import com.ambrosia.nymph.constants.Role
-import com.ambrosia.nymph.constants.Role.*
+import com.ambrosia.nymph.constants.Role.ADMIN
+import com.ambrosia.nymph.constants.Role.EMPLOYEE
+import com.ambrosia.nymph.constants.Role.MANAGER
+import com.ambrosia.nymph.constants.Role.values
 import com.ambrosia.nymph.exceptions.KeycloakException
 import com.ambrosia.nymph.models.KeycloakUser
 import io.mockk.every
@@ -10,7 +13,12 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
 import org.keycloak.admin.client.Keycloak
-import org.keycloak.admin.client.resource.*
+import org.keycloak.admin.client.resource.RealmResource
+import org.keycloak.admin.client.resource.RoleMappingResource
+import org.keycloak.admin.client.resource.RoleScopeResource
+import org.keycloak.admin.client.resource.RolesResource
+import org.keycloak.admin.client.resource.UserResource
+import org.keycloak.admin.client.resource.UsersResource
 import org.keycloak.representations.idm.RoleRepresentation
 import org.keycloak.representations.idm.UserRepresentation
 import org.springframework.boot.test.context.SpringBootTest
