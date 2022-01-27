@@ -1,7 +1,6 @@
 package com.ambrosia.nymph.services
 
 import com.ambrosia.nymph.configs.EnvironmentProperties
-import com.ambrosia.nymph.exceptions.KeycloakException
 import com.ambrosia.nymph.models.KeycloakUser
 import org.keycloak.OAuth2Constants
 import org.keycloak.admin.client.Keycloak
@@ -63,10 +62,6 @@ class KeycloakService(@Autowired private val environmentProperties: EnvironmentP
         }
 
     fun getUsersResource(): UsersResource {
-        try {
-            return getReamResource().users()
-        } catch (e: Exception) {
-            throw KeycloakException("error.keycloak.retrieveUserResource")
-        }
+        return getReamResource().users()
     }
 }

@@ -22,14 +22,10 @@ class UserService(@Autowired private val keycloakService: KeycloakService) : IUs
     override fun createKeycloakUser(user: KeycloakUser) {
         val usersResource = keycloakService.getUsersResource()
         val userRepresentation = keycloakService.getUserRepresentation(user)
-        try {
-            usersResource.create(userRepresentation).use { response ->
-                if (response.status != HttpStatus.SC_CREATED) {
-                    throw KeycloakException("error.keycloak.createUser")
-                }
+        usersResource.create(userRepresentation).use { response ->
+            if (response.status != HttpStatus.SC_CREATED) {
+                throw KeycloakException("error.keycloak.createUser")
             }
-        } catch (e: Exception) {
-            throw KeycloakException("error.keycloak.createUser")
         }
     }
 
@@ -77,16 +73,11 @@ class UserService(@Autowired private val keycloakService: KeycloakService) : IUs
                         .orElse(null)
                 }
                 .collect(Collectors.toList())
-        try {
-            if (isNotEmpty(rolesToRemove)) {
-                usersResource[currentUser.id].roles().realmLevel().remove(rolesToRemove)
-            }
-            if (isNotEmpty(rolesToAdd)) {
-                usersResource[currentUser.id].roles().realmLevel().add(rolesToAdd)
-            }
-        } catch (e: Exception) {
-            logger.info(e.message)
-            throw KeycloakException("error.keycloak.attributeRoles")
+        if (isNotEmpty(rolesToRemove)) {
+            usersResource[currentUser.id].roles().realmLevel().remove(rolesToRemove)
+        }
+        if (isNotEmpty(rolesToAdd)) {
+            usersResource[currentUser.id].roles().realmLevel().add(rolesToAdd)
         }
     }
 
