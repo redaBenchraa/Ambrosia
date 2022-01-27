@@ -2,6 +2,7 @@ package com.ambrosia.nymph.entities
 
 import com.ambrosia.nymph.constants.Constants
 import com.fasterxml.jackson.annotation.JsonManagedReference
+import org.hibernate.Hibernate
 import org.hibernate.annotations.ColumnDefault
 import org.hibernate.annotations.OnDelete
 import org.hibernate.annotations.OnDeleteAction
@@ -22,7 +23,7 @@ import javax.persistence.ManyToOne
 @Entity
 @SQLDelete(sql = "UPDATE category SET deleted = true WHERE id=?")
 @Where(clause = "deleted = false")
-class Category(
+data class Category(
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(nullable = false)
@@ -46,4 +47,19 @@ class Category(
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonManagedReference
     var business: Business? = null,
-)
+) {
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other == null || Hibernate.getClass(this) != Hibernate.getClass(other)) return false
+        other as Category
+
+        return id != null && id == other.id
+    }
+
+    override fun hashCode(): Int = javaClass.hashCode()
+
+    @Override
+    override fun toString(): String {
+        return this::class.simpleName + "(id = $id )"
+    }
+}

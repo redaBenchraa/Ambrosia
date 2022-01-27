@@ -3,6 +3,7 @@ package com.ambrosia.nymph.entities
 import com.ambrosia.nymph.constants.Constants.Companion.NOW
 import com.fasterxml.jackson.annotation.JsonBackReference
 import com.fasterxml.jackson.annotation.JsonManagedReference
+import org.hibernate.Hibernate
 import org.hibernate.annotations.ColumnDefault
 import org.hibernate.annotations.OnDelete
 import org.hibernate.annotations.OnDeleteAction
@@ -28,7 +29,7 @@ import javax.validation.constraints.NotNull
 @Table(name = "tables")
 @SQLDelete(sql = "UPDATE tables SET deleted = true WHERE id=?")
 @Where(clause = "deleted = false")
-class Table(
+data class Table(
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(nullable = false)
@@ -63,4 +64,19 @@ class Table(
     )
     @JsonBackReference
     var sessions: MutableSet<Session> = HashSet(),
-)
+) {
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other == null || Hibernate.getClass(this) != Hibernate.getClass(other)) return false
+        other as com.ambrosia.nymph.entities.Table
+
+        return id != null && id == other.id
+    }
+
+    override fun hashCode(): Int = javaClass.hashCode()
+
+    @Override
+    override fun toString(): String {
+        return this::class.simpleName + "(id = $id , number = $number , isAvailable = $isAvailable , createdAt = $createdAt , updatedAt = $updatedAt , deleted = $deleted )"
+    }
+}
