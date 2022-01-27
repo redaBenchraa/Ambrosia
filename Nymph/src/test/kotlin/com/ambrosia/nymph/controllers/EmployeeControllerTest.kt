@@ -8,6 +8,7 @@ import com.ambrosia.nymph.entities.Business
 import com.ambrosia.nymph.entities.Category
 import com.ambrosia.nymph.entities.Employee
 import com.ambrosia.nymph.exceptions.EntityNotFoundException
+import com.ambrosia.nymph.exceptions.KeycloakException
 import com.ambrosia.nymph.handlers.RuntimeExceptionHandler
 import com.ambrosia.nymph.mappers.toDto
 import com.ambrosia.nymph.mappers.toRegistrationEmployeeDto
@@ -22,6 +23,7 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR
 import org.springframework.http.HttpStatus.NOT_FOUND
 import org.springframework.http.MediaType
 import org.springframework.http.MediaType.APPLICATION_JSON
@@ -112,7 +114,7 @@ class EmployeeControllerTest {
     }
 
     @Test
-    fun `Edit an email`() {
+    fun `Edit an employee email`() {
         val employee = EditEmailDto(email = "email@email.com")
         every { employeeService.editEmployeeEmail(any(), any(), any()) } returns getEmployee().toDto()
         val content = objectMapper.writeValueAsString(employee)
@@ -124,7 +126,7 @@ class EmployeeControllerTest {
     }
 
     @Test
-    fun `Edit an position`() {
+    fun `Edit an employee position`() {
         val employee = EditPositionDto(position = Role.MANAGER)
         every { employeeService.editEmployeePosition(any(), any(), any()) } returns getEmployee().toDto()
         val content = objectMapper.writeValueAsString(employee)
@@ -133,6 +135,19 @@ class EmployeeControllerTest {
             .andExpect(status().isOk)
             .andExpect(content().contentType(APPLICATION_JSON))
             .andExpect(content().json(objectMapper.writeValueAsString(employee)))
+    }
+
+    @Test
+    fun `Edit and employee position wth keycloak error `() {
+        val exception = KeycloakException("error.keycloak.edit")
+        val expected = runtimeExceptionHandler.handleKeycloakException(exception)
+        every { employeeService.editEmployeePosition(any(), any(), any()) } throws exception
+        val content = objectMapper.writeValueAsString(EditPositionDto(position = Role.MANAGER))
+        mockMvc
+            .perform(put("$baseUrl/1/position").contentType(APPLICATION_JSON).content(content))
+            .andExpect(status().`is`(INTERNAL_SERVER_ERROR.value()))
+            .andExpect(content().contentType(APPLICATION_JSON))
+            .andExpect(content().json(objectMapper.writeValueAsString(expected.body)))
     }
 
     @Test
