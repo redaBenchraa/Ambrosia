@@ -1,7 +1,7 @@
 package com.ambrosia.nymph.entities
 
-import com.ambrosia.nymph.constants.Constants.Companion.NAME_MAX_SIZE
-import com.ambrosia.nymph.constants.Constants.Companion.PRICE_MIN
+import com.ambrosia.nymph.constants.NAME_MAX_SIZE
+import com.ambrosia.nymph.constants.PRICE_MIN
 import com.fasterxml.jackson.annotation.JsonBackReference
 import com.fasterxml.jackson.annotation.JsonManagedReference
 import org.hibernate.annotations.OnDelete

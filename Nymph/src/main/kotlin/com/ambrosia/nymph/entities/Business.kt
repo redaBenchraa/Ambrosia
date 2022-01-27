@@ -1,8 +1,8 @@
 package com.ambrosia.nymph.entities
 
-import com.ambrosia.nymph.constants.Constants.Companion.EMAIL_MAX_SIZE
-import com.ambrosia.nymph.constants.Constants.Companion.NAME_MAX_SIZE
 import com.ambrosia.nymph.constants.Currency
+import com.ambrosia.nymph.constants.EMAIL_MAX_SIZE
+import com.ambrosia.nymph.constants.NAME_MAX_SIZE
 import com.fasterxml.jackson.annotation.JsonBackReference
 import org.hibernate.annotations.ColumnDefault
 import org.hibernate.annotations.SQLDelete

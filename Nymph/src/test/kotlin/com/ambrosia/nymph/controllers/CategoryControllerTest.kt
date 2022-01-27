@@ -1,6 +1,6 @@
 package com.ambrosia.nymph.controllers
 
-import com.ambrosia.nymph.constants.Urls
+import com.ambrosia.nymph.constants.VIOLATIONS
 import com.ambrosia.nymph.entities.Business
 import com.ambrosia.nymph.entities.Category
 import com.ambrosia.nymph.exceptions.EntityNotFoundException
@@ -108,7 +108,7 @@ class CategoryControllerTest {
             .perform(post(baseUrl).contentType(APPLICATION_JSON).content(content))
             .andExpect(status().isBadRequest)
             .andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON))
-            .andExpect(jsonPath("$.type", `is`<Any>(Urls.VIOLATIONS)))
+            .andExpect(jsonPath("$.type", `is`<Any>(VIOLATIONS)))
             .andExpect(jsonPath("$.title", `is`("Constraint Violation")))
             .andExpect(jsonPath("$.status", `is`(400)))
             .andExpect(jsonPath("$.violations", hasSize<Any>(1)))

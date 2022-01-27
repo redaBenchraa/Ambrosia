@@ -1,7 +1,7 @@
 package com.ambrosia.nymph.entities
 
-import com.ambrosia.nymph.constants.Constants.Companion.EMAIL_MAX_SIZE
-import com.ambrosia.nymph.constants.Constants.Companion.NAME_MAX_SIZE
+import com.ambrosia.nymph.constants.EMAIL_MAX_SIZE
+import com.ambrosia.nymph.constants.NAME_MAX_SIZE
 import com.ambrosia.nymph.constants.Role
 import com.fasterxml.jackson.annotation.JsonManagedReference
 import org.hibernate.annotations.OnDelete

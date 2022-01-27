@@ -1,7 +1,7 @@
 package com.ambrosia.nymph.controllers
 
 import com.ambrosia.nymph.constants.Role
-import com.ambrosia.nymph.constants.Urls
+import com.ambrosia.nymph.constants.VIOLATIONS
 import com.ambrosia.nymph.dtos.BusinessRegistrationDto
 import com.ambrosia.nymph.dtos.EmployeeRegistrationDto
 import com.ambrosia.nymph.entities.Business
@@ -85,7 +85,7 @@ class BusinessControllerTest {
             .perform(post("$baseUrl/register").contentType(APPLICATION_JSON).content(content))
             .andExpect(status().isBadRequest)
             .andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON))
-            .andExpect(jsonPath("$.type", `is`<Any>(Urls.VIOLATIONS)))
+            .andExpect(jsonPath("$.type", `is`<Any>(VIOLATIONS)))
             .andExpect(jsonPath("$.title", `is`("Constraint Violation")))
             .andExpect(jsonPath("$.status", `is`(400)))
             .andExpect(jsonPath("$.violations", hasSize<Any>(1)))
@@ -109,7 +109,7 @@ class BusinessControllerTest {
             )
             .andExpect(status().isBadRequest)
             .andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON))
-            .andExpect(jsonPath("$.type", `is`<Any>(Urls.VIOLATIONS)))
+            .andExpect(jsonPath("$.type", `is`<Any>(VIOLATIONS)))
             .andExpect(jsonPath("$.title", `is`("Constraint Violation")))
             .andExpect(jsonPath("$.status", `is`(400)))
             .andExpect(jsonPath("$.violations", hasSize<Any>(1)))
@@ -129,7 +129,7 @@ class BusinessControllerTest {
             .perform(post("$baseUrl/register").contentType(APPLICATION_JSON).content(content))
             .andExpect(status().isBadRequest)
             .andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON))
-            .andExpect(jsonPath("$.type", `is`<Any>(Urls.VIOLATIONS)))
+            .andExpect(jsonPath("$.type", `is`<Any>(VIOLATIONS)))
             .andExpect(jsonPath("$.title", `is`("Constraint Violation")))
             .andExpect(jsonPath("$.status", `is`(400)))
             .andExpect(jsonPath("$.violations", hasSize<Any>(1)))
@@ -162,7 +162,7 @@ class BusinessControllerTest {
             .perform(put("$baseUrl/1").contentType(APPLICATION_JSON).content(content))
             .andExpect(status().isBadRequest)
             .andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON))
-            .andExpect(jsonPath("$.type", `is`<Any>(Urls.VIOLATIONS)))
+            .andExpect(jsonPath("$.type", `is`<Any>(VIOLATIONS)))
             .andExpect(jsonPath("$.title", `is`("Constraint Violation")))
             .andExpect(jsonPath("$.status", `is`(400)))
             .andExpect(jsonPath("$.violations", hasSize<Any>(1)))

@@ -1,6 +1,6 @@
 package com.ambrosia.nymph.dtos
 
-import com.ambrosia.nymph.constants.Constants.Companion.NAME_MAX_SIZE
+import com.ambrosia.nymph.constants.NAME_MAX_SIZE
 import javax.validation.constraints.Min
 import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotNull

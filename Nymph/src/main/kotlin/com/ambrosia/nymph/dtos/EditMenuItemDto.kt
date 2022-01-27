@@ -1,6 +1,6 @@
 package com.ambrosia.nymph.dtos
 
-import com.ambrosia.nymph.constants.Constants.Companion.PRICE_MIN
+import com.ambrosia.nymph.constants.PRICE_MIN
 import javax.validation.constraints.Min
 import javax.validation.constraints.NotNull
 

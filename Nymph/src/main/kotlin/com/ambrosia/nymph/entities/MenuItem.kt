@@ -1,6 +1,6 @@
 package com.ambrosia.nymph.entities
 
-import com.ambrosia.nymph.constants.Constants.Companion.EXTRA_MIN
+import com.ambrosia.nymph.constants.EXTRA_MIN
 import com.fasterxml.jackson.annotation.JsonManagedReference
 import org.hibernate.annotations.OnDelete
 import org.hibernate.annotations.OnDeleteAction

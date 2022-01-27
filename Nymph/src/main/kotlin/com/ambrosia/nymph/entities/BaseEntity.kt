@@ -1,6 +1,6 @@
 package com.ambrosia.nymph.entities
 
-import com.ambrosia.nymph.constants.Constants.Companion.NOW
+import com.ambrosia.nymph.constants.NOW
 import org.hibernate.annotations.ColumnDefault
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedDate

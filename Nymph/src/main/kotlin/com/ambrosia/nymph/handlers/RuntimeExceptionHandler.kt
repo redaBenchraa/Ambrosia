@@ -1,6 +1,9 @@
 package com.ambrosia.nymph.handlers
 
-import com.ambrosia.nymph.constants.Urls
+import com.ambrosia.nymph.constants.ENTITY_ALREADY_EXITS
+import com.ambrosia.nymph.constants.ENTITY_NOT_FOUND
+import com.ambrosia.nymph.constants.KEYCLOAK
+import com.ambrosia.nymph.constants.VIOLATIONS
 import com.ambrosia.nymph.exceptions.EntityAlreadyExistsException
 import com.ambrosia.nymph.exceptions.EntityNotFoundException
 import com.ambrosia.nymph.exceptions.KeycloakException
@@ -26,7 +29,7 @@ class RuntimeExceptionHandler : ProblemHandling, SecurityAdviceTrait {
     @Autowired
     lateinit var translator: Translator
 
-    override fun defaultConstraintViolationType(): URI = URI.create(Urls.VIOLATIONS)
+    override fun defaultConstraintViolationType(): URI = URI.create(VIOLATIONS)
 
     override fun isCausalChainsEnabled(): Boolean = true
 
@@ -42,7 +45,7 @@ class RuntimeExceptionHandler : ProblemHandling, SecurityAdviceTrait {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
             .body(
                 Problem.builder()
-                    .withType(URI.create(Urls.ENTITY_NOT_FOUND))
+                    .withType(URI.create(ENTITY_NOT_FOUND))
                     .withTitle(translator.toLocale("error.entityNotFound"))
                     .withStatus(Status.NOT_FOUND)
                     .withDetail(
@@ -62,7 +65,7 @@ class RuntimeExceptionHandler : ProblemHandling, SecurityAdviceTrait {
         return ResponseEntity.status(HttpStatus.CONFLICT)
             .body(
                 Problem.builder()
-                    .withType(URI.create(Urls.ENTITY_ALREADY_EXITS))
+                    .withType(URI.create(ENTITY_ALREADY_EXITS))
                     .withTitle(translator.toLocale("error.entityAlreadyExists"))
                     .withStatus(Status.CONFLICT)
                     .withDetail(
@@ -82,7 +85,7 @@ class RuntimeExceptionHandler : ProblemHandling, SecurityAdviceTrait {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
             .body(
                 Problem.builder()
-                    .withType(URI.create(Urls.KEYCLOAK))
+                    .withType(URI.create(KEYCLOAK))
                     .withTitle(translator.toLocale(ex.message))
                     .withStatus(Status.INTERNAL_SERVER_ERROR)
                     .build()

@@ -81,6 +81,30 @@ class UserServiceTest {
         assertDoesNotThrow { userService.updateRoles(getKeycloakUser(ADMIN)) }
     }
 
+    @Test
+    fun updateEmailSuccess() {
+        every { keycloakService.getUsersResource() } returns usersResource
+        every { usersResource.search(any()) } returns listOf(getUserRepresentation(EMPLOYEE, MANAGER))
+        every { realmResource.roles() } returns rolesResource
+        every { rolesResource.list() } returns getRealmRoles()
+        every { usersResource.get(any()) } returns userResource
+        every { userResource.roles() } returns roleMappingResource
+        every { roleMappingResource.realmLevel() } returns roleScopeResource
+        assertDoesNotThrow { userService.updateEmail(getKeycloakUser(ADMIN), "email") }
+    }
+
+    @Test
+    fun deleteUser() {
+        every { keycloakService.getUsersResource() } returns usersResource
+        every { usersResource.search(any()) } returns listOf(getUserRepresentation(EMPLOYEE, MANAGER))
+        every { realmResource.roles() } returns rolesResource
+        every { rolesResource.list() } returns getRealmRoles()
+        every { usersResource.get(any()) } returns userResource
+        every { userResource.roles() } returns roleMappingResource
+        every { roleMappingResource.realmLevel() } returns roleScopeResource
+        assertDoesNotThrow { userService.deleteKeycloakUser(getKeycloakUser(ADMIN)) }
+    }
+
     fun getRoleRepresentation(role: String?): RoleRepresentation {
         val roleRepresentation = RoleRepresentation()
         roleRepresentation.name = role

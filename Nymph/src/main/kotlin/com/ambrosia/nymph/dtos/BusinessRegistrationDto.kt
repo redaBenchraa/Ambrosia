@@ -1,7 +1,8 @@
 package com.ambrosia.nymph.dtos
 
-import com.ambrosia.nymph.constants.Constants
 import com.ambrosia.nymph.constants.Currency
+import com.ambrosia.nymph.constants.EMAIL_MAX_SIZE
+import com.ambrosia.nymph.constants.NAME_MAX_SIZE
 import javax.validation.Valid
 import javax.validation.constraints.Email
 import javax.validation.constraints.NotBlank
@@ -12,7 +13,7 @@ data class BusinessRegistrationDto(
     var id: Long? = null,
     @field:NotNull(message = "error.business.name.null")
     @field:NotBlank(message = "error.business.name.blank")
-    @field:Size(max = Constants.NAME_MAX_SIZE, message = "error.business.name.size.invalid")
+    @field:Size(max = NAME_MAX_SIZE, message = "error.business.name.size.invalid")
     var name: String?,
     @field:NotNull(message = "error.business.phoneNumber.null")
     @field:NotBlank(message = "error.business.phoneNumber.blank")
@@ -20,7 +21,7 @@ data class BusinessRegistrationDto(
     @field:NotNull(message = "error.business.email.null")
     @field:NotBlank(message = "error.business.email.blank")
     @field:Email(message = "error.business.email.format.invalid")
-    @field:Size(max = Constants.EMAIL_MAX_SIZE, message = "error.business.email.size.invalid")
+    @field:Size(max = EMAIL_MAX_SIZE, message = "error.business.email.size.invalid")
     var email: String?,
     var description: String?,
     var slogan: String?,

@@ -1,8 +1,8 @@
 package com.ambrosia.nymph.dtos
 
-import com.ambrosia.nymph.constants.Constants.Companion.EMAIL_MAX_SIZE
-import com.ambrosia.nymph.constants.Constants.Companion.NAME_MAX_SIZE
-import com.ambrosia.nymph.constants.Constants.Companion.PASSWORD_MIN_SIZE
+import com.ambrosia.nymph.constants.EMAIL_MAX_SIZE
+import com.ambrosia.nymph.constants.NAME_MAX_SIZE
+import com.ambrosia.nymph.constants.PASSWORD_MIN_SIZE
 import com.ambrosia.nymph.constants.Role
 import javax.validation.constraints.Email
 import javax.validation.constraints.NotBlank
