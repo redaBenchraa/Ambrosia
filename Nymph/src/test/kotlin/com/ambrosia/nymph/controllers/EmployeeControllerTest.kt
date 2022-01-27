@@ -5,7 +5,6 @@ import com.ambrosia.nymph.constants.VIOLATIONS
 import com.ambrosia.nymph.dtos.EditEmailDto
 import com.ambrosia.nymph.dtos.EditPositionDto
 import com.ambrosia.nymph.entities.Business
-import com.ambrosia.nymph.entities.Category
 import com.ambrosia.nymph.entities.Employee
 import com.ambrosia.nymph.exceptions.EntityNotFoundException
 import com.ambrosia.nymph.exceptions.KeycloakException
@@ -29,6 +28,7 @@ import org.springframework.http.MediaType
 import org.springframework.http.MediaType.APPLICATION_JSON
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
@@ -200,11 +200,33 @@ class EmployeeControllerTest {
 
     @Test
     fun `Delete an employee from a non existing business`() {
-        val exception = EntityNotFoundException(Category::class.java, mutableMapOf("id" to 1))
+        val exception = EntityNotFoundException(Business::class.java, mutableMapOf("id" to 1))
         val expected = runtimeExceptionHandler.handleEntityNotFoundException(exception)
         every { employeeService.deleteEmployee(any(), any()) } throws exception
         mockMvc
             .perform(delete("$baseUrl/1"))
+            .andExpect(status().`is`(NOT_FOUND.value()))
+            .andExpect(content().contentType(APPLICATION_JSON))
+            .andExpect(content().json(objectMapper.writeValueAsString(expected.body)))
+    }
+
+    @Test
+    fun `Get employees list from a business`() {
+        every { employeeService.getEmployees(any()) } returns mutableListOf(getEmployee().toDto())
+        mockMvc
+            .perform(get(baseUrl))
+            .andExpect(status().isOk)
+            .andExpect(content().contentType(APPLICATION_JSON))
+            .andExpect(content().json(objectMapper.writeValueAsString(mutableListOf(getEmployee().toDto()))))
+    }
+
+    @Test
+    fun `Get employees list from a non existing business`() {
+        val exception = EntityNotFoundException(Business::class.java, mutableMapOf("id" to 1))
+        val expected = runtimeExceptionHandler.handleEntityNotFoundException(exception)
+        every { employeeService.getEmployees(any()) } throws exception
+        mockMvc
+            .perform(get(baseUrl))
             .andExpect(status().`is`(NOT_FOUND.value()))
             .andExpect(content().contentType(APPLICATION_JSON))
             .andExpect(content().json(objectMapper.writeValueAsString(expected.body)))

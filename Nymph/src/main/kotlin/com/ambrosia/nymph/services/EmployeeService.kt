@@ -83,6 +83,13 @@ class EmployeeService(
         employeeRepository.delete(employee)
     }
 
+    @Transactional
+    fun getEmployees(businessId: Long): List<EmployeeDto> {
+        businessRepository.findById(businessId)
+            .orElseThrow { EntityNotFoundException(Business::class.java, mutableMapOf("id" to businessId)) }
+        return employeeRepository.findByBusinessId(businessId).stream().map { it.toDto() }.toList()
+    }
+
     fun verifyIfEmployeeExists(employeeDto: EmployeeRegistrationDto) {
         if (employeeRepository.existsByEmail(employeeDto.email!!)) {
             throw EntityAlreadyExistsException(Employee::class.java, mutableMapOf("email" to employeeDto.email!!))

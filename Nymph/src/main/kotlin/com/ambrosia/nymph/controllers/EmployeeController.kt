@@ -7,6 +7,7 @@ import com.ambrosia.nymph.dtos.EmployeeRegistrationDto
 import com.ambrosia.nymph.services.EmployeeService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.DeleteMapping
+import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
@@ -60,5 +61,10 @@ class EmployeeController(@Autowired private val employeeService: EmployeeService
         @Valid @RequestBody editPositionDto: EditPositionDto
     ): EmployeeDto {
         return employeeService.editEmployeePosition(businessId, employeeId, editPositionDto)
+    }
+
+    @GetMapping
+    fun getEmployees(@PathVariable("businessId") businessId: Long): List<EmployeeDto> {
+        return employeeService.getEmployees(businessId)
     }
 }

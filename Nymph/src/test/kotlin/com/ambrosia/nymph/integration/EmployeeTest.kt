@@ -13,6 +13,7 @@ import com.ambrosia.nymph.repositories.EmployeeRepository
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.github.springtestdbunit.TransactionDbUnitTestExecutionListener
 import com.github.springtestdbunit.annotation.DatabaseSetup
+import org.hamcrest.Matchers.`is`
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
@@ -25,9 +26,11 @@ import org.springframework.test.context.TestExecutionListeners
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
 @SpringBootTest
@@ -156,6 +159,29 @@ class EmployeeTest {
             .andExpect(content().json(objectMapper.writeValueAsString(employee)))
         val result = employeeRepository.findByBusinessId(1000)
         assertEquals(Role.ADMIN, result[0].position)
+    }
+
+    @Test
+    fun `Get employees`() {
+        mockMvc
+            .perform(get(baseUrl))
+            .andExpect(status().isOk)
+            .andExpect(content().contentType(APPLICATION_JSON))
+            .andExpect(jsonPath("$[0].firstName", `is`("firstName")))
+            .andExpect(jsonPath("$[0].lastName", `is`("lastName")))
+            .andExpect(jsonPath("$[0].email", `is`("email@email.com")))
+            .andExpect(jsonPath("$[0].position", `is`("ADMIN")))
+    }
+
+    @Test
+    fun `Get employees from a non existing business`() {
+        val exception = EntityNotFoundException(Business::class.java, mutableMapOf("id" to 1))
+        val expected = runtimeExceptionHandler.handleEntityNotFoundException(exception)
+        mockMvc
+            .perform(get("businesses/1/employees"))
+            .andExpect(status().`is`(NOT_FOUND.value()))
+            .andExpect(content().contentType(APPLICATION_JSON))
+            .andExpect(content().json(objectMapper.writeValueAsString(expected.body)))
     }
 
     private fun getEmployee(): Employee =
