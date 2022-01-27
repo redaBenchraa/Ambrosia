@@ -1,6 +1,8 @@
 package com.ambrosia.nymph.integration
 
 import com.ambrosia.nymph.constants.Role
+import com.ambrosia.nymph.dtos.EditEmailDto
+import com.ambrosia.nymph.dtos.EditPositionDto
 import com.ambrosia.nymph.entities.Business
 import com.ambrosia.nymph.entities.Employee
 import com.ambrosia.nymph.exceptions.EntityNotFoundException
@@ -128,6 +130,32 @@ class EmployeeTest {
             .andExpect(status().`is`(NOT_FOUND.value()))
             .andExpect(content().contentType(APPLICATION_JSON))
             .andExpect(content().json(objectMapper.writeValueAsString(expected.body)))
+    }
+
+    @Test
+    fun `Edit email`() {
+        val employee = EditEmailDto(email = "email2@email.com")
+        val content = objectMapper.writeValueAsString(employee)
+        mockMvc
+            .perform(put("$baseUrl/$id/email").contentType(APPLICATION_JSON).content(content))
+            .andExpect(status().isOk)
+            .andExpect(content().contentType(APPLICATION_JSON))
+            .andExpect(content().json(objectMapper.writeValueAsString(employee)))
+        val result = employeeRepository.findByBusinessId(1000)
+        assertEquals("email2@email.com", result[0].email)
+    }
+
+    @Test
+    fun `Edit an position`() {
+        val employee = EditPositionDto(position = Role.ADMIN)
+        val content = objectMapper.writeValueAsString(employee)
+        mockMvc
+            .perform(put("$baseUrl/$id/position").contentType(APPLICATION_JSON).content(content))
+            .andExpect(status().isOk)
+            .andExpect(content().contentType(APPLICATION_JSON))
+            .andExpect(content().json(objectMapper.writeValueAsString(employee)))
+        val result = employeeRepository.findByBusinessId(1000)
+        assertEquals(Role.ADMIN, result[0].position)
     }
 
     private fun getEmployee(): Employee =

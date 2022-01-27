@@ -2,6 +2,8 @@ package com.ambrosia.nymph.controllers
 
 import com.ambrosia.nymph.constants.Role
 import com.ambrosia.nymph.constants.VIOLATIONS
+import com.ambrosia.nymph.dtos.EditEmailDto
+import com.ambrosia.nymph.dtos.EditPositionDto
 import com.ambrosia.nymph.entities.Business
 import com.ambrosia.nymph.entities.Category
 import com.ambrosia.nymph.entities.Employee
@@ -104,6 +106,30 @@ class EmployeeControllerTest {
         val content = objectMapper.writeValueAsString(employee)
         mockMvc
             .perform(put("$baseUrl/1").contentType(APPLICATION_JSON).content(content))
+            .andExpect(status().isOk)
+            .andExpect(content().contentType(APPLICATION_JSON))
+            .andExpect(content().json(objectMapper.writeValueAsString(employee)))
+    }
+
+    @Test
+    fun `Edit an email`() {
+        val employee = EditEmailDto(email = "email@email.com")
+        every { employeeService.editEmployeeEmail(any(), any(), any()) } returns getEmployee().toDto()
+        val content = objectMapper.writeValueAsString(employee)
+        mockMvc
+            .perform(put("$baseUrl/1/email").contentType(APPLICATION_JSON).content(content))
+            .andExpect(status().isOk)
+            .andExpect(content().contentType(APPLICATION_JSON))
+            .andExpect(content().json(objectMapper.writeValueAsString(employee)))
+    }
+
+    @Test
+    fun `Edit an position`() {
+        val employee = EditPositionDto(position = Role.MANAGER)
+        every { employeeService.editEmployeePosition(any(), any(), any()) } returns getEmployee().toDto()
+        val content = objectMapper.writeValueAsString(employee)
+        mockMvc
+            .perform(put("$baseUrl/1/position").contentType(APPLICATION_JSON).content(content))
             .andExpect(status().isOk)
             .andExpect(content().contentType(APPLICATION_JSON))
             .andExpect(content().json(objectMapper.writeValueAsString(employee)))
