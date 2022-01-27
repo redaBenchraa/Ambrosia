@@ -2,6 +2,7 @@ package com.ambrosia.nymph.entities
 
 import com.ambrosia.nymph.constants.Constants.Companion.NOW
 import com.fasterxml.jackson.annotation.JsonManagedReference
+import org.hibernate.Hibernate
 import org.hibernate.annotations.ColumnDefault
 import org.hibernate.annotations.OnDelete
 import org.hibernate.annotations.OnDeleteAction
@@ -23,7 +24,7 @@ import javax.validation.constraints.NotNull
 @Entity
 @SQLDelete(sql = "UPDATE bill SET deleted = true WHERE id=?")
 @Where(clause = "deleted = false")
-class Bill(
+data class Bill(
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(nullable = false)
@@ -54,4 +55,19 @@ class Bill(
     @OnDelete(action = OnDeleteAction.NO_ACTION)
     @JsonManagedReference
     var session: Session,
-)
+) {
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other == null || Hibernate.getClass(this) != Hibernate.getClass(other)) return false
+        other as Bill
+
+        return id != null && id == other.id
+    }
+
+    override fun hashCode(): Int = javaClass.hashCode()
+
+    @Override
+    override fun toString(): String {
+        return this::class.simpleName + "(id = $id )"
+    }
+}

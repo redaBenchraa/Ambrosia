@@ -5,6 +5,7 @@ import com.ambrosia.nymph.constants.Constants.Companion.NOW
 import com.ambrosia.nymph.constants.Constants.Companion.PRICE_MIN
 import com.fasterxml.jackson.annotation.JsonBackReference
 import com.fasterxml.jackson.annotation.JsonManagedReference
+import org.hibernate.Hibernate
 import org.hibernate.annotations.ColumnDefault
 import org.hibernate.annotations.OnDelete
 import org.hibernate.annotations.OnDeleteAction
@@ -31,7 +32,7 @@ import javax.validation.constraints.Size
 @Entity
 @SQLDelete(sql = "UPDATE menu SET deleted = true WHERE id=?")
 @Where(clause = "deleted = false")
-class Menu(
+data class Menu(
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(nullable = false)
@@ -71,4 +72,19 @@ class Menu(
     )
     @JsonBackReference
     var menuItems: MutableSet<MenuItem> = HashSet(),
-)
+) {
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other == null || Hibernate.getClass(this) != Hibernate.getClass(other)) return false
+        other as Menu
+
+        return id != null && id == other.id
+    }
+
+    override fun hashCode(): Int = javaClass.hashCode()
+
+    @Override
+    override fun toString(): String {
+        return this::class.simpleName + "(id = $id )"
+    }
+}

@@ -24,7 +24,7 @@ liquibase {
         this.arguments =
             mapOf(
                 "logLevel" to "info",
-                "changeLogFile" to "src/main/resources/db/changelog/liquibase-changeLog.xml",
+                "changeLogFile" to "src/main/resources/db/changelog/liquibase.xml",
                 "url" to "jdbc:postgresql://localhost:5432/postgres",
                 "username" to "postgres",
                 "password" to "postgres",
@@ -97,10 +97,10 @@ detekt {
 
 tasks.withType<io.gitlab.arturbosch.detekt.Detekt>().configureEach {
     reports {
-        html.required.set(true) // observe findings in your browser with structure and code snippets
-        xml.required.set(true) // checkstyle like format mainly for integrations like Jenkins
-        txt.required.set(true) // similar to the console output, contains issue signature to manually edit baseline files
-        sarif.required.set(true) // standardized SARIF format (https://sarifweb.azurewebsites.net/) to support integrations with Github Code Scanning
+        html.required.set(true)
+        xml.required.set(true)
+        txt.required.set(true)
+        sarif.required.set(true)
     }
 }
 
@@ -119,7 +119,9 @@ sonarqube {
         property("sonar.login", "3202c74ae585cbae4134b6b9d00330f1ad4ec0a5")
         property("sonar.language", "kotlin")
         property("sonar.kotlin.detekt.reportPaths", "build/reports/detekt/detekt.xml")
-        property("sonar.coverage.jacoco.xmlReportPaths", "${project.buildDir}/reports/detekt/detekt.xml")
+        property("sonar.coverage.jacoco.xmlReportPaths", "build/reports/jacoco/test/jacocoTestReport.xml")
+        property("sonar.java.coveragePlugin", "jacoco")
+        property("sonar.jacoco.reportPath", "build/jacoco/test.exec")
     }
 }
 
@@ -139,13 +141,5 @@ tasks.withType<JacocoReport> {
     }
 }
 
-
 tasks.withType<Test> { useJUnitPlatform() }
 
-fun findAllReports(): String {
-    val file = "${rootProject.buildDir}/reports"
-    return rootProject.subprojects
-        .stream()
-        .map { "$file/jacocoTestReport-${name}.xml" }
-        .toList().joinToString(",")
-}
