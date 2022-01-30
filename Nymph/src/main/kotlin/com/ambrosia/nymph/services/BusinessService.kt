@@ -21,8 +21,10 @@ class BusinessService(
     fun createBusiness(businessRegistrationDto: BusinessRegistrationDto): BusinessRegistrationDto {
         val saveBusiness = businessRepository.save(businessRegistrationDto.toEntity())
         return saveBusiness.toDto().apply {
-            employee = employeeService.addEmployee(id!!, businessRegistrationDto.employee!!)
-                .toEmployeeRegistrationDto()
+            businessRegistrationDto.employee?.let {
+                employee = employeeService.addEmployee(id ?: -1, it)
+                    .toEmployeeRegistrationDto()
+            }
         }
     }
 

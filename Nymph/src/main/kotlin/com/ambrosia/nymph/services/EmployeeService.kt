@@ -91,8 +91,11 @@ class EmployeeService(
     }
 
     fun verifyIfEmployeeExists(employeeDto: EmployeeRegistrationDto) {
-        if (employeeRepository.existsByEmail(employeeDto.email!!)) {
-            throw EntityAlreadyExistsException(Employee::class.java, mutableMapOf("email" to employeeDto.email!!))
+        employeeDto.email?.let {
+            if (employeeRepository.existsByEmail(it)) {
+                throw EntityAlreadyExistsException(Employee::class.java, mutableMapOf("email" to it))
+            }
         }
+
     }
 }

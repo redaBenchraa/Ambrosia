@@ -23,7 +23,7 @@ import javax.validation.constraints.Size
 @Entity
 @SQLDelete(sql = "UPDATE menu SET deleted = true WHERE id=?")
 @Where(clause = "deleted = false")
-data class Menu(
+class Menu(
     @field:NotNull(message = "error.menu.name.null")
     @field:NotBlank(message = "error.menu.name.blank")
     @field:Size(max = NAME_MAX_SIZE, message = "error.menu.name.size.invalid")

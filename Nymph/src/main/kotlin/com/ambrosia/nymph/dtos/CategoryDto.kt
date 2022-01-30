@@ -10,8 +10,8 @@ class CategoryDto(
     @field:NotNull(message = "error.category.name.null")
     @field:NotBlank(message = "error.category.name.blank")
     @field:Size(max = NAME_MAX_SIZE, message = "error.category.name.size.invalid")
-    var name: String?,
-    var description: String?,
-    var image: String?,
+    var name: String? = null,
+    var description: String? = null,
+    var image: String? = null,
     var deleted: Boolean = false,
 )

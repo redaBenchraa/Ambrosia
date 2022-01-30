@@ -11,3 +11,4 @@ const val NAME_MAX_SIZE = 48
 const val EMAIL_MAX_SIZE = 254
 const val PASSWORD_MIN_SIZE = 6
 const val NOW = "now()"
+const val UNDEFINED_VALUE = "Undefined value"
