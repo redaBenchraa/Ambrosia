@@ -67,11 +67,16 @@ class MenuService(
             .orElseThrow { EntityNotFoundException(Business::class.java, mutableMapOf("id" to businessId)) }
         val menu = menuRepository.findById(menuId)
             .orElseThrow { EntityNotFoundException(Menu::class.java, mutableMapOf("id" to menuId)) }
-        val category = categoryRepository.findById(menuDto.categoryId!!)
-            .orElseThrow { EntityNotFoundException(Category::class.java, mutableMapOf("id" to menuDto.categoryId!!)) }
-        val item = itemRepository.findById(menuDto.itemId!!)
-            .orElseThrow { EntityNotFoundException(Item::class.java, mutableMapOf("id" to menuDto.itemId!!)) }
-        menu.menuItems.add(MenuItem(extra = menuDto.extra!!, menu = menu, item = item, category = category))
+        val category = categoryRepository.findById(menuDto.categoryId ?: -1)
+            .orElseThrow {
+                EntityNotFoundException(
+                    Category::class.java,
+                    mutableMapOf("id" to (menuDto.categoryId ?: -1))
+                )
+            }
+        val item = itemRepository.findById(menuDto.itemId ?: -1)
+            .orElseThrow { EntityNotFoundException(Item::class.java, mutableMapOf("id" to (menuDto.itemId ?: -1))) }
+        menu.menuItems.add(MenuItem(extra = menuDto.extra ?: 0.0, menu = menu, item = item, category = category))
         return menuRepository.save(menu).toDto()
     }
 
@@ -96,7 +101,7 @@ class MenuService(
             .orElseThrow { EntityNotFoundException(Menu::class.java, mutableMapOf("id" to menuId)) }
         val menuItem = menuItemRepository.findById(menuItemId)
             .orElseThrow { EntityNotFoundException(MenuItem::class.java, mutableMapOf("id" to menuItemId)) }
-        menuItem.extra = menuDto.extra!!
+        menuItem.extra = menuDto.extra ?: 0.0
         menuItemRepository.save(menuItem)
         return menu.toDto()
     }

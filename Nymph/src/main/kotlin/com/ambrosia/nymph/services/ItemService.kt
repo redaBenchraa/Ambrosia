@@ -15,7 +15,7 @@ import javax.transaction.Transactional
 @Service
 class ItemService(
     @Autowired private val businessRepository: BusinessRepository,
-    @Autowired private val itemRepository: ItemRepository
+    @Autowired private val itemRepository: ItemRepository,
 ) {
 
     @Transactional
@@ -49,5 +49,12 @@ class ItemService(
         val item = itemRepository.findById(itemId)
             .orElseThrow { EntityNotFoundException(Item::class.java, mutableMapOf("id" to itemId)) }
         itemRepository.delete(item)
+    }
+
+    @Transactional
+    fun getItems(businessId: Long): List<ItemDto> {
+        businessRepository.findById(businessId)
+            .orElseThrow { EntityNotFoundException(Business::class.java, mutableMapOf("id" to businessId)) }
+        return itemRepository.findByBusinessId(businessId).stream().map { it.toDto() }.toList()
     }
 }

@@ -20,7 +20,7 @@ import javax.validation.constraints.Size
 @Entity
 @SQLDelete(sql = "UPDATE employee SET deleted = true WHERE id=?")
 @Where(clause = "deleted = false")
-data class Employee(
+class Employee(
     @field:NotNull(message = "error.employee.firstName.null")
     @field:NotBlank(message = "error.employee.firstName.blank")
     @field:Size(max = NAME_MAX_SIZE, message = "error.employee.firstName.size.invalid")
