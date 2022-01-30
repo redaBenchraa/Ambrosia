@@ -82,9 +82,15 @@ dependencies {
 tasks.test {
     finalizedBy(tasks.jacocoTestReport)
 }
+
 tasks.jacocoTestReport {
     dependsOn(tasks.test)
 }
+
+tasks.sonarqube {
+    dependsOn(tasks.jacocoTestReport)
+}
+
 
 jacoco {
     toolVersion = "0.8.7"
