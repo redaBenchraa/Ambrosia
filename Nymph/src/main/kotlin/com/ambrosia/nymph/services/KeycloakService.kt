@@ -49,7 +49,7 @@ class KeycloakService(@Autowired private val environmentProperties: EnvironmentP
         .password(user.password)
         .build()
 
-    fun getPasswordRepresentation(password: String?): CredentialRepresentation =
+    fun getPasswordRepresentation(password: String): CredentialRepresentation =
         CredentialRepresentation().apply {
             isTemporary = false
             type = CredentialRepresentation.PASSWORD

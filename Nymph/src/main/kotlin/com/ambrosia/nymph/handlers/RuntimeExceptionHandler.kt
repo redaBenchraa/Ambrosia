@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.validation.FieldError
-import org.springframework.validation.ObjectError
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.ResponseStatus
@@ -35,9 +34,6 @@ class RuntimeExceptionHandler : ProblemHandling, SecurityAdviceTrait {
 
     override fun createViolation(error: FieldError): Violation =
         Violation(formatFieldName(error.field), translator.toLocale(error.defaultMessage))
-
-    override fun createViolation(error: ObjectError): Violation =
-        Violation(formatFieldName(error.objectName), translator.toLocale(error.defaultMessage))
 
     @ExceptionHandler(EntityNotFoundException::class)
     @ResponseStatus(value = HttpStatus.NOT_FOUND)
