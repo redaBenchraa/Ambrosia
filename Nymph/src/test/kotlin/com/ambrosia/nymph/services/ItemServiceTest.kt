@@ -9,6 +9,7 @@ import com.ambrosia.nymph.repositories.ItemRepository
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -114,6 +115,23 @@ class ItemServiceTest {
         every { businessRepository.findById(any()) } returns Optional.empty()
         assertThrows<EntityNotFoundException> { itemService.deleteItem(1, 1) }
     }
+
+    @Test
+    fun `Get business items`() {
+        every { businessRepository.findById(any()) } returns Optional.of(getBusiness())
+        every { itemRepository.findByBusinessId(any()) } returns mutableListOf(getItem())
+        val result = itemService.getItems(1)
+        Assertions.assertNotNull(result)
+        assertEquals(1, result.size)
+        assertEquals(getItem().toDto(), result[0])
+    }
+
+    @Test
+    fun `Get items from a non existing business`() {
+        every { businessRepository.findById(any()) } returns Optional.empty()
+        assertThrows<EntityNotFoundException> { itemService.getItems(1) }
+    }
+
 
     private fun getBusiness(): Business =
         Business(name = "name", currency = "EUR", email = "email", phoneNumber = "phoneNumber")

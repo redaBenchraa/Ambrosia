@@ -23,6 +23,7 @@ import org.springframework.http.HttpStatus.NOT_FOUND
 import org.springframework.http.MediaType
 import org.springframework.http.MediaType.APPLICATION_JSON
 import org.springframework.test.web.servlet.MockMvc
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put
@@ -161,6 +162,28 @@ class ItemControllerTest {
         every { itemService.deleteItem(any(), any()) } throws exception
         mockMvc
             .perform(delete("$baseUrl/1"))
+            .andExpect(status().`is`(NOT_FOUND.value()))
+            .andExpect(content().contentType(APPLICATION_JSON))
+            .andExpect(content().json(objectMapper.writeValueAsString(expected.body)))
+    }
+
+    @Test
+    fun `Get items list from a business`() {
+        every { itemService.getItems(any()) } returns mutableListOf(getItem().toDto())
+        mockMvc
+            .perform(MockMvcRequestBuilders.get(baseUrl))
+            .andExpect(status().isOk)
+            .andExpect(content().contentType(APPLICATION_JSON))
+            .andExpect(content().json(objectMapper.writeValueAsString(mutableListOf(getItem().toDto()))))
+    }
+
+    @Test
+    fun `Get items list from a non existing business`() {
+        val exception = EntityNotFoundException(Business::class.java, mutableMapOf("id" to 1))
+        val expected = runtimeExceptionHandler.handleEntityNotFoundException(exception)
+        every { itemService.getItems(any()) } throws exception
+        mockMvc
+            .perform(MockMvcRequestBuilders.get(baseUrl))
             .andExpect(status().`is`(NOT_FOUND.value()))
             .andExpect(content().contentType(APPLICATION_JSON))
             .andExpect(content().json(objectMapper.writeValueAsString(expected.body)))
