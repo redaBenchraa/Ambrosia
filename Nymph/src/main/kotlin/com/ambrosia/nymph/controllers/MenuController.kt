@@ -6,6 +6,7 @@ import com.ambrosia.nymph.dtos.MenuDto
 import com.ambrosia.nymph.services.MenuService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.DeleteMapping
+import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
@@ -21,7 +22,7 @@ class MenuController(@Autowired private val menuService: MenuService) {
     @PostMapping
     fun addMenus(
         @PathVariable("businessId") businessId: Long,
-        @Valid @RequestBody menu: MenuDto
+        @Valid @RequestBody menu: MenuDto,
     ): MenuDto {
         return menuService.addMenu(businessId, menu)
     }
@@ -30,7 +31,7 @@ class MenuController(@Autowired private val menuService: MenuService) {
     fun editMenus(
         @PathVariable("businessId") businessId: Long,
         @PathVariable("menuId") menuId: Long,
-        @Valid @RequestBody menu: MenuDto
+        @Valid @RequestBody menu: MenuDto,
     ): MenuDto {
         return menuService.editMenu(businessId, menuId, menu)
     }
@@ -38,7 +39,7 @@ class MenuController(@Autowired private val menuService: MenuService) {
     @DeleteMapping("{menuId}")
     fun deleteMenu(
         @PathVariable("businessId") businessId: Long,
-        @PathVariable("menuId") menuId: Long
+        @PathVariable("menuId") menuId: Long,
     ) {
         return menuService.deleteMenu(businessId, menuId)
     }
@@ -47,7 +48,7 @@ class MenuController(@Autowired private val menuService: MenuService) {
     fun addItemToMenus(
         @PathVariable("businessId") businessId: Long,
         @PathVariable("menuId") menuId: Long,
-        @Valid @RequestBody menuItem: AddMenuItemDto
+        @Valid @RequestBody menuItem: AddMenuItemDto,
     ): MenuDto {
         return menuService.addItemToMenu(businessId, menuId, menuItem)
     }
@@ -66,8 +67,13 @@ class MenuController(@Autowired private val menuService: MenuService) {
         @PathVariable("businessId") businessId: Long,
         @PathVariable("menuId") menuId: Long,
         @PathVariable("menuItemId") menuItemId: Long,
-        @Valid @RequestBody menuItem: EditMenuItemDto
+        @Valid @RequestBody menuItem: EditMenuItemDto,
     ): MenuDto {
         return menuService.editMenuItemExtra(businessId, menuId, menuItemId, menuItem)
+    }
+
+    @GetMapping
+    fun getMenu(@PathVariable("businessId") businessId: Long): List<MenuDto> {
+        return menuService.getMenus(businessId)
     }
 }

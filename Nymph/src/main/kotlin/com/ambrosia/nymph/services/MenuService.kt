@@ -105,4 +105,11 @@ class MenuService(
         menuItemRepository.save(menuItem)
         return menu.toDto()
     }
+
+    @Transactional
+    fun getMenus(businessId: Long): List<MenuDto> {
+        businessRepository.findById(businessId)
+            .orElseThrow { EntityNotFoundException(Business::class.java, mutableMapOf("id" to businessId)) }
+        return menuRepository.findByBusinessId(businessId).stream().map { it.toDto() }.toList()
+    }
 }

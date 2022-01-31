@@ -18,6 +18,9 @@ fun getCategories(menuItems: MutableSet<MenuItem>): MutableSet<MenuCategory> {
         .map { pair ->
             MenuCategory(
                 pair.key?.toDto() ?: defaultCategory(),
-                pair.value.map { MenuItemDto(it.id ?: -1, it.item?.toDto() ?: ItemDto(), it.extra) })
+                pair.value.map {
+                    MenuItemDto(it.id ?: -1, it.item?.toDto() ?: ItemDto(), it.extra)
+                }
+            )
         }.toMutableSet()
 }

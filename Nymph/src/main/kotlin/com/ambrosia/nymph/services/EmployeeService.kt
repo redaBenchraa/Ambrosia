@@ -96,6 +96,5 @@ class EmployeeService(
                 throw EntityAlreadyExistsException(Employee::class.java, mutableMapOf("email" to it))
             }
         }
-
     }
 }
