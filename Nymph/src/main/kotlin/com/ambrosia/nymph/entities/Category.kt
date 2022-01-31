@@ -15,7 +15,8 @@ import javax.persistence.ManyToOne
 @SQLDelete(sql = "UPDATE category SET deleted = true WHERE id=?")
 @Where(clause = "deleted = false")
 class Category(
-    @Column(nullable = false) var name: String,
+    @Column(nullable = false)
+    var name: String,
     @Column(columnDefinition = "text")
     var description: String? = null,
     var image: String? = null,
