@@ -146,7 +146,9 @@ tasks.withType<JacocoReport> {
             isEnabled = true
         }
     }
+
 }
 
-tasks.withType<Test> { useJUnitPlatform() }
-
+tasks.withType<Test> {
+    useJUnitPlatform()
+}
