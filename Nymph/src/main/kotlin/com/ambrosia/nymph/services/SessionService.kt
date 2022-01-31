@@ -28,14 +28,16 @@ class SessionService(
         val lastSession = sessionRepository.findFirstByTableIdOrderByUpdatedAtDesc(tableId)
         if (lastSession == null || lastSession.isClosed || lastSession.isPaid) {
             val newSession = Session(table = table, isPaid = false, isClosed = false, isApproved = false)
-            sessionRepository.save(newSession)
-            return newSession.toDto()
+            return sessionRepository.save(newSession).toDto()
         }
         return lastSession.toDto()
     }
 
     fun checkIfSessionIsPaid(session: Session): Boolean {
-        if (session.bills.size == 0 || session.orders.size == 0) {
+        if (session.isPaid) {
+            return true
+        }
+        if (session.orders.size == 0 || session.bills.size == 0) {
             return false
         }
         val total = session.orders.stream()

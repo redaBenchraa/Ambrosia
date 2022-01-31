@@ -1,0 +1,158 @@
+package com.ambrosia.nymph.services
+
+import com.ambrosia.nymph.entities.Bill
+import com.ambrosia.nymph.entities.Business
+import com.ambrosia.nymph.entities.Item
+import com.ambrosia.nymph.entities.Order
+import com.ambrosia.nymph.entities.OrderedItem
+import com.ambrosia.nymph.entities.Session
+import com.ambrosia.nymph.entities.Table
+import com.ambrosia.nymph.exceptions.EntityNotFoundException
+import com.ambrosia.nymph.repositories.BusinessRepository
+import com.ambrosia.nymph.repositories.SessionRepository
+import com.ambrosia.nymph.repositories.TableRepository
+import io.mockk.every
+import io.mockk.mockk
+import io.mockk.verify
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
+import java.util.Optional
+
+class SessionServiceTest {
+
+    private val businessRepository: BusinessRepository = mockk(relaxed = true)
+    private val tableRepository: TableRepository = mockk(relaxed = true)
+    private val sessionRepository: SessionRepository = mockk(relaxed = true)
+    private val sessionService = SessionService(businessRepository, tableRepository, sessionRepository)
+
+    @Test
+    fun `Get current session`() {
+        val session = Session(isPaid = false, isClosed = false, isApproved = false).apply { id = 1 }
+        every { businessRepository.findById(any()) } returns Optional.of(getBusiness())
+        every { tableRepository.findById(any()) } returns Optional.of(getTable())
+        every { sessionRepository.findFirstByTableIdOrderByUpdatedAtDesc(any()) } returns session
+        val result = sessionService.getCurrentSession(1, 1)
+        assertEquals(1, result.id)
+        verify {
+            businessRepository.findById(any())
+            tableRepository.findById(any())
+            sessionRepository.findFirstByTableIdOrderByUpdatedAtDesc(any())
+        }
+        verify(exactly = 0) {
+            sessionRepository.save(any())
+        }
+    }
+
+    @Test
+    fun `Get current session from a non existing business`() {
+        every { businessRepository.findById(any()) } returns Optional.empty()
+        assertThrows<EntityNotFoundException> { sessionService.getCurrentSession(1, 1) }
+    }
+
+    @Test
+    fun `Get current session from a non existing table`() {
+        every { businessRepository.findById(any()) } returns Optional.of(getBusiness())
+        every { tableRepository.findById(any()) } returns Optional.empty()
+        assertThrows<EntityNotFoundException> { sessionService.getCurrentSession(1, 1) }
+    }
+
+    @Test
+    fun `Create new session for paid last session`() {
+        val session = Session(isPaid = true, isClosed = false, isApproved = true)
+        every { businessRepository.findById(any()) } returns Optional.of(getBusiness())
+        every { tableRepository.findById(any()) } returns Optional.of(getTable())
+        every { sessionRepository.findFirstByTableIdOrderByUpdatedAtDesc(any()) } returns session
+        every { sessionRepository.save(any()) } returns session.apply { id = 1 }
+        val result = sessionService.getCurrentSession(1, 1)
+        assertEquals(1, result.id)
+        verify {
+            businessRepository.findById(any())
+            tableRepository.findById(any())
+            sessionRepository.findFirstByTableIdOrderByUpdatedAtDesc(any())
+            sessionRepository.save(any())
+        }
+    }
+
+    @Test
+    fun `Create new session for closed last session`() {
+        val session = Session(isPaid = false, isClosed = true, isApproved = true)
+        every { businessRepository.findById(any()) } returns Optional.of(getBusiness())
+        every { tableRepository.findById(any()) } returns Optional.of(getTable())
+        every { sessionRepository.findFirstByTableIdOrderByUpdatedAtDesc(any()) } returns session
+        every { sessionRepository.save(any()) } returns session.apply { id = 1 }
+        val result = sessionService.getCurrentSession(1, 1)
+        assertEquals(1, result.id)
+        verify {
+            businessRepository.findById(any())
+            tableRepository.findById(any())
+            sessionRepository.findFirstByTableIdOrderByUpdatedAtDesc(any())
+            sessionRepository.save(any())
+        }
+    }
+
+    @Test
+    fun `Create new session for non existing last session`() {
+        val session = Session(isPaid = false, isClosed = true, isApproved = true)
+        every { businessRepository.findById(any()) } returns Optional.of(getBusiness())
+        every { tableRepository.findById(any()) } returns Optional.of(getTable())
+        every { sessionRepository.findFirstByTableIdOrderByUpdatedAtDesc(any()) } returns null
+        every { sessionRepository.save(any()) } returns session.apply { id = 1 }
+        val result = sessionService.getCurrentSession(1, 1)
+        assertEquals(1, result.id)
+        verify {
+            businessRepository.findById(any())
+            tableRepository.findById(any())
+            sessionRepository.findFirstByTableIdOrderByUpdatedAtDesc(any())
+            sessionRepository.save(any())
+        }
+    }
+
+    @Test
+    fun `Check if session is paid`() {
+        val item = Item(name = "name", price = 10.0, business = getBusiness())
+        val order = Order(session = Session(), orderedItem = mutableSetOf())
+        val orderedItem = OrderedItem(name = "name", price = 10.0, order = order, item = item)
+        order.orderedItem.add(orderedItem)
+        val session = Session(isPaid = false, orders = mutableSetOf(order), bills = mutableSetOf(Bill(amount = 10.0)))
+        assertTrue(sessionService.checkIfSessionIsPaid(session))
+    }
+
+    @Test
+    fun `Check if session is paid when sums are not equal`() {
+        val item = Item(name = "name", price = 10.0, business = getBusiness())
+        val order = Order(session = Session(), orderedItem = mutableSetOf())
+        val orderedItem = OrderedItem(name = "name", price = 10.0, order = order, item = item)
+        order.orderedItem.add(orderedItem)
+        val session = Session(isPaid = false,
+            orders = mutableSetOf(order),
+            bills = mutableSetOf(Bill(amount = 5.0), Bill(amount = 1.0)))
+        assertFalse(sessionService.checkIfSessionIsPaid(session))
+    }
+
+    @Test
+    fun `Check if session is paid with no orders`() {
+        assertFalse(sessionService.checkIfSessionIsPaid(Session(isPaid = false)))
+    }
+
+    @Test
+    fun `Check if session is paid with no bill`() {
+        val order = Order(session = Session())
+        val session = Session(isPaid = false, orders = mutableSetOf(order))
+        assertFalse(sessionService.checkIfSessionIsPaid(session))
+    }
+
+    @Test
+    fun `Check if session is paid when isPaid is true`() {
+        assertTrue(sessionService.checkIfSessionIsPaid(Session(isPaid = true)))
+    }
+
+    private fun getTable(): Table =
+        Table(number = 1, business = getBusiness())
+
+    private fun getBusiness(): Business =
+        Business(name = "name", email = "email", phoneNumber = "phoneNumber")
+
+}

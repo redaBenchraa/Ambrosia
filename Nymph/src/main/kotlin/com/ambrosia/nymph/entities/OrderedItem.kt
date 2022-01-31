@@ -27,7 +27,7 @@ class OrderedItem(
     @Column(nullable = false)
     var name: String,
     @Column(columnDefinition = "text")
-    var description: String?,
+    var description: String? = null,
     @field:NotNull(message = "error.orderedItem.price.null")
     @field:Min(0, message = "error.orderedItem.price.negative")
     var price: Double,
