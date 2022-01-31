@@ -16,7 +16,7 @@ import javax.transaction.Transactional
 @Service
 class CustomerService(
     @Autowired private val customerRepository: CustomerRepository,
-    @Autowired private val userService: IUserService,
+    @Autowired private val userService: AbstractUserService,
 ) {
     @Transactional
     fun addCustomer(customerDto: CustomerRegistrationDto): CustomerDto {

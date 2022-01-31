@@ -1,15 +1,18 @@
 package com.ambrosia.nymph.services
 
 import com.ambrosia.nymph.models.KeycloakUser
+import com.ambrosia.nymph.repositories.CustomerRepository
+import com.ambrosia.nymph.repositories.EmployeeRepository
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Service
 
 @Service
 @Profile("test")
-class MockUserService : IUserService {
-    override fun verifyThatEmailDoesNotExists(email: String) {
-        return
-    }
+class MockUserService(
+    @Autowired private val employeeRepository: EmployeeRepository,
+    @Autowired private val customerRepository: CustomerRepository,
+) : AbstractUserService(employeeRepository, customerRepository) {
 
     override fun createKeycloakUser(user: KeycloakUser) {
         return

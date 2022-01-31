@@ -4,6 +4,8 @@ import com.ambrosia.nymph.constants.Role
 import com.ambrosia.nymph.dtos.BusinessRegistrationDto
 import com.ambrosia.nymph.dtos.EmployeeRegistrationDto
 import com.ambrosia.nymph.entities.Business
+import com.ambrosia.nymph.entities.Employee
+import com.ambrosia.nymph.exceptions.EntityAlreadyExistsException
 import com.ambrosia.nymph.exceptions.EntityNotFoundException
 import com.ambrosia.nymph.handlers.RuntimeExceptionHandler
 import com.ambrosia.nymph.repositories.BusinessRepository
@@ -18,6 +20,7 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.http.HttpStatus.CONFLICT
 import org.springframework.http.HttpStatus.NOT_FOUND
 import org.springframework.http.MediaType.APPLICATION_JSON
 import org.springframework.test.context.ActiveProfiles
@@ -86,26 +89,26 @@ class BusinessTest {
         assertEquals(Role.MANAGER, employees[0].position)
     }
 
-//    @Test
-//    fun `Create a business with an existing employee email`() {
-//        val content =
-//            objectMapper.writeValueAsString(getBusinessRegistrationDto().apply { employee?.email = "email@email.com" })
-//        val exception = EntityAlreadyExistsException(Employee::class.java, mutableMapOf("email" to "email@email.com"))
-//        val expected = runtimeExceptionHandler.handleEntityAlreadyExistsException(exception)
-//        mockMvc
-//            .perform(post("$baseUrl/register").contentType(APPLICATION_JSON).content(content))
-//            .andExpect(status().`is`(CONFLICT.value()))
-//            .andExpect(content().contentType(APPLICATION_JSON))
-//            .andExpect(content().json(objectMapper.writeValueAsString(expected.body)))
-//
-//        assertTrue(employeeRepository.existsByEmail("email@email.com"))
-//
-//        val businesses = businessRepository.findAll()
-//        assertEquals(1, businesses.size)
-//
-//        val employees = employeeRepository.findAll()
-//        assertEquals(1, employees.size)
-//    }
+    @Test
+    fun `Create a business with an existing employee email`() {
+        val content =
+            objectMapper.writeValueAsString(getBusinessRegistrationDto().apply { employee?.email = "email@email.com" })
+        val exception = EntityAlreadyExistsException(Employee::class.java, mutableMapOf("email" to "email@email.com"))
+        val expected = runtimeExceptionHandler.handleEntityAlreadyExistsException(exception)
+        mockMvc
+            .perform(post("$baseUrl/register").contentType(APPLICATION_JSON).content(content))
+            .andExpect(status().`is`(CONFLICT.value()))
+            .andExpect(content().contentType(APPLICATION_JSON))
+            .andExpect(content().json(objectMapper.writeValueAsString(expected.body)))
+
+        assertTrue(employeeRepository.existsByEmail("email@email.com"))
+
+        val businesses = businessRepository.findAll()
+        assertEquals(1, businesses.size)
+
+        val employees = employeeRepository.findAll()
+        assertEquals(1, employees.size)
+    }
 
     @Test
     fun `Edit a business`() {

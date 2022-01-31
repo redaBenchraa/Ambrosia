@@ -20,7 +20,7 @@ import javax.transaction.Transactional
 class EmployeeService(
     @Autowired private val businessRepository: BusinessRepository,
     @Autowired private val employeeRepository: EmployeeRepository,
-    @Autowired private val userService: IUserService,
+    @Autowired private val userService: AbstractUserService,
 ) {
     @Transactional
     fun addEmployee(businessId: Long, employeeDto: EmployeeRegistrationDto): EmployeeDto {

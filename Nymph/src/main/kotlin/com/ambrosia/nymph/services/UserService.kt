@@ -1,8 +1,5 @@
 package com.ambrosia.nymph.services
 
-import com.ambrosia.nymph.entities.Customer
-import com.ambrosia.nymph.entities.Employee
-import com.ambrosia.nymph.exceptions.EntityAlreadyExistsException
 import com.ambrosia.nymph.exceptions.KeycloakException
 import com.ambrosia.nymph.models.KeycloakUser
 import com.ambrosia.nymph.repositories.CustomerRepository
@@ -23,16 +20,7 @@ class UserService(
     @Autowired private val keycloakService: KeycloakService,
     @Autowired private val employeeRepository: EmployeeRepository,
     @Autowired private val customerRepository: CustomerRepository,
-) : IUserService {
-
-    override fun verifyThatEmailDoesNotExists(email: String) {
-        if (employeeRepository.existsByEmail(email)) {
-            throw EntityAlreadyExistsException(Employee::class.java, mutableMapOf("email" to email))
-        }
-        if (customerRepository.existsByEmail(email)) {
-            throw EntityAlreadyExistsException(Customer::class.java, mutableMapOf("email" to email))
-        }
-    }
+) : AbstractUserService(employeeRepository, customerRepository) {
 
     override fun createKeycloakUser(user: KeycloakUser) {
         val usersResource = keycloakService.getUsersResource()
