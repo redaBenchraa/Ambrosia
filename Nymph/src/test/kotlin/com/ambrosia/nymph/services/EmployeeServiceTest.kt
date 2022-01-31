@@ -57,8 +57,8 @@ class EmployeeServiceTest {
     @Test
     fun `Add an employee to a business with an existing email`() {
         every { businessRepository.findById(any()) } returns Optional.of(getBusiness())
-        every { userService.verifyThatEmailDoesNotExists(any()) } throws EntityAlreadyExistsException(Customer::class.java,
-            mutableMapOf())
+        every { userService.verifyThatEmailDoesNotExists(any()) } throws
+                EntityAlreadyExistsException(Customer::class.java, mutableMapOf())
         assertThrows<EntityAlreadyExistsException> {
             employeeService.addEmployee(1, getEmployeeRegistrationDto())
         }

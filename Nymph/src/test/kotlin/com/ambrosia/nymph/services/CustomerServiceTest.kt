@@ -47,8 +47,8 @@ class CustomerServiceTest {
 
     @Test
     fun `Add an customer to a business with an existing email`() {
-        every { userService.verifyThatEmailDoesNotExists(any()) } throws EntityAlreadyExistsException(Customer::class.java,
-            mutableMapOf())
+        every { userService.verifyThatEmailDoesNotExists(any()) } throws
+                EntityAlreadyExistsException(Customer::class.java, mutableMapOf())
         assertThrows<EntityAlreadyExistsException> {
             customerService.addCustomer(getCustomerRegistrationDto())
         }

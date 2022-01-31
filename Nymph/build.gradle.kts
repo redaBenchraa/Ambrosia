@@ -89,6 +89,7 @@ tasks.jacocoTestReport {
 }
 
 tasks.sonarqube {
+    dependsOn(tasks.detekt)
     dependsOn(tasks.jacocoTestReport)
 }
 
