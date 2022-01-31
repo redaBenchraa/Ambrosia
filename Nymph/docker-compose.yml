@@ -32,7 +32,7 @@ services:
       - postgres
 
   sonarqube:
-    build: sonarqube
+    image: sonarqube:9.3-community
     container_name: sonarqube
     ports:
       - "9000:9000"

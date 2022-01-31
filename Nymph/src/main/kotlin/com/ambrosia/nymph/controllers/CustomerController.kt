@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController
 import javax.validation.Valid
 
 @RestController
-@RequestMapping("businesses/{businessId}/customers")
+@RequestMapping("customers")
 class CustomerController(@Autowired private val customerService: CustomerService) {
 
     @PostMapping

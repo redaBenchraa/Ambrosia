@@ -3,6 +3,7 @@ package com.ambrosia.nymph.entities
 import com.fasterxml.jackson.annotation.JsonBackReference
 import org.hibernate.annotations.SQLDelete
 import org.hibernate.annotations.Where
+import java.time.LocalDate
 import javax.persistence.CascadeType
 import javax.persistence.Entity
 import javax.persistence.FetchType
@@ -14,7 +15,7 @@ import javax.persistence.OneToMany
 class Customer(
     var firstName: String? = null,
     var lastName: String? = null,
-    var age: Int? = null,
+    var dateOfBirth: LocalDate? = null,
     var email: String? = null,
     @OneToMany(
         cascade = [CascadeType.ALL],

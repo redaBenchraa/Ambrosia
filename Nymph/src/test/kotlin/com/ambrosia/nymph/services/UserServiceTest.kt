@@ -5,8 +5,11 @@ import com.ambrosia.nymph.constants.Role.ADMIN
 import com.ambrosia.nymph.constants.Role.EMPLOYEE
 import com.ambrosia.nymph.constants.Role.MANAGER
 import com.ambrosia.nymph.constants.Role.values
+import com.ambrosia.nymph.exceptions.EntityAlreadyExistsException
 import com.ambrosia.nymph.exceptions.KeycloakException
 import com.ambrosia.nymph.models.KeycloakUser
+import com.ambrosia.nymph.repositories.CustomerRepository
+import com.ambrosia.nymph.repositories.EmployeeRepository
 import io.mockk.every
 import io.mockk.mockk
 import org.junit.jupiter.api.Test
@@ -23,7 +26,7 @@ import org.keycloak.representations.idm.RoleRepresentation
 import org.keycloak.representations.idm.UserRepresentation
 import org.springframework.boot.test.context.SpringBootTest
 import java.net.URI
-import java.util.*
+import java.util.Arrays
 import java.util.stream.Collectors
 import javax.ws.rs.core.Response
 
@@ -38,7 +41,30 @@ class UserServiceTest {
     private val userResource: UserResource = mockk(relaxed = true)
     private val roleMappingResource: RoleMappingResource = mockk(relaxed = true)
     private val roleScopeResource: RoleScopeResource = mockk(relaxed = true)
-    private val userService: UserService = UserService(keycloakService)
+    private val employeeRepository: EmployeeRepository = mockk(relaxed = true)
+    private val customerRepository: CustomerRepository = mockk(relaxed = true)
+    private val userService: UserService = UserService(keycloakService, employeeRepository, customerRepository)
+
+    @Test
+    fun `Verify that email does not exist`() {
+        every { employeeRepository.existsByEmail(any()) } returns false
+        every { customerRepository.existsByEmail(any()) } returns false
+        assertDoesNotThrow { userService.verifyThatEmailDoesNotExists("email@email.com") }
+    }
+
+    @Test
+    fun `Verify that email exists for employee`() {
+        every { employeeRepository.existsByEmail(any()) } returns true
+        every { customerRepository.existsByEmail(any()) } returns false
+        assertThrows<EntityAlreadyExistsException> { userService.verifyThatEmailDoesNotExists("email@email.com") }
+    }
+
+    @Test
+    fun `Verify that email exists for customer`() {
+        every { employeeRepository.existsByEmail(any()) } returns false
+        every { customerRepository.existsByEmail(any()) } returns true
+        assertThrows<EntityAlreadyExistsException> { userService.verifyThatEmailDoesNotExists("email@email.com") }
+    }
 
     @Test
     fun createUserUserResourceError() {

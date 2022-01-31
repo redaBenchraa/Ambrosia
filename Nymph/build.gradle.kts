@@ -63,6 +63,7 @@ dependencies {
     implementation("org.apache.commons:commons-collections4:4.4")
     implementation("com.github.springtestdbunit:spring-test-dbunit:1.3.0")
     implementation("org.dbunit:dbunit:2.7.2")
+    implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.13.1")
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
     liquibaseRuntime("org.postgresql:postgresql")
     liquibaseRuntime("org.liquibase:liquibase-core:4.4.3")

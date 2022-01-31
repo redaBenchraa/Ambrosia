@@ -422,7 +422,10 @@
                         minValue="1" sequenceName="hibernate_sequence" startValue="1"/>
     </changeSet>
 
-    <changeSet author="Alexandre" id="01312020-01">
+    <changeSet author="Alexandre" id="1643639562878-1">
+        <addColumn tableName="customer">
+            <column name="date_of_birth" type="date"/>
+        </addColumn>
         <createIndex tableName="employee" indexName="employee_email_index">
             <column name="email"/>
         </createIndex>

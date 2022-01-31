@@ -5,13 +5,18 @@ import com.ambrosia.nymph.models.KeycloakUser
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.springframework.boot.test.context.SpringBootTest
-import java.util.*
+import java.util.Arrays
 import java.util.stream.Collectors
 
 @SpringBootTest
 class MockUserServiceTest {
 
     private val userService: MockUserService = MockUserService()
+
+    @Test
+    fun verifyThatEmailDoesNotExists() {
+        assertDoesNotThrow { userService.verifyThatEmailDoesNotExists("") }
+    }
 
     @Test
     fun createKeycloakUser() {

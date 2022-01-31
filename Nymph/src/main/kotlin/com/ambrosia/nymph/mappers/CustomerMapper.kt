@@ -7,22 +7,16 @@ import com.ambrosia.nymph.dtos.CustomerRegistrationDto
 import com.ambrosia.nymph.entities.Customer
 import com.ambrosia.nymph.models.KeycloakUser
 
-fun Customer.toDto(): CustomerDto = CustomerDto(id, firstName, lastName, age, email, deleted)
+fun Customer.toDto(): CustomerDto = CustomerDto(id, firstName, lastName, dateOfBirth, email, deleted)
 
 fun Customer.toRegistrationCustomerDto(): CustomerRegistrationDto =
-    CustomerRegistrationDto(id, firstName, lastName, age, email)
+    CustomerRegistrationDto(id, firstName, lastName, email, dateOfBirth)
 
 fun CustomerRegistrationDto.toEntity(): Customer =
-    Customer(firstName, lastName, age, email).apply { id }
+    Customer(firstName, lastName, dateOfBirth, email).apply { id }
 
 fun CustomerDto.toCustomerRegistrationDto(): CustomerRegistrationDto =
-    CustomerRegistrationDto(
-        id,
-        firstName,
-        lastName,
-        age,
-        email,
-    )
+    CustomerRegistrationDto(id, firstName, lastName, email, dateOfBirth)
 
 fun CustomerRegistrationDto.toKeyCloakUser() = KeycloakUser(
     username = "$firstName.$lastName",

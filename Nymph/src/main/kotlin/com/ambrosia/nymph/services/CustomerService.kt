@@ -4,7 +4,6 @@ import com.ambrosia.nymph.dtos.CustomerDto
 import com.ambrosia.nymph.dtos.CustomerRegistrationDto
 import com.ambrosia.nymph.dtos.EditEmailDto
 import com.ambrosia.nymph.entities.Customer
-import com.ambrosia.nymph.exceptions.EntityAlreadyExistsException
 import com.ambrosia.nymph.exceptions.EntityNotFoundException
 import com.ambrosia.nymph.mappers.toDto
 import com.ambrosia.nymph.mappers.toEntity
@@ -21,7 +20,7 @@ class CustomerService(
 ) {
     @Transactional
     fun addCustomer(customerDto: CustomerRegistrationDto): CustomerDto {
-        verifyIfCustomerExists(customerDto)
+        customerDto.email?.let { userService.verifyThatEmailDoesNotExists(it) }
         userService.createKeycloakUser(customerDto.toKeyCloakUser())
         val customer = customerDto.toEntity()
         return customerRepository.save(customer).toDto()
@@ -45,24 +44,15 @@ class CustomerService(
             .orElseThrow { EntityNotFoundException(Customer::class.java, mutableMapOf("id" to customerId)) }
         customerDto.firstName?.let { customer.firstName = it }
         customerDto.lastName?.let { customer.lastName = it }
-        customerDto.age?.let { customer.age = it }
+        customerDto.dateOfBirth?.let { customer.dateOfBirth = it }
         customerRepository.save(customer)
         return customer.toDto()
     }
 
     @Transactional
-    @Throws(EntityNotFoundException::class)
     fun deleteCustomer(customerId: Long) {
         val customer = customerRepository.findById(customerId)
             .orElseThrow { EntityNotFoundException(Customer::class.java, mutableMapOf("id" to customerId)) }
         customerRepository.delete(customer)
-    }
-
-    fun verifyIfCustomerExists(customerDto: CustomerRegistrationDto) {
-        customerDto.email?.let {
-            if (customerRepository.existsByEmail(it)) {
-                throw EntityAlreadyExistsException(Customer::class.java, mutableMapOf("email" to it))
-            }
-        }
     }
 }
