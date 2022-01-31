@@ -145,7 +145,6 @@ tasks.withType<JacocoReport> {
         xml.apply {
             isEnabled = true
         }
-
     }
 }
 
