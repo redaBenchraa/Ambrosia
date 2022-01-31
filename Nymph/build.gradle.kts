@@ -99,8 +99,8 @@ jacoco {
 }
 
 detekt {
-    buildUponDefaultConfig = true // preconfigure defaults
-    allRules = false // activate all available (even unstable) rules.
+    buildUponDefaultConfig = true
+    allRules = false
 }
 
 tasks.withType<io.gitlab.arturbosch.detekt.Detekt>().configureEach {
