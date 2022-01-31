@@ -9,6 +9,7 @@ import com.ambrosia.nymph.repositories.MenuRepository
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.github.springtestdbunit.TransactionDbUnitTestExecutionListener
 import com.github.springtestdbunit.annotation.DatabaseSetup
+import org.hamcrest.Matchers.`is`
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
@@ -21,9 +22,11 @@ import org.springframework.test.context.TestExecutionListeners
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
 @SpringBootTest
@@ -125,6 +128,34 @@ class MenuTest {
         val expected = runtimeExceptionHandler.handleEntityNotFoundException(exception)
         mockMvc
             .perform(delete("/businesses/1/menus/1"))
+            .andExpect(status().`is`(NOT_FOUND.value()))
+            .andExpect(content().contentType(APPLICATION_JSON))
+            .andExpect(content().json(objectMapper.writeValueAsString(expected.body)))
+    }
+
+    @Test
+    fun `Get menus`() {
+        mockMvc
+            .perform(get(baseUrl))
+            .andExpect(status().isOk)
+            .andExpect(content().contentType(APPLICATION_JSON))
+            .andExpect(jsonPath("$[0].name", `is`("name")))
+            .andExpect(jsonPath("$[0].price", `is`(10.0)))
+            .andExpect(jsonPath("$[0].id", `is`(1005)))
+            .andExpect(jsonPath("$[0].categories[0].category.id", `is`(1002)))
+            .andExpect(jsonPath("$[0].categories[0].category.name", `is`("name")))
+            .andExpect(jsonPath("$[0].categories[0].items[0].id", `is`(1006)))
+            .andExpect(jsonPath("$[0].categories[0].items[0].extra", `is`(10.0)))
+            .andExpect(jsonPath("$[0].categories[0].items[0].item.id", `is`(1004)))
+            .andExpect(jsonPath("$[0].categories[0].items[0].item.name", `is`("name")))
+    }
+
+    @Test
+    fun `Get menus from a non existing business`() {
+        val exception = EntityNotFoundException(Business::class.java, mutableMapOf("id" to 1))
+        val expected = runtimeExceptionHandler.handleEntityNotFoundException(exception)
+        mockMvc
+            .perform(get("/businesses/1/menus"))
             .andExpect(status().`is`(NOT_FOUND.value()))
             .andExpect(content().contentType(APPLICATION_JSON))
             .andExpect(content().json(objectMapper.writeValueAsString(expected.body)))

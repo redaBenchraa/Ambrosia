@@ -13,7 +13,7 @@ import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import java.util.*
+import java.util.Optional
 
 class ItemServiceTest {
 
@@ -131,7 +131,6 @@ class ItemServiceTest {
         every { businessRepository.findById(any()) } returns Optional.empty()
         assertThrows<EntityNotFoundException> { itemService.getItems(1) }
     }
-
 
     private fun getBusiness(): Business =
         Business(name = "name", currency = "EUR", email = "email", phoneNumber = "phoneNumber")

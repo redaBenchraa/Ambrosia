@@ -2,6 +2,7 @@ package com.ambrosia.nymph.entities
 
 import com.fasterxml.jackson.annotation.JsonBackReference
 import com.fasterxml.jackson.annotation.JsonManagedReference
+import org.hibernate.Hibernate
 import org.hibernate.annotations.OnDelete
 import org.hibernate.annotations.OnDeleteAction
 import org.hibernate.annotations.SQLDelete
@@ -18,7 +19,7 @@ import javax.validation.constraints.NotNull
 @Entity
 @SQLDelete(sql = "UPDATE session SET deleted = true WHERE id=?")
 @Where(clause = "deleted = false")
-class Session(
+data class Session(
     @Column(nullable = false)
     @field:NotNull(message = "error.session.isPaid.null")
     var isPaid: Boolean = false,
@@ -47,7 +48,7 @@ class Session(
         targetEntity = Order::class
     )
     @JsonBackReference
-    var orders: MutableSet<Order>,
+    var orders: MutableSet<Order>? = HashSet(),
     @OneToMany(
         cascade = [CascadeType.ALL],
         fetch = FetchType.LAZY,
@@ -55,5 +56,20 @@ class Session(
         targetEntity = Bill::class
     )
     @JsonBackReference
-    var bills: MutableSet<Bill>,
-) : BaseEntity()
+    var bills: MutableSet<Bill>? = HashSet(),
+) : BaseEntity() {
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other == null || Hibernate.getClass(this) != Hibernate.getClass(other)) return false
+        other as Session
+
+        return id != null && id == other.id
+    }
+
+    override fun hashCode(): Int = javaClass.hashCode()
+
+    @Override
+    override fun toString(): String {
+        return this::class.simpleName + "(id = $id , deleted = $deleted )"
+    }
+}

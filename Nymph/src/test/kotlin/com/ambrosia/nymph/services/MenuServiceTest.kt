@@ -17,10 +17,11 @@ import com.ambrosia.nymph.repositories.MenuRepository
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import java.util.*
+import java.util.Optional
 
 class MenuServiceTest {
 
@@ -236,6 +237,21 @@ class MenuServiceTest {
         assertThrows<EntityNotFoundException> { menuService.editMenuItemExtra(1, 1, 1, EditMenuItemDto(extra = 10.0)) }
     }
 
+    @Test
+    fun `Get business menus`() {
+        every { businessRepository.findById(any()) } returns Optional.of(getBusiness())
+        every { menuRepository.findByBusinessId(any()) } returns mutableListOf(getMenu())
+        val result = menuService.getMenus(1)
+        Assertions.assertNotNull(result)
+        assertEquals(1, result.size)
+        assertEquals(getMenu().toDto(), result[0])
+    }
+
+    @Test
+    fun `Get items from a non existing business`() {
+        every { businessRepository.findById(any()) } returns Optional.empty()
+        assertThrows<EntityNotFoundException> { menuService.getMenus(1) }
+    }
 
     private fun getBusiness(): Business =
         Business(name = "name", email = "email", phoneNumber = "phoneNumber")

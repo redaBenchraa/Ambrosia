@@ -80,7 +80,6 @@ internal class KeycloakServiceTest {
         assertFalse(result.isClosed)
     }
 
-
     @Test
     fun getUsersResource() {
         val realm: RealmResource = mockk(relaxed = true)
