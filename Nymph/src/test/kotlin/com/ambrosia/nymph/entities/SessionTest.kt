@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Assertions.assertNotEquals
 import org.junit.jupiter.api.Test
 
 class SessionTest {
-
     @Test
     fun `Equality test`() {
         val session = Session(isApproved = false, isPaid = false).apply { id = 1 }
