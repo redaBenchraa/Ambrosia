@@ -5,7 +5,7 @@ spring:
     allow-bean-definition-overriding: true
   liquibase:
     change-log: classpath:db/changelog/liquibase.xml
-    enabled: true
+    enabled: false
   datasource:
     continue-on-error: false
     password: ${POSTGRES_PASSWORD:postgres}
@@ -14,7 +14,7 @@ spring:
     driverClassName=: org.postgresql.Driver
   jpa:
     hibernate:
-      ddl-auto: validate
+      ddl-auto: update
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect

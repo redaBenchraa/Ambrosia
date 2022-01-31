@@ -33,8 +33,7 @@ class MenuService(
     fun addMenu(businessId: Long, menuDto: MenuDto): MenuDto {
         val business = businessRepository.findById(businessId)
             .orElseThrow { EntityNotFoundException(Business::class.java, mutableMapOf("id" to businessId)) }
-        val menu = menuDto.toEntity()
-        menu.business = business
+        val menu = menuDto.toEntity(business)
         return menuRepository.save(menu).toDto()
     }
 

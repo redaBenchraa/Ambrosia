@@ -22,8 +22,7 @@ class ItemService(
     fun addItem(businessId: Long, itemDto: ItemDto): ItemDto {
         val business = businessRepository.findById(businessId)
             .orElseThrow { EntityNotFoundException(Business::class.java, mutableMapOf("id" to businessId)) }
-        val item = itemDto.toEntity()
-        item.business = business
+        val item = itemDto.toEntity(business)
         return itemRepository.save(item).toDto()
     }
 

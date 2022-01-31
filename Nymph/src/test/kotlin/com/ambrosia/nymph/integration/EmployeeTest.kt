@@ -185,5 +185,9 @@ class EmployeeTest {
     }
 
     private fun getEmployee(): Employee =
-        Employee(firstName = "firstName", lastName = "lastName", position = Role.MANAGER, email = "email2@email.com")
+        Employee(firstName = "firstName",
+            lastName = "lastName",
+            position = Role.MANAGER,
+            email = "email2@email.com",
+            business = Business("name", "phoneNumber", "email"))
 }

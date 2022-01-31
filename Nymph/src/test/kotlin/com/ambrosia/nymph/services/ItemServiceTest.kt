@@ -136,5 +136,10 @@ class ItemServiceTest {
         Business(name = "name", currency = "EUR", email = "email", phoneNumber = "phoneNumber")
 
     private fun getItem(): Item =
-        Item(name = "name", description = "description", image = "image", price = 10.0, onlyForMenu = true)
+        Item(name = "name",
+            description = "description",
+            image = "image",
+            price = 10.0,
+            onlyForMenu = true,
+            business = Business("name", "phone", "email"))
 }

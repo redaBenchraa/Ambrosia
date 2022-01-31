@@ -23,5 +23,5 @@ class Category(
     @JoinColumn(name = "business_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonManagedReference
-    var business: Business? = null,
+    var business: Business,
 ) : BaseEntity()

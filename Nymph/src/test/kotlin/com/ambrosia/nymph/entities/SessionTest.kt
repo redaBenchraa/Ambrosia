@@ -10,10 +10,11 @@ class SessionTest {
         val session = Session(isApproved = false, isPaid = false).apply { id = 1 }
         val session1 = Session(isApproved = false, isPaid = false).apply { id = 1 }
         val session2 = Session(isApproved = false, isPaid = false).apply { id = 2 }
+        val table = Table(number = 1, business = Business("name", "phone", "email")).apply { id = 1 }
         assertEquals(session, session)
         assertEquals(session, session1)
         assertNotEquals(session, session2)
         assertNotEquals(session, null)
-        assertNotEquals(session, Table(number = 1).apply { id = 1 })
+        assertNotEquals(session, table)
     }
 }

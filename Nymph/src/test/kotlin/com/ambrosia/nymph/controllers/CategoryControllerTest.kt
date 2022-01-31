@@ -156,5 +156,6 @@ class CategoryControllerTest {
             name = "name",
             description = "description",
             image = "image",
+            business = Business("name", "phoneNumber", "email")
         )
 }

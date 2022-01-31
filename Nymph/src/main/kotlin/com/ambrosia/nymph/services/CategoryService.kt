@@ -15,15 +15,14 @@ import javax.transaction.Transactional
 @Service
 class CategoryService(
     @Autowired private val businessRepository: BusinessRepository,
-    @Autowired private val categoryRepository: CategoryRepository
+    @Autowired private val categoryRepository: CategoryRepository,
 ) {
 
     @Transactional
     fun addCategory(businessId: Long, categoryDto: CategoryDto): CategoryDto {
         val business = businessRepository.findById(businessId)
             .orElseThrow { EntityNotFoundException(Business::class.java, mutableMapOf("id" to businessId)) }
-        val category = categoryDto.toEntity()
-        category.business = business
+        val category = categoryDto.toEntity(business)
         return categoryRepository.save(category).toDto()
     }
 

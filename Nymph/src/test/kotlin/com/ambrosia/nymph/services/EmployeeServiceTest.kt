@@ -208,6 +208,7 @@ class EmployeeServiceTest {
             firstName = "firstName",
             lastName = "lastName",
             position = MANAGER,
-            email = "email@email.com"
+            email = "email@email.com",
+            business = Business("name", "phone", "email")
         )
 }

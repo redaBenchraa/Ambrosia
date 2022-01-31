@@ -195,5 +195,6 @@ class ItemControllerTest {
             description = "description",
             image = "image",
             price = 10.0,
+            business = Business("name", "phoneNumber", "email")
         )
 }

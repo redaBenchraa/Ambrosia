@@ -155,5 +155,5 @@ class ItemTest {
             .andExpect(content().json(objectMapper.writeValueAsString(expected.body)))
     }
 
-    private fun getItem() = Item(name = "name", price = 10.0)
+    private fun getItem() = Item(name = "name", price = 10.0, business = Business("name", "phoneNumber", "email"))
 }

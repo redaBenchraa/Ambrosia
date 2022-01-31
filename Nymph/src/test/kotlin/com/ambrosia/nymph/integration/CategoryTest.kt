@@ -128,5 +128,8 @@ class CategoryTest {
             .andExpect(content().json(objectMapper.writeValueAsString(expected.body)))
     }
 
-    private fun getCategory() = Category(name = "name", description = "description", image = "image")
+    private fun getCategory() = Category(name = "name",
+        description = "description",
+        image = "image",
+        business = Business("name", "phoneNumber", "email"))
 }

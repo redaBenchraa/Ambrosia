@@ -24,9 +24,9 @@ class Order(
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonManagedReference
     var session: Session,
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "customer_id", nullable = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
+    @ManyToOne(fetch = FetchType.LAZY, optional = true)
+    @JoinColumn(name = "customer_id", nullable = true)
+    @OnDelete(action = OnDeleteAction.NO_ACTION)
     @JsonManagedReference
     var customer: Customer? = null,
     @OneToMany(

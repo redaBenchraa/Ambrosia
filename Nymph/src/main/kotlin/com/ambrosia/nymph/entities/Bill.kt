@@ -14,19 +14,20 @@ import javax.persistence.ManyToOne
 @SQLDelete(sql = "UPDATE bill SET deleted = true WHERE id=?")
 @Where(clause = "deleted = false")
 class Bill(
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "customer_id", nullable = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JsonManagedReference
-    var customer: Customer?,
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "employee_id", nullable = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JsonManagedReference
-    var employee: Employee?,
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "session_id", nullable = false)
+    var amount: Double = 0.0,
+    @ManyToOne(fetch = FetchType.LAZY, optional = true)
+    @JoinColumn(name = "customer_id", nullable = true)
     @OnDelete(action = OnDeleteAction.NO_ACTION)
     @JsonManagedReference
-    var session: Session,
+    var customer: Customer? = null,
+    @ManyToOne(fetch = FetchType.LAZY, optional = true)
+    @JoinColumn(name = "employee_id", nullable = true)
+    @OnDelete(action = OnDeleteAction.NO_ACTION)
+    @JsonManagedReference
+    var employee: Employee? = null,
+    @ManyToOne(fetch = FetchType.LAZY, optional = true)
+    @JoinColumn(name = "session_id", nullable = true)
+    @OnDelete(action = OnDeleteAction.NO_ACTION)
+    @JsonManagedReference
+    var session: Session? = null,
 ) : BaseEntity()

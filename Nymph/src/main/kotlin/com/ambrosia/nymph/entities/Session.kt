@@ -24,21 +24,24 @@ data class Session(
     @field:NotNull(message = "error.session.isPaid.null")
     var isPaid: Boolean = false,
     @Column(nullable = false)
+    @field:NotNull(message = "error.session.isClosed.null")
+    var isClosed: Boolean = false,
+    @Column(nullable = false)
     @field:NotNull(message = "error.session.isApproved.null")
     var isApproved: Boolean = true,
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "business_id", nullable = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
+    @ManyToOne(fetch = FetchType.LAZY, optional = true)
+    @JoinColumn(name = "business_id", nullable = true)
+    @OnDelete(action = OnDeleteAction.NO_ACTION)
     @JsonManagedReference
     var business: Business? = null,
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "employee_id", nullable = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
+    @ManyToOne(fetch = FetchType.LAZY, optional = true)
+    @JoinColumn(name = "employee_id", nullable = true)
+    @OnDelete(action = OnDeleteAction.NO_ACTION)
     @JsonManagedReference
     var employee: Employee? = null,
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "table_id", nullable = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
+    @ManyToOne(fetch = FetchType.LAZY, optional = true)
+    @JoinColumn(name = "table_id", nullable = true)
+    @OnDelete(action = OnDeleteAction.NO_ACTION)
     @JsonManagedReference
     var table: Table? = null,
     @OneToMany(
@@ -48,7 +51,7 @@ data class Session(
         targetEntity = Order::class
     )
     @JsonBackReference
-    var orders: MutableSet<Order>? = HashSet(),
+    var orders: MutableSet<Order> = HashSet(),
     @OneToMany(
         cascade = [CascadeType.ALL],
         fetch = FetchType.LAZY,
@@ -56,7 +59,7 @@ data class Session(
         targetEntity = Bill::class
     )
     @JsonBackReference
-    var bills: MutableSet<Bill>? = HashSet(),
+    var bills: MutableSet<Bill> = HashSet(),
 ) : BaseEntity() {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

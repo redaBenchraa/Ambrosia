@@ -15,9 +15,6 @@ fun Customer.toRegistrationCustomerDto(): CustomerRegistrationDto =
 fun CustomerRegistrationDto.toEntity(): Customer =
     Customer(firstName, lastName, dateOfBirth, email).apply { id }
 
-fun CustomerDto.toCustomerRegistrationDto(): CustomerRegistrationDto =
-    CustomerRegistrationDto(id, firstName, lastName, email, dateOfBirth)
-
 fun CustomerRegistrationDto.toKeyCloakUser() = KeycloakUser(
     username = "$firstName.$lastName",
     email = email ?: UNDEFINED_VALUE,

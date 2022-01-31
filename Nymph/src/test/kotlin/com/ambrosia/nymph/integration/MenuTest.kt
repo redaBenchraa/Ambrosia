@@ -161,5 +161,5 @@ class MenuTest {
             .andExpect(content().json(objectMapper.writeValueAsString(expected.body)))
     }
 
-    private fun getMenu() = Menu(name = "name", price = 10.0)
+    private fun getMenu() = Menu(name = "name", price = 10.0, business = Business("name", "phoneNumber", "email"))
 }

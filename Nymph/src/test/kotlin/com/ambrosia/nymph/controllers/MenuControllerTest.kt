@@ -415,7 +415,7 @@ class MenuControllerTest {
             .andExpect(content().json(objectMapper.writeValueAsString(expected.body)))
     }
 
-    private fun getMenu() = Menu(name = "name", price = 10.0)
+    private fun getMenu() = Menu(name = "name", price = 10.0, business = Business("name", "phoneNumber", "email"))
     private fun getAddMenuItemDto() = AddMenuItemDto(itemId = 1, categoryId = 1, extra = 10.0)
     private fun getEditMenuItemDto() = EditMenuItemDto(id = 1, extra = 10.0)
 }

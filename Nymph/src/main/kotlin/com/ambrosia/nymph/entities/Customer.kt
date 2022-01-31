@@ -24,7 +24,7 @@ class Customer(
         targetEntity = Order::class
     )
     @JsonBackReference
-    var orders: MutableSet<Order>? = HashSet(),
+    var orders: MutableSet<Order> = HashSet(),
     @OneToMany(
         cascade = [CascadeType.ALL],
         fetch = FetchType.LAZY,
@@ -32,5 +32,5 @@ class Customer(
         targetEntity = Bill::class
     )
     @JsonBackReference
-    var bills: MutableSet<Bill>? = HashSet(),
+    var bills: MutableSet<Bill> = HashSet(),
 ) : BaseEntity()
