@@ -421,4 +421,14 @@
         <createSequence cacheSize="1" cycle="false" dataType="bigint" incrementBy="1" maxValue="9223372036854775807"
                         minValue="1" sequenceName="hibernate_sequence" startValue="1"/>
     </changeSet>
+
+    <changeSet author="Alexandre" id="01312020-01">
+        <createIndex tableName="employee" indexName="employee_email_index">
+            <column name="email"/>
+        </createIndex>
+        <createIndex tableName="customer" indexName="customer_email_index">
+            <column name="email"/>
+        </createIndex>
+    </changeSet>
+
 </databaseChangeLog>
