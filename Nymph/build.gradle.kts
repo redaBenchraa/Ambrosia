@@ -123,7 +123,7 @@ sonarqube {
         property("sonar.host.url", "http://localhost:9000")
         property("sonar.projectName", "Nymph")
         property("sonar.projectKey", "Nymph")
-        property("sonar.login", "3202c74ae585cbae4134b6b9d00330f1ad4ec0a5")
+        property("sonar.login", "0cdc89972e6c60137d9a1729c86e2dda963aa4ea")
         property("sonar.language", "kotlin")
         property("sonar.kotlin.detekt.reportPaths", "build/reports/detekt/detekt.xml")
         property("sonar.coverage.jacoco.xmlReportPaths", "build/reports/jacoco/test/jacocoTestReport.xml")
