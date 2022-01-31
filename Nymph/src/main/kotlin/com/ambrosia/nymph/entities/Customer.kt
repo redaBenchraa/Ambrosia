@@ -3,6 +3,7 @@ package com.ambrosia.nymph.entities
 import com.fasterxml.jackson.annotation.JsonBackReference
 import org.hibernate.annotations.SQLDelete
 import org.hibernate.annotations.Where
+import java.time.LocalDate
 import javax.persistence.CascadeType
 import javax.persistence.Entity
 import javax.persistence.FetchType
@@ -12,9 +13,10 @@ import javax.persistence.OneToMany
 @SQLDelete(sql = "UPDATE customer SET deleted = true WHERE id=?")
 @Where(clause = "deleted = false")
 class Customer(
-    var firstName: String,
-    var lastName: String,
-    var age: String,
+    var firstName: String? = null,
+    var lastName: String? = null,
+    var dateOfBirth: LocalDate? = null,
+    var email: String? = null,
     @OneToMany(
         cascade = [CascadeType.ALL],
         fetch = FetchType.LAZY,
@@ -22,7 +24,7 @@ class Customer(
         targetEntity = Order::class
     )
     @JsonBackReference
-    var orders: MutableSet<Order>,
+    var orders: MutableSet<Order>? = HashSet(),
     @OneToMany(
         cascade = [CascadeType.ALL],
         fetch = FetchType.LAZY,
@@ -30,5 +32,5 @@ class Customer(
         targetEntity = Bill::class
     )
     @JsonBackReference
-    var bills: MutableSet<Bill>,
+    var bills: MutableSet<Bill>? = HashSet(),
 ) : BaseEntity()

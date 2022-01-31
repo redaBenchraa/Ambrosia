@@ -6,6 +6,7 @@ import com.ambrosia.nymph.dtos.EditEmailDto
 import com.ambrosia.nymph.dtos.EditPositionDto
 import com.ambrosia.nymph.dtos.EmployeeRegistrationDto
 import com.ambrosia.nymph.entities.Business
+import com.ambrosia.nymph.entities.Customer
 import com.ambrosia.nymph.entities.Employee
 import com.ambrosia.nymph.exceptions.EntityAlreadyExistsException
 import com.ambrosia.nymph.exceptions.EntityNotFoundException
@@ -20,7 +21,7 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import java.util.*
+import java.util.Optional
 
 class EmployeeServiceTest {
 
@@ -32,7 +33,7 @@ class EmployeeServiceTest {
     @Test
     fun `Add an employee to a business`() {
         every { businessRepository.findById(any()) } returns Optional.of(getBusiness())
-        every { employeeRepository.existsByEmail(any()) } returns false
+        every { userService.verifyThatEmailDoesNotExists(any()) } returns Unit
         every { employeeRepository.save(any()) } returns getEmployee()
         every { userService.createKeycloakUser(any()) } returns Unit
         employeeService.addEmployee(1, getEmployeeRegistrationDto())
@@ -45,7 +46,7 @@ class EmployeeServiceTest {
     @Test
     fun `Add an employee with keycloak exception`() {
         every { businessRepository.findById(any()) } returns Optional.of(getBusiness())
-        every { employeeRepository.existsByEmail(any()) } returns false
+        every { userService.verifyThatEmailDoesNotExists(any()) } returns Unit
         every { employeeRepository.save(any()) } returns getEmployee()
         every { userService.createKeycloakUser(any()) } throws KeycloakException(message = "error.keycloak.createUser")
         assertThrows<KeycloakException> {
@@ -56,7 +57,8 @@ class EmployeeServiceTest {
     @Test
     fun `Add an employee to a business with an existing email`() {
         every { businessRepository.findById(any()) } returns Optional.of(getBusiness())
-        every { employeeRepository.existsByEmail(any()) } returns true
+        every { userService.verifyThatEmailDoesNotExists(any()) } throws
+                EntityAlreadyExistsException(Customer::class.java, mutableMapOf())
         assertThrows<EntityAlreadyExistsException> {
             employeeService.addEmployee(1, getEmployeeRegistrationDto())
         }

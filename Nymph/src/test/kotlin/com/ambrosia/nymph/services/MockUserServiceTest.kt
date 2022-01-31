@@ -2,16 +2,24 @@ package com.ambrosia.nymph.services
 
 import com.ambrosia.nymph.constants.Role
 import com.ambrosia.nymph.models.KeycloakUser
+import com.ambrosia.nymph.repositories.CustomerRepository
+import com.ambrosia.nymph.repositories.EmployeeRepository
+import io.mockk.mockk
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
-import org.springframework.boot.test.context.SpringBootTest
-import java.util.*
+import java.util.Arrays
 import java.util.stream.Collectors
 
-@SpringBootTest
 class MockUserServiceTest {
 
-    private val userService: MockUserService = MockUserService()
+    private val employeeRepository: EmployeeRepository = mockk(relaxed = true)
+    private val customerRepository: CustomerRepository = mockk(relaxed = true)
+    private val userService: MockUserService = MockUserService(employeeRepository, customerRepository)
+
+    @Test
+    fun verifyThatEmailDoesNotExists() {
+        assertDoesNotThrow { userService.verifyThatEmailDoesNotExists("") }
+    }
 
     @Test
     fun createKeycloakUser() {

@@ -48,4 +48,10 @@
             category_id="1002"
             extra="10.0"
     />
+    <customer
+            id="1007"
+            first_name="firstName"
+            last_name="lastName"
+            email="customer@email.com"
+    />
 </dataset>

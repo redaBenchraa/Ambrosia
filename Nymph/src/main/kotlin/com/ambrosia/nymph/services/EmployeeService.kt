@@ -6,7 +6,6 @@ import com.ambrosia.nymph.dtos.EmployeeDto
 import com.ambrosia.nymph.dtos.EmployeeRegistrationDto
 import com.ambrosia.nymph.entities.Business
 import com.ambrosia.nymph.entities.Employee
-import com.ambrosia.nymph.exceptions.EntityAlreadyExistsException
 import com.ambrosia.nymph.exceptions.EntityNotFoundException
 import com.ambrosia.nymph.mappers.toDto
 import com.ambrosia.nymph.mappers.toEntity
@@ -21,13 +20,13 @@ import javax.transaction.Transactional
 class EmployeeService(
     @Autowired private val businessRepository: BusinessRepository,
     @Autowired private val employeeRepository: EmployeeRepository,
-    @Autowired private val userService: IUserService,
+    @Autowired private val userService: AbstractUserService,
 ) {
     @Transactional
     fun addEmployee(businessId: Long, employeeDto: EmployeeRegistrationDto): EmployeeDto {
         val business = businessRepository.findById(businessId)
             .orElseThrow { EntityNotFoundException(Business::class.java, mutableMapOf("id" to businessId)) }
-        verifyIfEmployeeExists(employeeDto)
+        employeeDto.email?.let { userService.verifyThatEmailDoesNotExists(it) }
         userService.createKeycloakUser(employeeDto.toKeyCloakUser())
         val employee = employeeDto.toEntity()
         employee.business = business
@@ -74,7 +73,6 @@ class EmployeeService(
     }
 
     @Transactional
-    @Throws(EntityNotFoundException::class)
     fun deleteEmployee(businessId: Long, employeeId: Long) {
         businessRepository.findById(businessId)
             .orElseThrow { EntityNotFoundException(Business::class.java, mutableMapOf("id" to businessId)) }
@@ -88,13 +86,5 @@ class EmployeeService(
         businessRepository.findById(businessId)
             .orElseThrow { EntityNotFoundException(Business::class.java, mutableMapOf("id" to businessId)) }
         return employeeRepository.findByBusinessId(businessId).stream().map { it.toDto() }.toList()
-    }
-
-    fun verifyIfEmployeeExists(employeeDto: EmployeeRegistrationDto) {
-        employeeDto.email?.let {
-            if (employeeRepository.existsByEmail(it)) {
-                throw EntityAlreadyExistsException(Employee::class.java, mutableMapOf("email" to it))
-            }
-        }
     }
 }

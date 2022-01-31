@@ -2,12 +2,12 @@ package com.ambrosia.nymph.services
 
 import com.ambrosia.nymph.exceptions.KeycloakException
 import com.ambrosia.nymph.models.KeycloakUser
+import com.ambrosia.nymph.repositories.CustomerRepository
+import com.ambrosia.nymph.repositories.EmployeeRepository
 import org.apache.commons.collections4.CollectionUtils.isNotEmpty
 import org.apache.commons.collections4.CollectionUtils.subtract
 import org.apache.http.HttpStatus
 import org.keycloak.representations.idm.RoleRepresentation
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Service
@@ -16,8 +16,11 @@ import java.util.stream.Collectors
 
 @Service
 @Profile("default")
-class UserService(@Autowired private val keycloakService: KeycloakService) : IUserService {
-    val logger: Logger = LoggerFactory.getLogger(UserService::class.java)
+class UserService(
+    @Autowired private val keycloakService: KeycloakService,
+    @Autowired private val employeeRepository: EmployeeRepository,
+    @Autowired private val customerRepository: CustomerRepository,
+) : AbstractUserService(employeeRepository, customerRepository) {
 
     override fun createKeycloakUser(user: KeycloakUser) {
         val usersResource = keycloakService.getUsersResource()

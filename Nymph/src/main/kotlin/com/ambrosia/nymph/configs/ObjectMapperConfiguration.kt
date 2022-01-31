@@ -1,6 +1,8 @@
 package com.ambrosia.nymph.configs
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.datatype.jdk8.Jdk8Module
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.KotlinFeature
 import com.fasterxml.jackson.module.kotlin.KotlinModule
 import org.springframework.context.annotation.Bean
@@ -25,6 +27,8 @@ class ObjectMapperConfiguration {
                 .configure(KotlinFeature.StrictNullChecks, false)
                 .build(),
             ProblemModule().withStackTraces(false),
-            ConstraintViolationProblemModule()
+            ConstraintViolationProblemModule(),
+            Jdk8Module(),
+            JavaTimeModule()
         )
 }
