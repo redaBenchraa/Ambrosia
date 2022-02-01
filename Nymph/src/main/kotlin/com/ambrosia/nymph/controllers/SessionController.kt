@@ -21,12 +21,57 @@ class SessionController(@Autowired private val sessionService: SessionService) {
         return sessionService.getCurrentSession(businessId, tableId)
     }
 
-    @PutMapping("{sessionId}")
+    @PutMapping("{sessionId}/mark-as-closed")
     fun markAsClosed(
         @PathVariable("businessId") businessId: Long,
         @PathVariable("tableId") tableId: Long,
         @PathVariable("sessionId") sessionId: Long,
     ): SessionDto {
-        return sessionService.markAsClosed(businessId, tableId, sessionId)
+        return sessionService.editSession(businessId, tableId, sessionId, SessionDto(isClosed = true))
+    }
+
+    @PutMapping("{sessionId}/mark-as-opened")
+    fun markAsOpened(
+        @PathVariable("businessId") businessId: Long,
+        @PathVariable("tableId") tableId: Long,
+        @PathVariable("sessionId") sessionId: Long,
+    ): SessionDto {
+        return sessionService.editSession(businessId, tableId, sessionId, SessionDto(isClosed = false))
+    }
+
+    @PutMapping("{sessionId}/mark-as-paid")
+    fun markAsPaid(
+        @PathVariable("businessId") businessId: Long,
+        @PathVariable("tableId") tableId: Long,
+        @PathVariable("sessionId") sessionId: Long,
+    ): SessionDto {
+        return sessionService.editSession(businessId, tableId, sessionId, SessionDto(isPaid = true))
+    }
+
+    @PutMapping("{sessionId}/mark-as-unpaid")
+    fun markAsUnPaid(
+        @PathVariable("businessId") businessId: Long,
+        @PathVariable("tableId") tableId: Long,
+        @PathVariable("sessionId") sessionId: Long,
+    ): SessionDto {
+        return sessionService.editSession(businessId, tableId, sessionId, SessionDto(isPaid = false))
+    }
+
+    @PutMapping("{sessionId}/mark-as-approved")
+    fun markAsApproved(
+        @PathVariable("businessId") businessId: Long,
+        @PathVariable("tableId") tableId: Long,
+        @PathVariable("sessionId") sessionId: Long,
+    ): SessionDto {
+        return sessionService.editSession(businessId, tableId, sessionId, SessionDto(isApproved = true))
+    }
+
+    @PutMapping("{sessionId}/mark-as-unapproved")
+    fun markAsUnapproved(
+        @PathVariable("businessId") businessId: Long,
+        @PathVariable("tableId") tableId: Long,
+        @PathVariable("sessionId") sessionId: Long,
+    ): SessionDto {
+        return sessionService.editSession(businessId, tableId, sessionId, SessionDto(isApproved = false))
     }
 }

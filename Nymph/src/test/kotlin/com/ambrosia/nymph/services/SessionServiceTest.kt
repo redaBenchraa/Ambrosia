@@ -1,5 +1,6 @@
 package com.ambrosia.nymph.services
 
+import com.ambrosia.nymph.dtos.SessionDto
 import com.ambrosia.nymph.entities.Bill
 import com.ambrosia.nymph.entities.Business
 import com.ambrosia.nymph.entities.Item
@@ -145,13 +146,15 @@ class SessionServiceTest {
     }
 
     @Test
-    fun `Mark session as closed`() {
+    fun `Edit session`() {
         every { businessRepository.findById(any()) } returns Optional.of(getBusiness())
         every { tableRepository.findById(any()) } returns Optional.of(getTable())
         every { sessionRepository.findById(any()) } returns Optional.of(getSession())
         every { sessionRepository.save(any()) } returns getSession()
-        val result = sessionService.markAsClosed(1, 1, 1)
-        assertTrue(result.isClosed)
+        val result = sessionService.editSession(1, 1, 1, SessionDto(isPaid = true, isApproved = false, isClosed = true))
+        assertTrue(result.isPaid ?: true)
+        assertFalse(result.isApproved ?: false)
+        assertTrue(result.isClosed ?: true)
         verify {
             businessRepository.findById(any())
             tableRepository.findById(any())
@@ -161,36 +164,36 @@ class SessionServiceTest {
     }
 
     @Test
-    fun `Mark session as closed for a non existing business`() {
+    fun `Edit session for a non existing business`() {
         every { businessRepository.findById(any()) } returns Optional.empty()
         every { tableRepository.findById(any()) } returns Optional.of(getTable())
         every { sessionRepository.findById(any()) } returns Optional.of(getSession())
         every { sessionRepository.save(any()) } returns getSession()
-        assertThrows<EntityNotFoundException> { sessionService.markAsClosed(1, 1, 1) }
+        assertThrows<EntityNotFoundException> { sessionService.editSession(1, 1, 1, SessionDto(isPaid = true)) }
         verify(exactly = 0) {
             sessionRepository.save(any())
         }
     }
 
     @Test
-    fun `Mark session as closed for a non existing table`() {
+    fun `Edit session for a non existing table`() {
         every { businessRepository.findById(any()) } returns Optional.of(getBusiness())
         every { tableRepository.findById(any()) } returns Optional.empty()
         every { sessionRepository.findById(any()) } returns Optional.of(getSession())
         every { sessionRepository.save(any()) } returns getSession()
-        assertThrows<EntityNotFoundException> { sessionService.markAsClosed(1, 1, 1) }
+        assertThrows<EntityNotFoundException> { sessionService.editSession(1, 1, 1, SessionDto(isPaid = true)) }
         verify(exactly = 0) {
             sessionRepository.save(any())
         }
     }
 
     @Test
-    fun `Mark session as closed for a non existing session`() {
+    fun `Edit session for a non existing session`() {
         every { businessRepository.findById(any()) } returns Optional.of(getBusiness())
         every { tableRepository.findById(any()) } returns Optional.of(getTable())
         every { sessionRepository.findById(any()) } returns Optional.empty()
         every { sessionRepository.save(any()) } returns getSession()
-        assertThrows<EntityNotFoundException> { sessionService.markAsClosed(1, 1, 1) }
+        assertThrows<EntityNotFoundException> { sessionService.editSession(1, 1, 1, SessionDto(isPaid = true)) }
         verify(exactly = 0) {
             sessionRepository.save(any())
         }

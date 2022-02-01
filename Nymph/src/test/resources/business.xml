@@ -60,7 +60,7 @@
             table_id="1003"
             employee_id="1001"
             is_paid="false"
-            is_approved="true"
+            is_approved="false"
             is_closed="false"
     />
     <tables

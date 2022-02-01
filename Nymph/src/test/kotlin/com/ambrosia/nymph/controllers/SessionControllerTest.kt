@@ -76,11 +76,34 @@ class SessionControllerTest {
     }
 
     @Test
+    fun `Mark session as opened`() {
+        val session = getSession().toDto()
+        every { sessionService.editSession(any(), any(), any(), any()) } returns session
+        mockMvc
+            .perform(put("$baseUrl/1/mark-as-opened"))
+            .andExpect(status().isOk)
+            .andExpect(content().contentType(APPLICATION_JSON))
+            .andExpect(content().json(objectMapper.writeValueAsString(session)))
+    }
+
+    @Test
+    fun `Mark session as opened of a non existing business`() {
+        val exception = EntityNotFoundException(Business::class.java, mutableMapOf("id" to 1))
+        val expected = runtimeExceptionHandler.handleEntityNotFoundException(exception)
+        every { sessionService.editSession(any(), any(), any(), any()) } throws exception
+        mockMvc
+            .perform(put("$baseUrl/1/mark-as-opened"))
+            .andExpect(status().`is`(NOT_FOUND.value()))
+            .andExpect(content().contentType(APPLICATION_JSON))
+            .andExpect(content().json(objectMapper.writeValueAsString(expected.body)))
+    }
+
+    @Test
     fun `Mark session as closed`() {
         val session = getSession().toDto()
-        every { sessionService.markAsClosed(any(), any(), any()) } returns session
+        every { sessionService.editSession(any(), any(), any(), any()) } returns session
         mockMvc
-            .perform(put("$baseUrl/1"))
+            .perform(put("$baseUrl/1/mark-as-closed"))
             .andExpect(status().isOk)
             .andExpect(content().contentType(APPLICATION_JSON))
             .andExpect(content().json(objectMapper.writeValueAsString(session)))
@@ -90,14 +113,105 @@ class SessionControllerTest {
     fun `Mark session as closed of a non existing business`() {
         val exception = EntityNotFoundException(Business::class.java, mutableMapOf("id" to 1))
         val expected = runtimeExceptionHandler.handleEntityNotFoundException(exception)
-        every { sessionService.markAsClosed(any(), any(), any()) } throws exception
+        every { sessionService.editSession(any(), any(), any(), any()) } throws exception
         mockMvc
-            .perform(put("$baseUrl/1"))
+            .perform(put("$baseUrl/1/mark-as-closed"))
             .andExpect(status().`is`(NOT_FOUND.value()))
             .andExpect(content().contentType(APPLICATION_JSON))
             .andExpect(content().json(objectMapper.writeValueAsString(expected.body)))
     }
 
+    @Test
+    fun `Mark session as paid`() {
+        val session = getSession().toDto()
+        every { sessionService.editSession(any(), any(), any(), any()) } returns session
+        mockMvc
+            .perform(put("$baseUrl/1/mark-as-paid"))
+            .andExpect(status().isOk)
+            .andExpect(content().contentType(APPLICATION_JSON))
+            .andExpect(content().json(objectMapper.writeValueAsString(session)))
+    }
+
+    @Test
+    fun `Mark session as paid of a non existing business`() {
+        val exception = EntityNotFoundException(Business::class.java, mutableMapOf("id" to 1))
+        val expected = runtimeExceptionHandler.handleEntityNotFoundException(exception)
+        every { sessionService.editSession(any(), any(), any(), any()) } throws exception
+        mockMvc
+            .perform(put("$baseUrl/1/mark-as-paid"))
+            .andExpect(status().`is`(NOT_FOUND.value()))
+            .andExpect(content().contentType(APPLICATION_JSON))
+            .andExpect(content().json(objectMapper.writeValueAsString(expected.body)))
+    }
+
+    @Test
+    fun `Mark session as unpaid`() {
+        val session = getSession().toDto()
+        every { sessionService.editSession(any(), any(), any(), any()) } returns session
+        mockMvc
+            .perform(put("$baseUrl/1/mark-as-unpaid"))
+            .andExpect(status().isOk)
+            .andExpect(content().contentType(APPLICATION_JSON))
+            .andExpect(content().json(objectMapper.writeValueAsString(session)))
+    }
+
+    @Test
+    fun `Mark session as unpaid of a non existing business`() {
+        val exception = EntityNotFoundException(Business::class.java, mutableMapOf("id" to 1))
+        val expected = runtimeExceptionHandler.handleEntityNotFoundException(exception)
+        every { sessionService.editSession(any(), any(), any(), any()) } throws exception
+        mockMvc
+            .perform(put("$baseUrl/1/mark-as-unpaid"))
+            .andExpect(status().`is`(NOT_FOUND.value()))
+            .andExpect(content().contentType(APPLICATION_JSON))
+            .andExpect(content().json(objectMapper.writeValueAsString(expected.body)))
+    }
+
+    @Test
+    fun `Mark session as approved`() {
+        val session = getSession().toDto()
+        every { sessionService.editSession(any(), any(), any(), any()) } returns session
+        mockMvc
+            .perform(put("$baseUrl/1/mark-as-approved"))
+            .andExpect(status().isOk)
+            .andExpect(content().contentType(APPLICATION_JSON))
+            .andExpect(content().json(objectMapper.writeValueAsString(session)))
+    }
+
+    @Test
+    fun `Mark session as approved of a non existing business`() {
+        val exception = EntityNotFoundException(Business::class.java, mutableMapOf("id" to 1))
+        val expected = runtimeExceptionHandler.handleEntityNotFoundException(exception)
+        every { sessionService.editSession(any(), any(), any(), any()) } throws exception
+        mockMvc
+            .perform(put("$baseUrl/1/mark-as-approved"))
+            .andExpect(status().`is`(NOT_FOUND.value()))
+            .andExpect(content().contentType(APPLICATION_JSON))
+            .andExpect(content().json(objectMapper.writeValueAsString(expected.body)))
+    }
+
+    @Test
+    fun `Mark session as unapproved`() {
+        val session = getSession().toDto()
+        every { sessionService.editSession(any(), any(), any(), any()) } returns session
+        mockMvc
+            .perform(put("$baseUrl/1/mark-as-unapproved"))
+            .andExpect(status().isOk)
+            .andExpect(content().contentType(APPLICATION_JSON))
+            .andExpect(content().json(objectMapper.writeValueAsString(session)))
+    }
+
+    @Test
+    fun `Mark session as unapproved of a non existing business`() {
+        val exception = EntityNotFoundException(Business::class.java, mutableMapOf("id" to 1))
+        val expected = runtimeExceptionHandler.handleEntityNotFoundException(exception)
+        every { sessionService.editSession(any(), any(), any(), any()) } throws exception
+        mockMvc
+            .perform(put("$baseUrl/1/mark-as-unapproved"))
+            .andExpect(status().`is`(NOT_FOUND.value()))
+            .andExpect(content().contentType(APPLICATION_JSON))
+            .andExpect(content().json(objectMapper.writeValueAsString(expected.body)))
+    }
 
     private fun getSession() = Session(isPaid = false, isClosed = false, isApproved = true)
 }

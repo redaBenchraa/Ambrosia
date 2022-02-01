@@ -34,14 +34,16 @@ class SessionService(
     }
 
     @Transactional
-    fun markAsClosed(businessId: Long, tableId: Long, sessionId: Long): SessionDto {
+    fun editSession(businessId: Long, tableId: Long, sessionId: Long, sessionDto: SessionDto): SessionDto {
         businessRepository.findById(businessId)
             .orElseThrow { EntityNotFoundException(Business::class.java, mutableMapOf("id" to businessId)) }
         tableRepository.findById(tableId)
             .orElseThrow { EntityNotFoundException(Table::class.java, mutableMapOf("id" to tableId)) }
         val session = sessionRepository.findById(sessionId)
             .orElseThrow { EntityNotFoundException(Session::class.java, mutableMapOf("id" to sessionId)) }
-        session.isClosed = true
+        sessionDto.isApproved?.let { session.isApproved = it }
+        sessionDto.isClosed?.let { session.isClosed = it }
+        sessionDto.isPaid?.let { session.isPaid = it }
         sessionRepository.save(session)
         return session.toDto()
     }
