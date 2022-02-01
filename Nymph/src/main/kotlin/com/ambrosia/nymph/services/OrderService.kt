@@ -31,13 +31,13 @@ class OrderService(
     @Autowired private val orderItemRepository: OrderedItemRepository,
 ) {
     @Transactional
-    fun createOrder(
-        businessId: Long, tableId: Long, sessionId: Long, addOrderDto: AddOrderDto,
-    ): OrderDto {
-        businessRepository.findById(businessId)
-            .orElseThrow { EntityNotFoundException(Business::class.java, mutableMapOf("id" to businessId)) }
-        tableRepository.findById(tableId)
-            .orElseThrow { EntityNotFoundException(Table::class.java, mutableMapOf("id" to tableId)) }
+    fun createOrder(businessId: Long, tableId: Long, sessionId: Long, addOrderDto: AddOrderDto): OrderDto {
+        if (!businessRepository.existsById(businessId)) {
+            throw EntityNotFoundException(Business::class.java, mutableMapOf("id" to businessId))
+        }
+        if (!tableRepository.existsById(tableId)) {
+            throw EntityNotFoundException(Table::class.java, mutableMapOf("id" to tableId))
+        }
         val session = sessionRepository.findById(sessionId)
             .orElseThrow { EntityNotFoundException(Session::class.java, mutableMapOf("id" to sessionId)) }
         if (session.isClosed) {

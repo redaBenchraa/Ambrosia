@@ -40,7 +40,7 @@ class ItemServiceTest {
 
     @Test
     fun `Edit a item`() {
-        every { businessRepository.findById(any()) } returns Optional.of(getBusiness())
+        every { businessRepository.existsById(any()) } returns true
         every { itemRepository.findById(any()) } returns Optional.of(getItem())
         every { itemRepository.save(any()) } returns getItem()
         val itemDto = getItem().toDto().apply {
@@ -57,7 +57,7 @@ class ItemServiceTest {
         assertEquals(42.0, result.price)
         assertEquals(false, result.onlyForMenu)
         verify {
-            businessRepository.findById(any())
+            businessRepository.existsById(any())
             itemRepository.findById(any())
             itemRepository.save(any())
         }
@@ -65,7 +65,7 @@ class ItemServiceTest {
 
     @Test
     fun `Edit a item with null values`() {
-        every { businessRepository.findById(any()) } returns Optional.of(getBusiness())
+        every { businessRepository.existsById(any()) } returns true
         every { itemRepository.findById(any()) } returns Optional.of(getItem())
         every { itemRepository.save(any()) } returns getItem()
         val itemDto = getItem().toDto().apply {
@@ -82,7 +82,7 @@ class ItemServiceTest {
         assertEquals(10.0, result.price)
         assertEquals(true, result.onlyForMenu)
         verify {
-            businessRepository.findById(any())
+            businessRepository.existsById(any())
             itemRepository.findById(any())
             itemRepository.save(any())
         }
@@ -90,20 +90,20 @@ class ItemServiceTest {
 
     @Test
     fun `Edit a item from a non existing business`() {
-        every { businessRepository.findById(any()) } returns Optional.empty()
+        every { businessRepository.existsById(any()) } returns false
         assertThrows<EntityNotFoundException> { itemService.editItem(1, 1, getItem().toDto()) }
     }
 
     @Test
     fun `Edit a non existing item`() {
-        every { businessRepository.findById(any()) } returns Optional.of(getBusiness())
+        every { businessRepository.existsById(any()) } returns true
         every { itemRepository.findById(any()) } returns Optional.empty()
         assertThrows<EntityNotFoundException> { itemService.editItem(1, 1, getItem().toDto()) }
     }
 
     @Test
     fun `Remove a item`() {
-        every { businessRepository.findById(any()) } returns Optional.of(getBusiness())
+        every { businessRepository.existsById(any()) } returns true
         every { itemRepository.findById(any()) } returns Optional.of(getItem())
         every { itemRepository.delete(any()) } returns Unit
         itemService.deleteItem(1, 1)
@@ -112,13 +112,13 @@ class ItemServiceTest {
 
     @Test
     fun `Remove a item from a non existing business`() {
-        every { businessRepository.findById(any()) } returns Optional.empty()
+        every { businessRepository.existsById(any()) } returns false
         assertThrows<EntityNotFoundException> { itemService.deleteItem(1, 1) }
     }
 
     @Test
     fun `Get business items`() {
-        every { businessRepository.findById(any()) } returns Optional.of(getBusiness())
+        every { businessRepository.existsById(any()) } returns true
         every { itemRepository.findByBusinessId(any()) } returns mutableListOf(getItem())
         val result = itemService.getItems(1)
         Assertions.assertNotNull(result)
@@ -128,7 +128,7 @@ class ItemServiceTest {
 
     @Test
     fun `Get items from a non existing business`() {
-        every { businessRepository.findById(any()) } returns Optional.empty()
+        every { businessRepository.existsById(any()) } returns false
         assertThrows<EntityNotFoundException> { itemService.getItems(1) }
     }
 
@@ -141,5 +141,5 @@ class ItemServiceTest {
             image = "image",
             price = 10.0,
             onlyForMenu = true,
-            business = Business("name", "phone", "email"))
+            business = getBusiness())
 }

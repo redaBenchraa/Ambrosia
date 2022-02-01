@@ -3,6 +3,7 @@ package com.ambrosia.nymph.handlers
 import com.ambrosia.nymph.constants.ENTITY_ALREADY_EXITS
 import com.ambrosia.nymph.constants.ENTITY_NOT_FOUND
 import com.ambrosia.nymph.constants.KEYCLOAK
+import com.ambrosia.nymph.constants.SESSION_CLOSED
 import com.ambrosia.nymph.constants.VIOLATIONS
 import com.ambrosia.nymph.entities.Session
 import com.ambrosia.nymph.exceptions.EntityAlreadyExistsException
@@ -63,7 +64,7 @@ class RuntimeExceptionHandler : ProblemHandling, SecurityAdviceTrait {
         return ResponseEntity.status(HttpStatus.CONFLICT)
             .body(
                 Problem.builder()
-                    .withType(URI.create(ENTITY_NOT_FOUND))
+                    .withType(URI.create(SESSION_CLOSED))
                     .withTitle(translator.toLocale("error.sessionIsClosed"))
                     .withStatus(Status.CONFLICT)
                     .withDetail(

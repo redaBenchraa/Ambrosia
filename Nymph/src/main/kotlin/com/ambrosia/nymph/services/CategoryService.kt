@@ -28,8 +28,9 @@ class CategoryService(
 
     @Transactional
     fun editCategory(businessId: Long, categoryId: Long, categoryDto: CategoryDto): CategoryDto {
-        businessRepository.findById(businessId)
-            .orElseThrow { EntityNotFoundException(Business::class.java, mutableMapOf("id" to businessId)) }
+        if (!businessRepository.existsById(businessId)) {
+            throw EntityNotFoundException(Business::class.java, mutableMapOf("id" to businessId))
+        }
         val category = categoryRepository.findById(categoryId)
             .orElseThrow { EntityNotFoundException(Category::class.java, mutableMapOf("id" to categoryId)) }
         categoryDto.name?.let { category.name = it }
@@ -41,8 +42,9 @@ class CategoryService(
 
     @Transactional
     fun deleteCategory(businessId: Long, categoryId: Long) {
-        businessRepository.findById(businessId)
-            .orElseThrow { EntityNotFoundException(Business::class.java, mutableMapOf("id" to businessId)) }
+        if (!businessRepository.existsById(businessId)) {
+            throw EntityNotFoundException(Business::class.java, mutableMapOf("id" to businessId))
+        }
         val category = categoryRepository.findById(categoryId)
             .orElseThrow { EntityNotFoundException(Category::class.java, mutableMapOf("id" to categoryId)) }
         categoryRepository.delete(category)

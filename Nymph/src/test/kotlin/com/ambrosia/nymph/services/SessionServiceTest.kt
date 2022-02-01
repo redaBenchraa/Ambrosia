@@ -32,13 +32,13 @@ class SessionServiceTest {
     @Test
     fun `Get current session`() {
         val session = Session(isPaid = false, isClosed = false, isApproved = false).apply { id = 1 }
-        every { businessRepository.findById(any()) } returns Optional.of(getBusiness())
+        every { businessRepository.existsById(any()) } returns true
         every { tableRepository.findById(any()) } returns Optional.of(getTable())
         every { sessionRepository.findFirstByTableIdOrderByUpdatedAtDesc(any()) } returns session
         val result = sessionService.getCurrentSession(1, 1)
         assertEquals(1, result.id)
         verify {
-            businessRepository.findById(any())
+            businessRepository.existsById(any())
             tableRepository.findById(any())
             sessionRepository.findFirstByTableIdOrderByUpdatedAtDesc(any())
         }
@@ -49,13 +49,13 @@ class SessionServiceTest {
 
     @Test
     fun `Get current session from a non existing business`() {
-        every { businessRepository.findById(any()) } returns Optional.empty()
+        every { businessRepository.existsById(any()) } returns false
         assertThrows<EntityNotFoundException> { sessionService.getCurrentSession(1, 1) }
     }
 
     @Test
     fun `Get current session from a non existing table`() {
-        every { businessRepository.findById(any()) } returns Optional.of(getBusiness())
+        every { businessRepository.existsById(any()) } returns true
         every { tableRepository.findById(any()) } returns Optional.empty()
         assertThrows<EntityNotFoundException> { sessionService.getCurrentSession(1, 1) }
     }
@@ -63,14 +63,14 @@ class SessionServiceTest {
     @Test
     fun `Create new session for paid last session`() {
         val session = Session(isPaid = true, isClosed = false, isApproved = true)
-        every { businessRepository.findById(any()) } returns Optional.of(getBusiness())
+        every { businessRepository.existsById(any()) } returns true
         every { tableRepository.findById(any()) } returns Optional.of(getTable())
         every { sessionRepository.findFirstByTableIdOrderByUpdatedAtDesc(any()) } returns session
         every { sessionRepository.save(any()) } returns session.apply { id = 1 }
         val result = sessionService.getCurrentSession(1, 1)
         assertEquals(1, result.id)
         verify {
-            businessRepository.findById(any())
+            businessRepository.existsById(any())
             tableRepository.findById(any())
             sessionRepository.findFirstByTableIdOrderByUpdatedAtDesc(any())
             sessionRepository.save(any())
@@ -80,14 +80,14 @@ class SessionServiceTest {
     @Test
     fun `Create new session for closed last session`() {
         val session = Session(isPaid = false, isClosed = true, isApproved = true)
-        every { businessRepository.findById(any()) } returns Optional.of(getBusiness())
+        every { businessRepository.existsById(any()) } returns true
         every { tableRepository.findById(any()) } returns Optional.of(getTable())
         every { sessionRepository.findFirstByTableIdOrderByUpdatedAtDesc(any()) } returns session
         every { sessionRepository.save(any()) } returns session.apply { id = 1 }
         val result = sessionService.getCurrentSession(1, 1)
         assertEquals(1, result.id)
         verify {
-            businessRepository.findById(any())
+            businessRepository.existsById(any())
             tableRepository.findById(any())
             sessionRepository.findFirstByTableIdOrderByUpdatedAtDesc(any())
             sessionRepository.save(any())
@@ -97,14 +97,14 @@ class SessionServiceTest {
     @Test
     fun `Create new session for non existing last session`() {
         val session = Session(isPaid = false, isClosed = true, isApproved = true)
-        every { businessRepository.findById(any()) } returns Optional.of(getBusiness())
+        every { businessRepository.existsById(any()) } returns true
         every { tableRepository.findById(any()) } returns Optional.of(getTable())
         every { sessionRepository.findFirstByTableIdOrderByUpdatedAtDesc(any()) } returns null
         every { sessionRepository.save(any()) } returns session.apply { id = 1 }
         val result = sessionService.getCurrentSession(1, 1)
         assertEquals(1, result.id)
         verify {
-            businessRepository.findById(any())
+            businessRepository.existsById(any())
             tableRepository.findById(any())
             sessionRepository.findFirstByTableIdOrderByUpdatedAtDesc(any())
             sessionRepository.save(any())
@@ -147,8 +147,8 @@ class SessionServiceTest {
 
     @Test
     fun `Edit session`() {
-        every { businessRepository.findById(any()) } returns Optional.of(getBusiness())
-        every { tableRepository.findById(any()) } returns Optional.of(getTable())
+        every { businessRepository.existsById(any()) } returns true
+        every { tableRepository.existsById(any()) } returns true
         every { sessionRepository.findById(any()) } returns Optional.of(getSession())
         every { sessionRepository.save(any()) } returns getSession()
         val result = sessionService.editSession(1, 1, 1, SessionDto(isPaid = true, isApproved = false, isClosed = true))
@@ -156,8 +156,8 @@ class SessionServiceTest {
         assertFalse(result.isApproved ?: false)
         assertTrue(result.isClosed ?: true)
         verify {
-            businessRepository.findById(any())
-            tableRepository.findById(any())
+            businessRepository.existsById(any())
+            tableRepository.existsById(any())
             sessionRepository.findById(any())
             sessionRepository.save(any())
         }
@@ -165,8 +165,8 @@ class SessionServiceTest {
 
     @Test
     fun `Edit session for a non existing business`() {
-        every { businessRepository.findById(any()) } returns Optional.empty()
-        every { tableRepository.findById(any()) } returns Optional.of(getTable())
+        every { businessRepository.existsById(any()) } returns false
+        every { tableRepository.existsById(any()) } returns true
         every { sessionRepository.findById(any()) } returns Optional.of(getSession())
         every { sessionRepository.save(any()) } returns getSession()
         assertThrows<EntityNotFoundException> { sessionService.editSession(1, 1, 1, SessionDto(isPaid = true)) }
@@ -177,8 +177,8 @@ class SessionServiceTest {
 
     @Test
     fun `Edit session for a non existing table`() {
-        every { businessRepository.findById(any()) } returns Optional.of(getBusiness())
-        every { tableRepository.findById(any()) } returns Optional.empty()
+        every { businessRepository.existsById(any()) } returns true
+        every { tableRepository.existsById(any()) } returns false
         every { sessionRepository.findById(any()) } returns Optional.of(getSession())
         every { sessionRepository.save(any()) } returns getSession()
         assertThrows<EntityNotFoundException> { sessionService.editSession(1, 1, 1, SessionDto(isPaid = true)) }
@@ -189,8 +189,8 @@ class SessionServiceTest {
 
     @Test
     fun `Edit session for a non existing session`() {
-        every { businessRepository.findById(any()) } returns Optional.of(getBusiness())
-        every { tableRepository.findById(any()) } returns Optional.of(getTable())
+        every { businessRepository.existsById(any()) } returns true
+        every { tableRepository.existsById(any()) } returns true
         every { sessionRepository.findById(any()) } returns Optional.empty()
         every { sessionRepository.save(any()) } returns getSession()
         assertThrows<EntityNotFoundException> { sessionService.editSession(1, 1, 1, SessionDto(isPaid = true)) }
