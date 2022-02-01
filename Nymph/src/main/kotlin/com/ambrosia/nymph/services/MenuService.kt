@@ -76,10 +76,12 @@ class MenuService(
             }
         val item = itemRepository.findById(menuDto.itemId ?: -1)
             .orElseThrow { EntityNotFoundException(Item::class.java, mutableMapOf("id" to (menuDto.itemId ?: -1))) }
-        menu.menuItems.add(MenuItem(extra = menuDto.extra ?: DEFAULT_DOUBLE_VALUE,
+        menu.menuItems.add(MenuItem(
+            extra = menuDto.extra ?: DEFAULT_DOUBLE_VALUE,
             menu = menu,
             item = item,
-            category = category))
+            category = category)
+        )
         return menuRepository.save(menu).toDto()
     }
 

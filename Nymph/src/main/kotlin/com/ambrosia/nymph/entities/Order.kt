@@ -36,5 +36,5 @@ class Order(
         targetEntity = OrderedItem::class
     )
     @JsonBackReference
-    var orderedItem: MutableSet<OrderedItem> = HashSet(),
+    var orderedItems: MutableSet<OrderedItem> = HashSet(),
 ) : BaseEntity()

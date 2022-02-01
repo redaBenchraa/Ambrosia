@@ -20,9 +20,7 @@ import javax.validation.constraints.NotNull
 import javax.validation.constraints.Size
 
 @Entity
-@Table(indexes = [
-    Index(columnList = "email")
-])
+@Table(indexes = [Index(columnList = "email")])
 @SQLDelete(sql = "UPDATE employee SET deleted = true WHERE id=?")
 @Where(clause = "deleted = false")
 class Employee(

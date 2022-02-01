@@ -4,9 +4,11 @@ import com.ambrosia.nymph.constants.ENTITY_ALREADY_EXITS
 import com.ambrosia.nymph.constants.ENTITY_NOT_FOUND
 import com.ambrosia.nymph.constants.KEYCLOAK
 import com.ambrosia.nymph.constants.VIOLATIONS
+import com.ambrosia.nymph.entities.Session
 import com.ambrosia.nymph.exceptions.EntityAlreadyExistsException
 import com.ambrosia.nymph.exceptions.EntityNotFoundException
 import com.ambrosia.nymph.exceptions.KeycloakException
+import com.ambrosia.nymph.exceptions.SessionIsClosedException
 import com.ambrosia.nymph.utils.Translator
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
@@ -54,6 +56,27 @@ class RuntimeExceptionHandler : ProblemHandling, SecurityAdviceTrait {
                     .build()
             )
     }
+
+    @ExceptionHandler(SessionIsClosedException::class)
+    @ResponseStatus(value = HttpStatus.CONFLICT)
+    fun handleEntityNotFoundException(ex: SessionIsClosedException): ResponseEntity<Problem> {
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+            .body(
+                Problem.builder()
+                    .withType(URI.create(ENTITY_NOT_FOUND))
+                    .withTitle(translator.toLocale("error.sessionIsClosed"))
+                    .withStatus(Status.CONFLICT)
+                    .withDetail(
+                        String.format(
+                            translator.toLocale("error.sessionIsClosedDetails"),
+                            Session::class.java.simpleName,
+                            ex.parameters.toString()
+                        )
+                    )
+                    .build()
+            )
+    }
+
 
     @ExceptionHandler(EntityAlreadyExistsException::class)
     @ResponseStatus(value = HttpStatus.CONFLICT)

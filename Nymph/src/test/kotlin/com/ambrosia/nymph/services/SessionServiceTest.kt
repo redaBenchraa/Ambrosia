@@ -114,9 +114,9 @@ class SessionServiceTest {
     @Test
     fun `Check if session is paid`() {
         val item = Item(name = "name", price = 10.0, business = getBusiness())
-        val order = Order(session = Session(), orderedItem = mutableSetOf())
+        val order = Order(session = Session(), orderedItems = mutableSetOf())
         val orderedItem = OrderedItem(name = "name", price = 10.0, order = order, item = item)
-        order.orderedItem.add(orderedItem)
+        order.orderedItems.add(orderedItem)
         val session = Session(isPaid = false, orders = mutableSetOf(order), bills = mutableSetOf(Bill(amount = 10.0)))
         assertTrue(sessionService.checkIfSessionIsPaid(session))
     }
@@ -124,9 +124,9 @@ class SessionServiceTest {
     @Test
     fun `Check if session is paid when sums are not equal`() {
         val item = Item(name = "name", price = 10.0, business = getBusiness())
-        val order = Order(session = Session(), orderedItem = mutableSetOf())
+        val order = Order(session = Session(), orderedItems = mutableSetOf())
         val orderedItem = OrderedItem(name = "name", price = 10.0, order = order, item = item)
-        order.orderedItem.add(orderedItem)
+        order.orderedItems.add(orderedItem)
         val session = Session(isPaid = false,
             orders = mutableSetOf(order),
             bills = mutableSetOf(Bill(amount = 5.0), Bill(amount = 1.0)))

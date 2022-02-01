@@ -1,3 +1,6 @@
 package com.ambrosia.nymph.dtos
 
-class OrderDto
+class OrderDto(
+    var orderedItems: MutableSet<OrderedItemDto> = HashSet(),
+)
+
