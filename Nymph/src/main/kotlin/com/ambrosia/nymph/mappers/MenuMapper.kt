@@ -1,7 +1,6 @@
 package com.ambrosia.nymph.mappers
 
 import com.ambrosia.nymph.constants.UNDEFINED_VALUE
-import com.ambrosia.nymph.dtos.ItemDto
 import com.ambrosia.nymph.dtos.MenuCategory
 import com.ambrosia.nymph.dtos.MenuDto
 import com.ambrosia.nymph.dtos.MenuItemDto
