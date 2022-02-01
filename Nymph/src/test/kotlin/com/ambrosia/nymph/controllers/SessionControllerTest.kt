@@ -18,6 +18,7 @@ import org.springframework.http.HttpStatus.NOT_FOUND
 import org.springframework.http.MediaType.APPLICATION_JSON
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
@@ -43,12 +44,11 @@ class SessionControllerTest {
     fun `Get current session`() {
         val session = getSession().toDto()
         every { sessionService.getCurrentSession(any(), any()) } returns session
-        val content = objectMapper.writeValueAsString(session)
         mockMvc
-            .perform(get(baseUrl).contentType(APPLICATION_JSON).content(content))
+            .perform(get(baseUrl))
             .andExpect(status().isOk)
             .andExpect(content().contentType(APPLICATION_JSON))
-            .andExpect(content().json(content))
+            .andExpect(content().json(objectMapper.writeValueAsString(session)))
     }
 
     @Test
@@ -70,6 +70,29 @@ class SessionControllerTest {
         every { sessionService.getCurrentSession(any(), any()) } throws exception
         mockMvc
             .perform(get(baseUrl))
+            .andExpect(status().`is`(NOT_FOUND.value()))
+            .andExpect(content().contentType(APPLICATION_JSON))
+            .andExpect(content().json(objectMapper.writeValueAsString(expected.body)))
+    }
+
+    @Test
+    fun `Mark session as closed`() {
+        val session = getSession().toDto()
+        every { sessionService.markAsClosed(any(), any(), any()) } returns session
+        mockMvc
+            .perform(put("$baseUrl/1"))
+            .andExpect(status().isOk)
+            .andExpect(content().contentType(APPLICATION_JSON))
+            .andExpect(content().json(objectMapper.writeValueAsString(session)))
+    }
+
+    @Test
+    fun `Mark session as closed of a non existing business`() {
+        val exception = EntityNotFoundException(Business::class.java, mutableMapOf("id" to 1))
+        val expected = runtimeExceptionHandler.handleEntityNotFoundException(exception)
+        every { sessionService.markAsClosed(any(), any(), any()) } throws exception
+        mockMvc
+            .perform(put("$baseUrl/1"))
             .andExpect(status().`is`(NOT_FOUND.value()))
             .andExpect(content().contentType(APPLICATION_JSON))
             .andExpect(content().json(objectMapper.writeValueAsString(expected.body)))

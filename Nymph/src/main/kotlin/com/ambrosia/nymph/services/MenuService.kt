@@ -1,5 +1,6 @@
 package com.ambrosia.nymph.services
 
+import com.ambrosia.nymph.constants.DEFAULT_DOUBLE_VALUE
 import com.ambrosia.nymph.dtos.AddMenuItemDto
 import com.ambrosia.nymph.dtos.EditMenuItemDto
 import com.ambrosia.nymph.dtos.MenuDto
@@ -75,7 +76,10 @@ class MenuService(
             }
         val item = itemRepository.findById(menuDto.itemId ?: -1)
             .orElseThrow { EntityNotFoundException(Item::class.java, mutableMapOf("id" to (menuDto.itemId ?: -1))) }
-        menu.menuItems.add(MenuItem(extra = menuDto.extra ?: 0.0, menu = menu, item = item, category = category))
+        menu.menuItems.add(MenuItem(extra = menuDto.extra ?: DEFAULT_DOUBLE_VALUE,
+            menu = menu,
+            item = item,
+            category = category))
         return menuRepository.save(menu).toDto()
     }
 
@@ -100,7 +104,7 @@ class MenuService(
             .orElseThrow { EntityNotFoundException(Menu::class.java, mutableMapOf("id" to menuId)) }
         val menuItem = menuItemRepository.findById(menuItemId)
             .orElseThrow { EntityNotFoundException(MenuItem::class.java, mutableMapOf("id" to menuItemId)) }
-        menuItem.extra = menuDto.extra ?: 0.0
+        menuItem.extra = menuDto.extra ?: DEFAULT_DOUBLE_VALUE
         menuItemRepository.save(menuItem)
         return menu.toDto()
     }

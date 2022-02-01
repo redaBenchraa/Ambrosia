@@ -144,6 +144,61 @@ class SessionServiceTest {
         assertFalse(sessionService.checkIfSessionIsPaid(session))
     }
 
+    @Test
+    fun `Mark session as closed`() {
+        every { businessRepository.findById(any()) } returns Optional.of(getBusiness())
+        every { tableRepository.findById(any()) } returns Optional.of(getTable())
+        every { sessionRepository.findById(any()) } returns Optional.of(getSession())
+        every { sessionRepository.save(any()) } returns getSession()
+        val result = sessionService.markAsClosed(1, 1, 1)
+        assertTrue(result.isClosed)
+        verify {
+            businessRepository.findById(any())
+            tableRepository.findById(any())
+            sessionRepository.findById(any())
+            sessionRepository.save(any())
+        }
+    }
+
+    @Test
+    fun `Mark session as closed for a non existing business`() {
+        every { businessRepository.findById(any()) } returns Optional.empty()
+        every { tableRepository.findById(any()) } returns Optional.of(getTable())
+        every { sessionRepository.findById(any()) } returns Optional.of(getSession())
+        every { sessionRepository.save(any()) } returns getSession()
+        assertThrows<EntityNotFoundException> { sessionService.markAsClosed(1, 1, 1) }
+        verify(exactly = 0) {
+            sessionRepository.save(any())
+        }
+    }
+
+    @Test
+    fun `Mark session as closed for a non existing table`() {
+        every { businessRepository.findById(any()) } returns Optional.of(getBusiness())
+        every { tableRepository.findById(any()) } returns Optional.empty()
+        every { sessionRepository.findById(any()) } returns Optional.of(getSession())
+        every { sessionRepository.save(any()) } returns getSession()
+        assertThrows<EntityNotFoundException> { sessionService.markAsClosed(1, 1, 1) }
+        verify(exactly = 0) {
+            sessionRepository.save(any())
+        }
+    }
+
+    @Test
+    fun `Mark session as closed for a non existing session`() {
+        every { businessRepository.findById(any()) } returns Optional.of(getBusiness())
+        every { tableRepository.findById(any()) } returns Optional.of(getTable())
+        every { sessionRepository.findById(any()) } returns Optional.empty()
+        every { sessionRepository.save(any()) } returns getSession()
+        assertThrows<EntityNotFoundException> { sessionService.markAsClosed(1, 1, 1) }
+        verify(exactly = 0) {
+            sessionRepository.save(any())
+        }
+    }
+
+    private fun getSession(): Session =
+        Session(isApproved = true, isClosed = false, isPaid = false, business = getBusiness())
+
     private fun getTable(): Table =
         Table(number = 1, business = getBusiness())
 
