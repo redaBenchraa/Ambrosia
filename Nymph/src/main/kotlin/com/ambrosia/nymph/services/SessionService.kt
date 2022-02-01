@@ -34,9 +34,6 @@ class SessionService(
     }
 
     fun checkIfSessionIsPaid(session: Session): Boolean {
-        if (session.isPaid) {
-            return true
-        }
         if (session.orders.size == 0 || session.bills.size == 0) {
             return false
         }

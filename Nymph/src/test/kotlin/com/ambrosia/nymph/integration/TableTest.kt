@@ -58,8 +58,8 @@ class TableTest {
             .perform(post(baseUrl).contentType(APPLICATION_JSON).content(content))
             .andExpect(status().isOk)
             .andExpect(content().contentType(APPLICATION_JSON))
-        val result = tableRepository.findByBusinessId(1000)
-        assertEquals(2, result.size)
+        val result = tableRepository.findByBusinessId(businessId)
+        assertEquals(3, result.size)
         assertEquals(1, result[1].number)
     }
 

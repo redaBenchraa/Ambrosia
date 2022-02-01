@@ -21,12 +21,12 @@ import org.springframework.http.MediaType.APPLICATION_JSON
 import org.springframework.test.context.TestExecutionListeners
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener
 import org.springframework.test.web.servlet.MockMvc
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
 @SpringBootTest
@@ -136,12 +136,12 @@ class ItemTest {
     @Test
     fun `Get items`() {
         mockMvc
-            .perform(MockMvcRequestBuilders.get(baseUrl))
+            .perform(get(baseUrl))
             .andExpect(status().isOk)
             .andExpect(content().contentType(APPLICATION_JSON))
-            .andExpect(MockMvcResultMatchers.jsonPath("$[0].name", Matchers.`is`("name")))
-            .andExpect(MockMvcResultMatchers.jsonPath("$[0].price", Matchers.`is`(10.0)))
-            .andExpect(MockMvcResultMatchers.jsonPath("$[0].id", Matchers.`is`(1004)))
+            .andExpect(jsonPath("$[0].name", Matchers.`is`("name")))
+            .andExpect(jsonPath("$[0].price", Matchers.`is`(10.0)))
+            .andExpect(jsonPath("$[0].id", Matchers.`is`(1004)))
     }
 
     @Test
@@ -149,7 +149,7 @@ class ItemTest {
         val exception = EntityNotFoundException(Business::class.java, mutableMapOf("id" to 1))
         val expected = runtimeExceptionHandler.handleEntityNotFoundException(exception)
         mockMvc
-            .perform(MockMvcRequestBuilders.get("/businesses/1/items"))
+            .perform(get("/businesses/1/items"))
             .andExpect(status().`is`(NOT_FOUND.value()))
             .andExpect(content().contentType(APPLICATION_JSON))
             .andExpect(content().json(objectMapper.writeValueAsString(expected.body)))

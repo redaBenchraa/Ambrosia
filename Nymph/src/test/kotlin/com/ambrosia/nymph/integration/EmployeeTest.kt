@@ -65,7 +65,7 @@ class EmployeeTest {
             .perform(post(baseUrl).contentType(APPLICATION_JSON).content(content))
             .andExpect(status().isOk)
             .andExpect(content().contentType(APPLICATION_JSON))
-        val result = employeeRepository.findByBusinessId(1000)
+        val result = employeeRepository.findByBusinessId(businessId)
         assertEquals(2, result.size)
         assertEquals("firstName", result[1].firstName)
     }
@@ -144,7 +144,7 @@ class EmployeeTest {
             .andExpect(status().isOk)
             .andExpect(content().contentType(APPLICATION_JSON))
             .andExpect(content().json(objectMapper.writeValueAsString(employee)))
-        val result = employeeRepository.findByBusinessId(1000)
+        val result = employeeRepository.findByBusinessId(businessId)
         assertEquals("email2@email.com", result[0].email)
     }
 
@@ -157,7 +157,7 @@ class EmployeeTest {
             .andExpect(status().isOk)
             .andExpect(content().contentType(APPLICATION_JSON))
             .andExpect(content().json(objectMapper.writeValueAsString(employee)))
-        val result = employeeRepository.findByBusinessId(1000)
+        val result = employeeRepository.findByBusinessId(businessId)
         assertEquals(Role.ADMIN, result[0].position)
     }
 

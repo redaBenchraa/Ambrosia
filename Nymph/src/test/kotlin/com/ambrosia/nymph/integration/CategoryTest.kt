@@ -58,7 +58,7 @@ class CategoryTest {
             .perform(post(baseUrl).contentType(APPLICATION_JSON).content(content))
             .andExpect(status().isOk)
             .andExpect(content().contentType(APPLICATION_JSON))
-        val result = categoryRepository.findByBusinessId(1000)
+        val result = categoryRepository.findByBusinessId(businessId)
         assertEquals(2, result.size)
         assertEquals("name", result[1].name)
     }

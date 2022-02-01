@@ -144,11 +144,6 @@ class SessionServiceTest {
         assertFalse(sessionService.checkIfSessionIsPaid(session))
     }
 
-    @Test
-    fun `Check if session is paid when isPaid is true`() {
-        assertTrue(sessionService.checkIfSessionIsPaid(Session(isPaid = true)))
-    }
-
     private fun getTable(): Table =
         Table(number = 1, business = getBusiness())
 
