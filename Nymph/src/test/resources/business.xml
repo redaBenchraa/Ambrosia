@@ -54,4 +54,19 @@
             last_name="lastName"
             email="customer@email.com"
     />
+    <session
+            id="1008"
+            business_id="1000"
+            table_id="1003"
+            employee_id="1001"
+            is_paid="false"
+            is_approved="false"
+            is_closed="false"
+    />
+    <tables
+            id="1009"
+            number="2"
+            is_available="true"
+            business_id="1000"
+    />
 </dataset>

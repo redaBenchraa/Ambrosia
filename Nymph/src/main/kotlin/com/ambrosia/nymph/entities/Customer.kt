@@ -7,9 +7,14 @@ import java.time.LocalDate
 import javax.persistence.CascadeType
 import javax.persistence.Entity
 import javax.persistence.FetchType
+import javax.persistence.Index
 import javax.persistence.OneToMany
+import javax.persistence.Table
 
 @Entity
+@Table(indexes = [
+    Index(columnList = "email")
+])
 @SQLDelete(sql = "UPDATE customer SET deleted = true WHERE id=?")
 @Where(clause = "deleted = false")
 class Customer(
@@ -24,7 +29,7 @@ class Customer(
         targetEntity = Order::class
     )
     @JsonBackReference
-    var orders: MutableSet<Order>? = HashSet(),
+    var orders: MutableSet<Order> = HashSet(),
     @OneToMany(
         cascade = [CascadeType.ALL],
         fetch = FetchType.LAZY,
@@ -32,5 +37,5 @@ class Customer(
         targetEntity = Bill::class
     )
     @JsonBackReference
-    var bills: MutableSet<Bill>? = HashSet(),
+    var bills: MutableSet<Bill> = HashSet(),
 ) : BaseEntity()

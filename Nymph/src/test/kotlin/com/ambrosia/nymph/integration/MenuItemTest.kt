@@ -88,7 +88,7 @@ class MenuItemTest {
         val expected = runtimeExceptionHandler.handleEntityNotFoundException(exception)
         val content = objectMapper.writeValueAsString(getAddMenuItemDto())
         mockMvc
-            .perform(post("/businesses/1000/menus/1/items").contentType(APPLICATION_JSON).content(content))
+            .perform(post("/businesses/$businessId/menus/1/items").contentType(APPLICATION_JSON).content(content))
             .andExpect(status().`is`(NOT_FOUND.value()))
             .andExpect(content().contentType(APPLICATION_JSON))
             .andExpect(content().json(objectMapper.writeValueAsString(expected.body)))
@@ -154,7 +154,7 @@ class MenuItemTest {
         val expected = runtimeExceptionHandler.handleEntityNotFoundException(exception)
         val content = objectMapper.writeValueAsString(getEditMenuItemDto())
         mockMvc
-            .perform(put("/businesses/1000/menus/1/items/1").contentType(APPLICATION_JSON).content(content))
+            .perform(put("/businesses/$businessId/menus/1/items/1").contentType(APPLICATION_JSON).content(content))
             .andExpect(status().`is`(NOT_FOUND.value()))
             .andExpect(content().contentType(APPLICATION_JSON))
             .andExpect(content().json(objectMapper.writeValueAsString(expected.body)))
@@ -205,7 +205,7 @@ class MenuItemTest {
         val exception = EntityNotFoundException(Menu::class.java, mutableMapOf("id" to 1))
         val expected = runtimeExceptionHandler.handleEntityNotFoundException(exception)
         mockMvc
-            .perform(delete("/businesses/1000/menus/1/items/1").contentType(APPLICATION_JSON))
+            .perform(delete("/businesses/$businessId/menus/1/items/1").contentType(APPLICATION_JSON))
             .andExpect(status().`is`(NOT_FOUND.value()))
             .andExpect(content().contentType(APPLICATION_JSON))
             .andExpect(content().json(objectMapper.writeValueAsString(expected.body)))

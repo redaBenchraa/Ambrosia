@@ -36,8 +36,8 @@ class Item(
     @ColumnDefault("false")
     var onlyForMenu: Boolean = false,
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "business_id", nullable = true)
+    @JoinColumn(name = "business_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonManagedReference
-    var business: Business? = null,
+    var business: Business,
 ) : BaseEntity()

@@ -256,8 +256,17 @@ class MenuServiceTest {
     private fun getBusiness(): Business =
         Business(name = "name", email = "email", phoneNumber = "phoneNumber")
 
-    private fun getMenuItem(): MenuItem = MenuItem(extra = 10.0)
-    private fun getItem(): Item = Item(name = "name", price = 10.0)
-    private fun getCategory(): Category = Category(name = "name")
-    private fun getMenu(): Menu = Menu(name = "name", price = 10.0, image = "image", description = "description")
+    private fun getMenuItem(): MenuItem =
+        MenuItem(extra = 10.0, menu = getMenu(), category = getCategory(), item = getItem())
+
+    private fun getItem(): Item = Item(name = "name", price = 10.0, business = Business("name", "phone", "email"))
+
+    private fun getCategory(): Category = Category(name = "name", business = Business("name", "phone", "email"))
+
+    private fun getMenu(): Menu = Menu(name = "name",
+        price = 10.0,
+        image = "image",
+        description = "description",
+        business = Business("name", "phone", "email")
+    )
 }

@@ -12,7 +12,7 @@ import io.mockk.verify
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import java.util.*
+import java.util.Optional
 
 class CategoryServiceTest {
 
@@ -118,5 +118,6 @@ class CategoryServiceTest {
             name = "name",
             description = "description",
             image = "image",
+            business = Business("name", "phone", "email")
         )
 }

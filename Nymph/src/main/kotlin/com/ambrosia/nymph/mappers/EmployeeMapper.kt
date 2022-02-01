@@ -3,6 +3,7 @@ package com.ambrosia.nymph.mappers
 import com.ambrosia.nymph.constants.UNDEFINED_VALUE
 import com.ambrosia.nymph.dtos.EmployeeDto
 import com.ambrosia.nymph.dtos.EmployeeRegistrationDto
+import com.ambrosia.nymph.entities.Business
 import com.ambrosia.nymph.entities.Employee
 import com.ambrosia.nymph.models.KeycloakUser
 
@@ -11,8 +12,13 @@ fun Employee.toDto(): EmployeeDto = EmployeeDto(id, firstName, lastName, email, 
 fun Employee.toRegistrationEmployeeDto(): EmployeeRegistrationDto =
     EmployeeRegistrationDto(id, firstName, lastName, email, position)
 
-fun EmployeeRegistrationDto.toEntity(): Employee =
-    Employee(firstName ?: UNDEFINED_VALUE, lastName ?: UNDEFINED_VALUE, email ?: UNDEFINED_VALUE, position).apply { id }
+fun EmployeeRegistrationDto.toEntity(business: Business): Employee =
+    Employee(firstName ?: UNDEFINED_VALUE,
+        lastName ?: UNDEFINED_VALUE,
+        email ?: UNDEFINED_VALUE,
+        position,
+        business
+    ).apply { id }
 
 fun EmployeeDto.toEmployeeRegistrationDto(): EmployeeRegistrationDto =
     EmployeeRegistrationDto(

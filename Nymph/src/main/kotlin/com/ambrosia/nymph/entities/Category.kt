@@ -15,7 +15,8 @@ import javax.persistence.ManyToOne
 @SQLDelete(sql = "UPDATE category SET deleted = true WHERE id=?")
 @Where(clause = "deleted = false")
 class Category(
-    @Column(nullable = false) var name: String,
+    @Column(nullable = false)
+    var name: String,
     @Column(columnDefinition = "text")
     var description: String? = null,
     var image: String? = null,
@@ -23,5 +24,5 @@ class Category(
     @JoinColumn(name = "business_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonManagedReference
-    var business: Business? = null,
+    var business: Business,
 ) : BaseEntity()

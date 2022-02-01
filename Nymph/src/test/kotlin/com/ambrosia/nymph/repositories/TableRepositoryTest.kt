@@ -27,6 +27,6 @@ class TableRepositoryTest {
 
     @Test
     fun `Find tables by business id`() {
-        assertEquals(1, tableRepository.findByBusinessId(businessId).size)
+        assertEquals(2, tableRepository.findByBusinessId(businessId).size)
     }
 }

@@ -238,5 +238,6 @@ class EmployeeControllerTest {
             lastName = "lastName",
             position = Role.MANAGER,
             email = "email@email.com",
+            business = Business("name", "phoneNumber", "email")
         )
 }

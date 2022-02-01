@@ -58,8 +58,8 @@ class TableTest {
             .perform(post(baseUrl).contentType(APPLICATION_JSON).content(content))
             .andExpect(status().isOk)
             .andExpect(content().contentType(APPLICATION_JSON))
-        val result = tableRepository.findByBusinessId(1000)
-        assertEquals(2, result.size)
+        val result = tableRepository.findByBusinessId(businessId)
+        assertEquals(3, result.size)
         assertEquals(1, result[1].number)
     }
 
@@ -128,5 +128,5 @@ class TableTest {
             .andExpect(content().json(objectMapper.writeValueAsString(expected.body)))
     }
 
-    private fun getTable() = Table(number = 1, isAvailable = true)
+    private fun getTable() = Table(number = 1, isAvailable = true, business = Business("name", "phoneNumber", "email"))
 }

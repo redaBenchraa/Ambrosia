@@ -16,7 +16,7 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import java.util.*
+import java.util.Optional
 
 class BusinessServiceTest {
 
@@ -150,6 +150,7 @@ class BusinessServiceTest {
             firstName = "firstName",
             lastName = "lastName",
             position = Role.MANAGER,
-            email = "email@email.com"
+            email = "email@email.com",
+            business = Business("name", "phone", "email")
         ).apply { id = 1 }
 }

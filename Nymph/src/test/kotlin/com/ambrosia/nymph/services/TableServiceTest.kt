@@ -12,7 +12,7 @@ import io.mockk.verify
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import java.util.*
+import java.util.Optional
 
 class TableServiceTest {
 
@@ -110,5 +110,5 @@ class TableServiceTest {
     private fun getBusiness(): Business =
         Business(name = "name", currency = "EUR", email = "email", phoneNumber = "phoneNumber")
 
-    private fun getTable(): Table = Table(number = 1, isAvailable = true)
+    private fun getTable(): Table = Table(number = 1, isAvailable = true, business = Business("name", "phone", "email"))
 }

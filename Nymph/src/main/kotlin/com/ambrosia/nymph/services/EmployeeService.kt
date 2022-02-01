@@ -28,8 +28,7 @@ class EmployeeService(
             .orElseThrow { EntityNotFoundException(Business::class.java, mutableMapOf("id" to businessId)) }
         employeeDto.email?.let { userService.verifyThatEmailDoesNotExists(it) }
         userService.createKeycloakUser(employeeDto.toKeyCloakUser())
-        val employee = employeeDto.toEntity()
-        employee.business = business
+        val employee = employeeDto.toEntity(business)
         return employeeRepository.save(employee).toDto()
     }
 

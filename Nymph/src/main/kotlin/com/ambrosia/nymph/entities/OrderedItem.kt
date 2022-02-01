@@ -27,7 +27,7 @@ class OrderedItem(
     @Column(nullable = false)
     var name: String,
     @Column(columnDefinition = "text")
-    var description: String?,
+    var description: String? = null,
     @field:NotNull(message = "error.orderedItem.price.null")
     @field:Min(0, message = "error.orderedItem.price.negative")
     var price: Double,
@@ -35,10 +35,10 @@ class OrderedItem(
     @JoinColumn(name = "order_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonManagedReference
-    var order: Order? = null,
+    var order: Order,
     @OneToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "item_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonManagedReference
-    var item: Item?,
+    var item: Item,
 ) : BaseEntity()

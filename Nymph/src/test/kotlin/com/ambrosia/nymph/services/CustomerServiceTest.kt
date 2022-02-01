@@ -132,6 +132,6 @@ class CustomerServiceTest {
             firstName = "firstName",
             lastName = "lastName",
             dateOfBirth = LocalDate.now(),
-            email = "email@email.com"
+            email = "email@email.com",
         )
 }

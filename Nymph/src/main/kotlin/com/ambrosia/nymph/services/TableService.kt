@@ -15,15 +15,14 @@ import javax.transaction.Transactional
 @Service
 class TableService(
     @Autowired private val businessRepository: BusinessRepository,
-    @Autowired private val tableRepository: TableRepository
+    @Autowired private val tableRepository: TableRepository,
 ) {
 
     @Transactional
     fun addTable(businessId: Long, tableDto: TableDto): TableDto {
         val business = businessRepository.findById(businessId)
             .orElseThrow { EntityNotFoundException(Business::class.java, mutableMapOf("id" to businessId)) }
-        val table = tableDto.toEntity()
-        table.business = business
+        val table = tableDto.toEntity(business)
         return tableRepository.save(table).toDto()
     }
 

@@ -39,7 +39,7 @@ class Menu(
     @JoinColumn(name = "business_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonManagedReference
-    var business: Business? = null,
+    var business: Business,
     @OneToMany(
         cascade = [CascadeType.ALL],
         fetch = FetchType.LAZY,
