@@ -9,7 +9,7 @@ import com.ambrosia.nymph.entities.OrderedItem
 import com.ambrosia.nymph.entities.Session
 import com.ambrosia.nymph.entities.Table
 import com.ambrosia.nymph.exceptions.EntityNotFoundException
-import com.ambrosia.nymph.exceptions.SessionIsClosedException
+import com.ambrosia.nymph.exceptions.SessionClosedException
 import com.ambrosia.nymph.mappers.toDto
 import com.ambrosia.nymph.repositories.BusinessRepository
 import com.ambrosia.nymph.repositories.ItemRepository
@@ -41,7 +41,7 @@ class OrderService(
         val session = sessionRepository.findById(sessionId)
             .orElseThrow { EntityNotFoundException(Session::class.java, mutableMapOf("id" to sessionId)) }
         if (session.closed) {
-            throw SessionIsClosedException(mutableMapOf("id" to sessionId))
+            throw SessionClosedException(mutableMapOf("id" to sessionId))
         }
         val order = Order(session = session)
         orderRepository.save(order).let { order.id = it.id }

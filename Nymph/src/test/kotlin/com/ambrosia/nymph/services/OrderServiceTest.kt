@@ -8,6 +8,7 @@ import com.ambrosia.nymph.entities.Order
 import com.ambrosia.nymph.entities.OrderedItem
 import com.ambrosia.nymph.entities.Session
 import com.ambrosia.nymph.exceptions.EntityNotFoundException
+import com.ambrosia.nymph.exceptions.SessionClosedException
 import com.ambrosia.nymph.repositories.BusinessRepository
 import com.ambrosia.nymph.repositories.ItemRepository
 import com.ambrosia.nymph.repositories.OrderRepository
@@ -16,6 +17,7 @@ import com.ambrosia.nymph.repositories.SessionRepository
 import com.ambrosia.nymph.repositories.TableRepository
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.verify
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Test
@@ -75,13 +77,13 @@ class OrderServiceTest {
     }
 
     @Test
-    fun `Create new order with with a closed session`() {
+    fun `Create new order with a closed session`() {
         every { businessRepository.existsById(any()) } returns true
         every { tableRepository.existsById(any()) } returns true
         every { sessionRepository.findById(any()) } returns Optional.of(getSession().apply { closed = true })
         every { itemRepository.findById(any()) } returns Optional.empty()
-        every { orderRepository.save(any()) } returns getOrder()
-        assertThrows<EntityNotFoundException> { orderService.createOrder(1, 1, 1, AddOrderDto()) }
+        assertThrows<SessionClosedException> { orderService.createOrder(1, 1, 1, AddOrderDto()) }
+        verify(exactly = 0) { orderRepository.save(any()) }
     }
 
     @Test

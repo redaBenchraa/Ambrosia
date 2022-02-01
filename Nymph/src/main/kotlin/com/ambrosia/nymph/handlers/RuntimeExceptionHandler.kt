@@ -9,7 +9,7 @@ import com.ambrosia.nymph.entities.Session
 import com.ambrosia.nymph.exceptions.EntityAlreadyExistsException
 import com.ambrosia.nymph.exceptions.EntityNotFoundException
 import com.ambrosia.nymph.exceptions.KeycloakException
-import com.ambrosia.nymph.exceptions.SessionIsClosedException
+import com.ambrosia.nymph.exceptions.SessionClosedException
 import com.ambrosia.nymph.utils.Translator
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
@@ -58,9 +58,9 @@ class RuntimeExceptionHandler : ProblemHandling, SecurityAdviceTrait {
             )
     }
 
-    @ExceptionHandler(SessionIsClosedException::class)
+    @ExceptionHandler(SessionClosedException::class)
     @ResponseStatus(value = HttpStatus.CONFLICT)
-    fun handleEntityNotFoundException(ex: SessionIsClosedException): ResponseEntity<Problem> {
+    fun handleEntityNotFoundException(ex: SessionClosedException): ResponseEntity<Problem> {
         return ResponseEntity.status(HttpStatus.CONFLICT)
             .body(
                 Problem.builder()
