@@ -260,13 +260,13 @@
             <column defaultValueComputed="now()" name="updated_at" type="TIMESTAMP WITHOUT TIME ZONE">
                 <constraints nullable="false"/>
             </column>
-            <column name="is_approved" type="BOOLEAN">
+            <column name="approved" type="BOOLEAN">
                 <constraints nullable="false"/>
             </column>
-            <column name="is_closed" type="BOOLEAN">
+            <column name="closed" type="BOOLEAN">
                 <constraints nullable="false"/>
             </column>
-            <column name="is_paid" type="BOOLEAN">
+            <column name="paid" type="BOOLEAN">
                 <constraints nullable="false"/>
             </column>
             <column name="business_id" type="BIGINT"/>

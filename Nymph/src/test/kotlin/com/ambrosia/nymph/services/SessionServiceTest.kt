@@ -31,7 +31,7 @@ class SessionServiceTest {
 
     @Test
     fun `Get current session`() {
-        val session = Session(isPaid = false, isClosed = false, isApproved = false).apply { id = 1 }
+        val session = Session(paid = false, closed = false, approved = false).apply { id = 1 }
         every { businessRepository.existsById(any()) } returns true
         every { tableRepository.findById(any()) } returns Optional.of(getTable())
         every { sessionRepository.findFirstByTableIdOrderByUpdatedAtDesc(any()) } returns session
@@ -62,7 +62,7 @@ class SessionServiceTest {
 
     @Test
     fun `Create new session for paid last session`() {
-        val session = Session(isPaid = true, isClosed = false, isApproved = true)
+        val session = Session(paid = true, closed = false, approved = true)
         every { businessRepository.existsById(any()) } returns true
         every { tableRepository.findById(any()) } returns Optional.of(getTable())
         every { sessionRepository.findFirstByTableIdOrderByUpdatedAtDesc(any()) } returns session
@@ -79,7 +79,7 @@ class SessionServiceTest {
 
     @Test
     fun `Create new session for closed last session`() {
-        val session = Session(isPaid = false, isClosed = true, isApproved = true)
+        val session = Session(paid = false, closed = true, approved = true)
         every { businessRepository.existsById(any()) } returns true
         every { tableRepository.findById(any()) } returns Optional.of(getTable())
         every { sessionRepository.findFirstByTableIdOrderByUpdatedAtDesc(any()) } returns session
@@ -96,7 +96,7 @@ class SessionServiceTest {
 
     @Test
     fun `Create new session for non existing last session`() {
-        val session = Session(isPaid = false, isClosed = true, isApproved = true)
+        val session = Session(paid = false, closed = true, approved = true)
         every { businessRepository.existsById(any()) } returns true
         every { tableRepository.findById(any()) } returns Optional.of(getTable())
         every { sessionRepository.findFirstByTableIdOrderByUpdatedAtDesc(any()) } returns null
@@ -117,7 +117,7 @@ class SessionServiceTest {
         val order = Order(session = Session(), orderedItems = mutableSetOf())
         val orderedItem = OrderedItem(name = "name", price = 10.0, order = order, item = item)
         order.orderedItems.add(orderedItem)
-        val session = Session(isPaid = false, orders = mutableSetOf(order), bills = mutableSetOf(Bill(amount = 10.0)))
+        val session = Session(paid = false, orders = mutableSetOf(order), bills = mutableSetOf(Bill(amount = 10.0)))
         assertTrue(sessionService.checkIfSessionIsPaid(session))
     }
 
@@ -127,7 +127,7 @@ class SessionServiceTest {
         val order = Order(session = Session(), orderedItems = mutableSetOf())
         val orderedItem = OrderedItem(name = "name", price = 10.0, order = order, item = item)
         order.orderedItems.add(orderedItem)
-        val session = Session(isPaid = false,
+        val session = Session(paid = false,
             orders = mutableSetOf(order),
             bills = mutableSetOf(Bill(amount = 5.0), Bill(amount = 1.0)))
         assertFalse(sessionService.checkIfSessionIsPaid(session))
@@ -135,13 +135,13 @@ class SessionServiceTest {
 
     @Test
     fun `Check if session is paid with no orders`() {
-        assertFalse(sessionService.checkIfSessionIsPaid(Session(isPaid = false)))
+        assertFalse(sessionService.checkIfSessionIsPaid(Session(paid = false)))
     }
 
     @Test
     fun `Check if session is paid with no bill`() {
         val order = Order(session = Session())
-        val session = Session(isPaid = false, orders = mutableSetOf(order))
+        val session = Session(paid = false, orders = mutableSetOf(order))
         assertFalse(sessionService.checkIfSessionIsPaid(session))
     }
 
@@ -200,7 +200,7 @@ class SessionServiceTest {
     }
 
     private fun getSession(): Session =
-        Session(isApproved = true, isClosed = false, isPaid = false, business = getBusiness())
+        Session(approved = true, closed = false, paid = false, business = getBusiness())
 
     private fun getTable(): Table =
         Table(number = 1, business = getBusiness())

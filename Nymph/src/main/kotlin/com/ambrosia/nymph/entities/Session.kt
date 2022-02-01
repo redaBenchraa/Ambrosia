@@ -21,14 +21,14 @@ import javax.validation.constraints.NotNull
 @Where(clause = "deleted = false")
 data class Session(
     @Column(nullable = false)
-    @field:NotNull(message = "error.session.isPaid.null")
-    var isPaid: Boolean = false,
+    @field:NotNull(message = "error.session.paid.null")
+    var paid: Boolean = false,
     @Column(nullable = false)
-    @field:NotNull(message = "error.session.isClosed.null")
-    var isClosed: Boolean = false,
+    @field:NotNull(message = "error.session.closed.null")
+    var closed: Boolean = false,
     @Column(nullable = false)
-    @field:NotNull(message = "error.session.isApproved.null")
-    var isApproved: Boolean = true,
+    @field:NotNull(message = "error.session.approved.null")
+    var approved: Boolean = true,
     @ManyToOne(fetch = FetchType.LAZY, optional = true)
     @JoinColumn(name = "business_id", nullable = true)
     @OnDelete(action = OnDeleteAction.NO_ACTION)

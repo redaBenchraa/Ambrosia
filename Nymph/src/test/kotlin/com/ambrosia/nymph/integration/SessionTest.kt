@@ -111,7 +111,7 @@ class SessionTest {
             .andExpect(jsonPath("$.isClosed", `is`(false)))
         val result = sessionRepository.findById(id)
         assertTrue(result.isPresent)
-        assertFalse(result.get().isClosed)
+        assertFalse(result.get().closed)
     }
 
     @Test
@@ -158,7 +158,7 @@ class SessionTest {
             .andExpect(jsonPath("$.isClosed", `is`(true)))
         val result = sessionRepository.findById(id)
         assertTrue(result.isPresent)
-        assertTrue(result.get().isClosed)
+        assertTrue(result.get().closed)
     }
 
     @Test
@@ -205,7 +205,7 @@ class SessionTest {
             .andExpect(jsonPath("$.isClosed", `is`(false)))
         val result = sessionRepository.findById(id)
         assertTrue(result.isPresent)
-        assertTrue(result.get().isPaid)
+        assertTrue(result.get().paid)
     }
 
     @Test
@@ -252,7 +252,7 @@ class SessionTest {
             .andExpect(jsonPath("$.isClosed", `is`(false)))
         val result = sessionRepository.findById(id)
         assertTrue(result.isPresent)
-        assertFalse(result.get().isPaid)
+        assertFalse(result.get().paid)
     }
 
     @Test
@@ -299,7 +299,7 @@ class SessionTest {
             .andExpect(jsonPath("$.isClosed", `is`(false)))
         val result = sessionRepository.findById(id)
         assertTrue(result.isPresent)
-        assertTrue(result.get().isApproved)
+        assertTrue(result.get().approved)
     }
 
     @Test
@@ -346,7 +346,7 @@ class SessionTest {
             .andExpect(jsonPath("$.isClosed", `is`(false)))
         val result = sessionRepository.findById(id)
         assertTrue(result.isPresent)
-        assertFalse(result.get().isApproved)
+        assertFalse(result.get().approved)
     }
 
     @Test

@@ -40,7 +40,7 @@ class OrderService(
         }
         val session = sessionRepository.findById(sessionId)
             .orElseThrow { EntityNotFoundException(Session::class.java, mutableMapOf("id" to sessionId)) }
-        if (session.isClosed) {
+        if (session.closed) {
             throw SessionIsClosedException(mutableMapOf("id" to sessionId))
         }
         val order = Order(session = session)
