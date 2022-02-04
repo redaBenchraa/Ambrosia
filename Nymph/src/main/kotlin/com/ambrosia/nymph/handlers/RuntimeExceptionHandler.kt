@@ -60,7 +60,7 @@ class RuntimeExceptionHandler : ProblemHandling, SecurityAdviceTrait {
 
     @ExceptionHandler(SessionClosedException::class)
     @ResponseStatus(value = HttpStatus.CONFLICT)
-    fun handleEntityNotFoundException(ex: SessionClosedException): ResponseEntity<Problem> {
+    fun handleSessionClosedException(ex: SessionClosedException): ResponseEntity<Problem> {
         return ResponseEntity.status(HttpStatus.CONFLICT)
             .body(
                 Problem.builder()
@@ -77,7 +77,6 @@ class RuntimeExceptionHandler : ProblemHandling, SecurityAdviceTrait {
                     .build()
             )
     }
-
 
     @ExceptionHandler(EntityAlreadyExistsException::class)
     @ResponseStatus(value = HttpStatus.CONFLICT)

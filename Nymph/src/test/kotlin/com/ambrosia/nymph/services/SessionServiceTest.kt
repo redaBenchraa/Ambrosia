@@ -34,13 +34,13 @@ class SessionServiceTest {
         val session = Session(paid = false, closed = false, approved = false).apply { id = 1 }
         every { businessRepository.existsById(any()) } returns true
         every { tableRepository.findById(any()) } returns Optional.of(getTable())
-        every { sessionRepository.findFirstByTableIdOrderByUpdatedAtDesc(any()) } returns session
+        every { sessionRepository.findFirstByTableIdOrderByUpdatedAtDescIdDesc(any()) } returns session
         val result = sessionService.getCurrentSession(1, 1)
         assertEquals(1, result.id)
         verify {
             businessRepository.existsById(any())
             tableRepository.findById(any())
-            sessionRepository.findFirstByTableIdOrderByUpdatedAtDesc(any())
+            sessionRepository.findFirstByTableIdOrderByUpdatedAtDescIdDesc(any())
         }
         verify(exactly = 0) {
             sessionRepository.save(any())
@@ -65,14 +65,14 @@ class SessionServiceTest {
         val session = Session(paid = true, closed = false, approved = true)
         every { businessRepository.existsById(any()) } returns true
         every { tableRepository.findById(any()) } returns Optional.of(getTable())
-        every { sessionRepository.findFirstByTableIdOrderByUpdatedAtDesc(any()) } returns session
+        every { sessionRepository.findFirstByTableIdOrderByUpdatedAtDescIdDesc(any()) } returns session
         every { sessionRepository.save(any()) } returns session.apply { id = 1 }
         val result = sessionService.getCurrentSession(1, 1)
         assertEquals(1, result.id)
         verify {
             businessRepository.existsById(any())
             tableRepository.findById(any())
-            sessionRepository.findFirstByTableIdOrderByUpdatedAtDesc(any())
+            sessionRepository.findFirstByTableIdOrderByUpdatedAtDescIdDesc(any())
             sessionRepository.save(any())
         }
     }
@@ -82,14 +82,14 @@ class SessionServiceTest {
         val session = Session(paid = false, closed = true, approved = true)
         every { businessRepository.existsById(any()) } returns true
         every { tableRepository.findById(any()) } returns Optional.of(getTable())
-        every { sessionRepository.findFirstByTableIdOrderByUpdatedAtDesc(any()) } returns session
+        every { sessionRepository.findFirstByTableIdOrderByUpdatedAtDescIdDesc(any()) } returns session
         every { sessionRepository.save(any()) } returns session.apply { id = 1 }
         val result = sessionService.getCurrentSession(1, 1)
         assertEquals(1, result.id)
         verify {
             businessRepository.existsById(any())
             tableRepository.findById(any())
-            sessionRepository.findFirstByTableIdOrderByUpdatedAtDesc(any())
+            sessionRepository.findFirstByTableIdOrderByUpdatedAtDescIdDesc(any())
             sessionRepository.save(any())
         }
     }
@@ -99,14 +99,14 @@ class SessionServiceTest {
         val session = Session(paid = false, closed = true, approved = true)
         every { businessRepository.existsById(any()) } returns true
         every { tableRepository.findById(any()) } returns Optional.of(getTable())
-        every { sessionRepository.findFirstByTableIdOrderByUpdatedAtDesc(any()) } returns null
+        every { sessionRepository.findFirstByTableIdOrderByUpdatedAtDescIdDesc(any()) } returns null
         every { sessionRepository.save(any()) } returns session.apply { id = 1 }
         val result = sessionService.getCurrentSession(1, 1)
         assertEquals(1, result.id)
         verify {
             businessRepository.existsById(any())
             tableRepository.findById(any())
-            sessionRepository.findFirstByTableIdOrderByUpdatedAtDesc(any())
+            sessionRepository.findFirstByTableIdOrderByUpdatedAtDescIdDesc(any())
             sessionRepository.save(any())
         }
     }

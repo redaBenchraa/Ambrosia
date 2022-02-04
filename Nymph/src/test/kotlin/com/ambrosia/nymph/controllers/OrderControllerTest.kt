@@ -2,9 +2,7 @@ package com.ambrosia.nymph.controllers
 
 import com.ambrosia.nymph.dtos.AddOrderDto
 import com.ambrosia.nymph.entities.Business
-import com.ambrosia.nymph.entities.Item
 import com.ambrosia.nymph.entities.Order
-import com.ambrosia.nymph.entities.OrderedItem
 import com.ambrosia.nymph.entities.Session
 import com.ambrosia.nymph.exceptions.EntityNotFoundException
 import com.ambrosia.nymph.exceptions.SessionClosedException
@@ -72,7 +70,7 @@ class OrderControllerTest {
     @Test
     fun `Get current session for a closed session`() {
         val exception = SessionClosedException(mutableMapOf("id" to 1))
-        val expected = runtimeExceptionHandler.handleEntityNotFoundException(exception)
+        val expected = runtimeExceptionHandler.handleSessionClosedException(exception)
         every { orderService.createOrder(any(), any(), any(), any()) } throws exception
         mockMvc
             .perform(post(baseUrl).contentType(APPLICATION_JSON)
@@ -85,21 +83,10 @@ class OrderControllerTest {
 
     private fun getOrder(): Order = Order(session = getSession())
 
-    private fun getOrderedItem(): OrderedItem =
-        OrderedItem(order = getOrder(), description = "description", name = "name", price = 10.0, item = getItem())
-
     private fun getSession(): Session =
         Session(approved = true,
             closed = false,
             paid = false,
-            business = getBusiness())
-
-    private fun getItem(): Item =
-        Item(name = "name",
-            description = "description",
-            image = "image",
-            price = 10.0,
-            onlyForMenu = true,
             business = getBusiness())
 
     private fun getBusiness() = Business(name = "name", email = "email", phoneNumber = "phoneNumber")

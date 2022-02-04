@@ -36,7 +36,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 @DatabaseSetup("classpath:business.xml")
 class SessionTest {
 
-    private final val id: Long = 1008
+    private final val id: Long = 1009
     private final val businessId: Long = 1000
     private final val tableId: Long = 1003
     private val baseUrl = "/businesses/$businessId/tables/$tableId/sessions"
@@ -59,7 +59,7 @@ class SessionTest {
             .perform(get(baseUrl))
             .andExpect(status().isOk)
             .andExpect(content().contentType(APPLICATION_JSON))
-            .andExpect(jsonPath("$.id", `is`(1008)))
+            .andExpect(jsonPath("$.id", `is`(1009)))
             .andExpect(jsonPath("$.isApproved", `is`(false)))
             .andExpect(jsonPath("$.isPaid", `is`(false)))
             .andExpect(jsonPath("$.isClosed", `is`(false)))
@@ -68,13 +68,13 @@ class SessionTest {
     @Test
     fun `Create new session`() {
         mockMvc
-            .perform(get("/businesses/$businessId/tables/1009/sessions"))
+            .perform(get("/businesses/$businessId/tables/1010/sessions"))
             .andExpect(status().isOk)
             .andExpect(content().contentType(APPLICATION_JSON))
             .andExpect(jsonPath("$.isApproved", `is`(false)))
             .andExpect(jsonPath("$.isPaid", `is`(false)))
             .andExpect(jsonPath("$.isClosed", `is`(false)))
-        assertEquals(2, sessionRepository.count())
+        assertEquals(3, sessionRepository.count())
     }
 
 

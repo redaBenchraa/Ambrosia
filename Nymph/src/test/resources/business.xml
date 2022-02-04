@@ -59,12 +59,21 @@
             business_id="1000"
             table_id="1003"
             employee_id="1001"
+            paid="true"
+            approved="true"
+            closed="true"
+    />
+    <session
+            id="1009"
+            business_id="1000"
+            table_id="1003"
+            employee_id="1001"
             paid="false"
             approved="false"
             closed="false"
     />
     <tables
-            id="1009"
+            id="1010"
             number="2"
             is_available="true"
             business_id="1000"

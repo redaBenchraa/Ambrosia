@@ -26,7 +26,7 @@ class SessionService(
         }
         val table = tableRepository.findById(tableId)
             .orElseThrow { EntityNotFoundException(Table::class.java, mutableMapOf("id" to tableId)) }
-        val lastSession = sessionRepository.findFirstByTableIdOrderByUpdatedAtDesc(tableId)
+        val lastSession = sessionRepository.findFirstByTableIdOrderByUpdatedAtDescIdDesc(tableId)
         if (lastSession == null || lastSession.closed || lastSession.paid) {
             val newSession = Session(table = table, paid = false, closed = false, approved = false)
             return sessionRepository.save(newSession).toDto()

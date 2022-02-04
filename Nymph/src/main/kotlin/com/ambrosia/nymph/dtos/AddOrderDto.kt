@@ -7,5 +7,5 @@ class AddOrderDto(
 
 class ItemsToOrder(
     var id: Long,
-    var description: String?,
+    var description: String? = null,
 )
