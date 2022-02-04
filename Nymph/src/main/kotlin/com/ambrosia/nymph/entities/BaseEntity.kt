@@ -12,7 +12,7 @@ import javax.persistence.Id
 import javax.persistence.MappedSuperclass
 
 @MappedSuperclass
-class BaseEntity(
+open class BaseEntity(
     @Id
     @Column(nullable = false)
     @GeneratedValue(strategy = GenerationType.AUTO)
