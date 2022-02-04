@@ -32,7 +32,7 @@ class OrderController(@Autowired private val orderService: OrderService) {
         @Valid @RequestBody addOrderDto: AddOrderDto,
     ): OrderDto = orderService.addItemsToOrder(businessId, tableId, sessionId, orderId, addOrderDto)
 
-    @DeleteMapping("{orderId}/orderItems/{orderItemId}")
+    @DeleteMapping("{orderId}/items/{orderItemId}")
     fun removeItemFromOrder(
         @PathVariable("businessId") businessId: Long,
         @PathVariable("tableId") tableId: Long,

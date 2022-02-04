@@ -740,7 +740,7 @@ style:
     active: false
   ThrowsCount:
     active: true
-    max: 3
+    max: 5
     excludeGuardClauses: false
   TrailingWhitespace:
     active: false

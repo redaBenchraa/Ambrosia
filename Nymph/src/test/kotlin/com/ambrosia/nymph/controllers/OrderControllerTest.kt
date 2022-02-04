@@ -124,7 +124,7 @@ class OrderControllerTest {
     fun `Delete item from an order`() {
         every { orderService.removeItemFromOrder(any(), any(), any(), any(), any()) } returns Unit
         mockMvc
-            .perform(delete("$baseUrl/1/orderItems/1"))
+            .perform(delete("$baseUrl/1/items/1"))
             .andExpect(status().isOk)
     }
 
@@ -134,7 +134,7 @@ class OrderControllerTest {
         val expected = runtimeExceptionHandler.handleEntityNotFoundException(exception)
         every { orderService.removeItemFromOrder(any(), any(), any(), any(), any()) } throws exception
         mockMvc
-            .perform(delete("$baseUrl/1/orderItems/1"))
+            .perform(delete("$baseUrl/1/items/1"))
             .andExpect(status().`is`(NOT_FOUND.value()))
             .andExpect(content().contentType(APPLICATION_JSON))
             .andExpect(content().json(objectMapper.writeValueAsString(expected.body)))
@@ -146,7 +146,7 @@ class OrderControllerTest {
         val expected = runtimeExceptionHandler.handleSessionClosedException(exception)
         every { orderService.removeItemFromOrder(any(), any(), any(), any(), any()) } throws exception
         mockMvc
-            .perform(delete("$baseUrl/1/orderItems/1"))
+            .perform(delete("$baseUrl/1/items/1"))
             .andExpect(status().`is`(CONFLICT.value()))
             .andExpect(content().contentType(APPLICATION_JSON))
             .andExpect(content().json(objectMapper.writeValueAsString(expected.body)))
