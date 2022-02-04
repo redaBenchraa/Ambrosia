@@ -5,7 +5,6 @@ import com.ambrosia.nymph.constants.EMAIL_MAX_SIZE
 import com.ambrosia.nymph.constants.NAME_MAX_SIZE
 import com.fasterxml.jackson.annotation.JsonBackReference
 import org.hibernate.Hibernate
-import org.hibernate.annotations.ColumnDefault
 import org.hibernate.annotations.SQLDelete
 import org.hibernate.annotations.Where
 import javax.persistence.CascadeType
@@ -13,28 +12,16 @@ import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.FetchType
 import javax.persistence.OneToMany
-import javax.validation.constraints.Email
-import javax.validation.constraints.NotBlank
-import javax.validation.constraints.NotNull
-import javax.validation.constraints.Size
 
 @Entity
 @SQLDelete(sql = "UPDATE business SET deleted = true WHERE id=?")
 @Where(clause = "deleted = false")
 data class Business(
-    @field:NotNull(message = "error.business.name.null")
-    @field:NotBlank(message = "error.business.name.blank")
-    @field:Size(max = NAME_MAX_SIZE, message = "error.business.name.size.invalid")
-    @Column(nullable = false)
+    @Column(nullable = false, length = NAME_MAX_SIZE)
     var name: String,
-    @field:NotNull
-    @field:NotBlank(message = "error.business.phoneNumber.blank")
     @Column(nullable = false)
     var phoneNumber: String,
-    @Column(nullable = false)
-    @field:NotBlank(message = "error.business.email.blank")
-    @field:Email(message = "error.business.email.format.invalid")
-    @field:Size(max = EMAIL_MAX_SIZE, message = "error.business.email.size.invalid")
+    @Column(nullable = false, length = EMAIL_MAX_SIZE)
     var email: String,
     @Column(columnDefinition = "text")
     var description: String? = null,
@@ -43,8 +30,7 @@ data class Business(
     var location: String? = null,
     @Column(nullable = false)
     var currency: String = Currency.EUR.name,
-    @Column(nullable = false)
-    @ColumnDefault("true")
+    @Column(columnDefinition = "boolean default true", nullable = false)
     var available: Boolean = true,
     @OneToMany(
         cascade = [CascadeType.ALL],

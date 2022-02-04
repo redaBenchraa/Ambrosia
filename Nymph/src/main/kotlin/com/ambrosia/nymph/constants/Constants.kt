@@ -6,8 +6,6 @@ const val ENTITY_ALREADY_EXITS = "http://www.ambrosia.com/api/enitity-already-ex
 const val KEYCLOAK = "http://www.ambrosia.com/api/keycloak"
 const val SESSION_CLOSED = "http://www.ambrosia.com/api/session-closed"
 
-const val EXTRA_MIN: Long = 0L
-const val PRICE_MIN: Long = 0L
 const val NAME_MAX_SIZE = 48
 const val EMAIL_MAX_SIZE = 254
 const val PASSWORD_MIN_SIZE = 6
