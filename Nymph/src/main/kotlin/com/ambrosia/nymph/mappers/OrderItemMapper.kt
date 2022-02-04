@@ -6,4 +6,3 @@ import com.ambrosia.nymph.entities.OrderItem
 fun OrderItem.toDto(): OrderedItemDto = OrderedItemDto(
     id, name, description, price, item?.toDto()
 )
-

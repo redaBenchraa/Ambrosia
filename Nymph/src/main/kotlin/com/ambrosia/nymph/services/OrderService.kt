@@ -45,7 +45,11 @@ class OrderService(
 
     @Transactional
     fun addItemsToOrder(
-        businessId: Long, tableId: Long, sessionId: Long, orderId: Long, addOrderDto: AddOrderDto,
+        businessId: Long,
+        tableId: Long,
+        sessionId: Long,
+        orderId: Long,
+        addOrderDto: AddOrderDto,
     ): OrderDto {
         fetchSessionWithExistenceValidation(businessId, tableId, sessionId)
         val order = orderRepository.findById(orderId)
