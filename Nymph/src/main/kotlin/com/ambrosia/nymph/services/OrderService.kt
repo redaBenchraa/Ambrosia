@@ -76,11 +76,13 @@ class OrderService(
         return orderItems.stream().map {
             val item = itemRepository.findById(it.id)
                 .orElseThrow { EntityNotFoundException(Item::class.java, mutableMapOf("id" to it.id)) }
-            OrderItem(order = order,
+            OrderItem(
+                order = order,
                 item = item,
                 name = item.name,
                 price = item.price,
-                description = it.description ?: item.description)
+                description = it.description ?: item.description
+            )
         }.toList()
     }
 

@@ -739,7 +739,7 @@ style:
   SpacingBetweenPackageAndImports:
     active: false
   ThrowsCount:
-    active: true
+    active: false
     max: 5
     excludeGuardClauses: false
   TrailingWhitespace:

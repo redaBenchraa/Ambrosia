@@ -84,7 +84,8 @@ class MenuService(
                 extra = menuDto.extra ?: DEFAULT_DOUBLE_VALUE,
                 menu = menu,
                 item = item,
-                category = category)
+                category = category
+            )
         )
         return menuRepository.save(menu).toDto()
     }
