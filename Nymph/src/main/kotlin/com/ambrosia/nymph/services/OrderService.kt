@@ -34,17 +34,7 @@ class OrderService(
 
     @Transactional
     fun createOrder(businessId: Long, tableId: Long, sessionId: Long, addOrderDto: AddOrderDto): OrderDto {
-        if (!businessRepository.existsById(businessId)) {
-            throw EntityNotFoundException(Business::class.java, mutableMapOf("id" to businessId))
-        }
-        if (!tableRepository.existsById(tableId)) {
-            throw EntityNotFoundException(Table::class.java, mutableMapOf("id" to tableId))
-        }
-        val session = sessionRepository.findById(sessionId)
-            .orElseThrow { EntityNotFoundException(Session::class.java, mutableMapOf("id" to sessionId)) }
-        if (session.closed) {
-            throw SessionClosedException(mutableMapOf("id" to sessionId))
-        }
+        val session = fetchSessionWithExistenceValidation(businessId, tableId, sessionId)
         val order = Order(session = session)
         orderRepository.save(order).let { order.id = it.id }
         var orderItems = buildOrderItems(addOrderDto.items, order)
@@ -57,17 +47,7 @@ class OrderService(
     fun addItemsToOrder(
         businessId: Long, tableId: Long, sessionId: Long, orderId: Long, addOrderDto: AddOrderDto,
     ): OrderDto {
-        if (!businessRepository.existsById(businessId)) {
-            throw EntityNotFoundException(Business::class.java, mutableMapOf("id" to businessId))
-        }
-        if (!tableRepository.existsById(tableId)) {
-            throw EntityNotFoundException(Table::class.java, mutableMapOf("id" to tableId))
-        }
-        val session = sessionRepository.findById(sessionId)
-            .orElseThrow { EntityNotFoundException(Session::class.java, mutableMapOf("id" to sessionId)) }
-        if (session.closed) {
-            throw SessionClosedException(mutableMapOf("id" to sessionId))
-        }
+        fetchSessionWithExistenceValidation(businessId, tableId, sessionId)
         val order = orderRepository.findById(orderId)
             .orElseThrow { EntityNotFoundException(Order::class.java, mutableMapOf("id" to orderId)) }
         var orderItems = buildOrderItems(addOrderDto.items, order)
@@ -78,17 +58,7 @@ class OrderService(
 
     @Transactional
     fun removeItemFromOrder(businessId: Long, tableId: Long, sessionId: Long, orderId: Long, orderItemId: Long) {
-        if (!businessRepository.existsById(businessId)) {
-            throw EntityNotFoundException(Business::class.java, mutableMapOf("id" to businessId))
-        }
-        if (!tableRepository.existsById(tableId)) {
-            throw EntityNotFoundException(Table::class.java, mutableMapOf("id" to tableId))
-        }
-        val session = sessionRepository.findById(sessionId)
-            .orElseThrow { EntityNotFoundException(Session::class.java, mutableMapOf("id" to sessionId)) }
-        if (session.closed) {
-            throw SessionClosedException(mutableMapOf("id" to sessionId))
-        }
+        fetchSessionWithExistenceValidation(businessId, tableId, sessionId)
         if (!orderRepository.existsById(orderId)) {
             throw EntityNotFoundException(Order::class.java, mutableMapOf("id" to orderId))
         }
@@ -108,5 +78,20 @@ class OrderService(
                 price = item.price,
                 description = it.description ?: item.description)
         }.toList()
+    }
+
+    private fun fetchSessionWithExistenceValidation(businessId: Long, tableId: Long, sessionId: Long): Session {
+        if (!businessRepository.existsById(businessId)) {
+            throw EntityNotFoundException(Business::class.java, mutableMapOf("id" to businessId))
+        }
+        if (!tableRepository.existsById(tableId)) {
+            throw EntityNotFoundException(Table::class.java, mutableMapOf("id" to tableId))
+        }
+        val session = sessionRepository.findById(sessionId)
+            .orElseThrow { EntityNotFoundException(Session::class.java, mutableMapOf("id" to sessionId)) }
+        if (session.closed) {
+            throw SessionClosedException(mutableMapOf("id" to sessionId))
+        }
+        return session
     }
 }
