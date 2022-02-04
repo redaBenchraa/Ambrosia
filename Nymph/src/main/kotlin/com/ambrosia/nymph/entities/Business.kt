@@ -45,7 +45,7 @@ data class Business(
     var currency: String = Currency.EUR.name,
     @Column(nullable = false)
     @ColumnDefault("true")
-    var isAvailable: Boolean = true,
+    var available: Boolean = true,
     @OneToMany(
         cascade = [CascadeType.ALL],
         fetch = FetchType.LAZY,

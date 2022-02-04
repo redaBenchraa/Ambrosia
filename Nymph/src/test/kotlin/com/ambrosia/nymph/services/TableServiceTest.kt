@@ -44,11 +44,11 @@ class TableServiceTest {
         every { tableRepository.save(any()) } returns getTable()
         val tableDto = getTable().toDto().apply {
             number = 42
-            isAvailable = false
+            available = false
         }
         val result = tableService.editTable(1, 4, tableDto)
         assertEquals(42, result.number)
-        assertEquals(false, result.isAvailable)
+        assertEquals(false, result.available)
         verify {
             businessRepository.existsById(any())
             tableRepository.findById(any())
@@ -63,11 +63,11 @@ class TableServiceTest {
         every { tableRepository.save(any()) } returns getTable()
         val tableDto = getTable().toDto().apply {
             number = null
-            isAvailable = null
+            available = null
         }
         val result = tableService.editTable(1, 4, tableDto)
         assertEquals(1, result.number)
-        assertEquals(true, result.isAvailable)
+        assertEquals(true, result.available)
         verify {
             businessRepository.existsById(any())
             tableRepository.findById(any())
@@ -107,7 +107,7 @@ class TableServiceTest {
         assertThrows<EntityNotFoundException> { tableService.deleteTable(1, 1) }
     }
 
-    private fun getTable(): Table = Table(number = 1, isAvailable = true, business = getBusiness())
+    private fun getTable(): Table = Table(number = 1, available = true, business = getBusiness())
 
     private fun getBusiness(): Business =
         Business(name = "name", currency = "EUR", email = "email", phoneNumber = "phoneNumber")

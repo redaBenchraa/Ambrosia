@@ -34,7 +34,7 @@ class TableService(
         val table = tableRepository.findById(tableId)
             .orElseThrow { EntityNotFoundException(Table::class.java, mutableMapOf("id" to tableId)) }
         tableDto.number?.let { table.number = it }
-        tableDto.isAvailable?.let { table.isAvailable = it }
+        tableDto.available?.let { table.available = it }
         tableRepository.save(table)
         return table.toDto()
     }

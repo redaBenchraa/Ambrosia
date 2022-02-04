@@ -26,7 +26,7 @@
     <tables
             id="1003"
             number="1"
-            is_available="true"
+            available="true"
             business_id="1000"
     />
     <item
@@ -75,7 +75,7 @@
     <tables
             id="1010"
             number="2"
-            is_available="true"
+            available="true"
             business_id="1000"
     />
 </dataset>

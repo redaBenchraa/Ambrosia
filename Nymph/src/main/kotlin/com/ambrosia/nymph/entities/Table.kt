@@ -25,9 +25,9 @@ class Table(
     @Column(nullable = false)
     @field:NotNull(message = "error.table.number.null")
     var number: Int,
-    @field:NotNull(message = "error.table.isAvailable.null")
+    @field:NotNull(message = "error.table.available.null")
     @ColumnDefault("true")
-    var isAvailable: Boolean = true,
+    var available: Boolean = true,
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "business_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)

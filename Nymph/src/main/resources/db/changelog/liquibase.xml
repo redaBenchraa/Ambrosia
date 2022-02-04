@@ -41,7 +41,7 @@
             <column name="email" type="VARCHAR(254)">
                 <constraints nullable="false"/>
             </column>
-            <column defaultValueBoolean="true" name="is_available" type="BOOLEAN">
+            <column defaultValueBoolean="true" name="available" type="BOOLEAN">
                 <constraints nullable="false"/>
             </column>
             <column name="location" type="VARCHAR(255)"/>
@@ -286,7 +286,7 @@
             <column defaultValueComputed="now()" name="updated_at" type="TIMESTAMP WITHOUT TIME ZONE">
                 <constraints nullable="false"/>
             </column>
-            <column defaultValueBoolean="true" name="is_available" type="BOOLEAN">
+            <column defaultValueBoolean="true" name="available" type="BOOLEAN">
                 <constraints nullable="false"/>
             </column>
             <column name="number" type="INTEGER">
