@@ -57,20 +57,20 @@ class OrderTest {
     private lateinit var orderRepository: OrderRepository
 
     @Test
-    fun `Get new order`() {
+    fun `Create new order`() {
         mockMvc
             .perform(post(baseUrl).contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(AddOrderDto(items = mutableSetOf(ItemsToOrder(id = itemId))))))
             .andExpect(status().isOk)
             .andExpect(content().contentType(APPLICATION_JSON))
-            .andExpect(jsonPath("$.orderedItems[0].name", `is`("name")))
+            .andExpect(jsonPath("$.orderItems[0].name", `is`("name")))
         val result = orderRepository.findAll()
         assertNotNull(result)
         assertEquals(1, result.size)
     }
 
     @Test
-    fun `Get current session from a non existing business`() {
+    fun `Create a new order with a non existing business`() {
         val exception = EntityNotFoundException(Business::class.java, mutableMapOf("id" to 1))
         val expected = runtimeExceptionHandler.handleEntityNotFoundException(exception)
         mockMvc
@@ -82,7 +82,7 @@ class OrderTest {
     }
 
     @Test
-    fun `Get current session from a non existing table`() {
+    fun `Create a new order with a non existing table`() {
         val exception = EntityNotFoundException(Table::class.java, mutableMapOf("id" to 1))
         val expected = runtimeExceptionHandler.handleEntityNotFoundException(exception)
         mockMvc
@@ -94,7 +94,7 @@ class OrderTest {
     }
 
     @Test
-    fun `Get current session from a non existing session`() {
+    fun `Create a new order with a non existing session`() {
         val exception = EntityNotFoundException(Session::class.java, mutableMapOf("id" to 1))
         val expected = runtimeExceptionHandler.handleEntityNotFoundException(exception)
         mockMvc
@@ -106,7 +106,7 @@ class OrderTest {
     }
 
     @Test
-    fun `Get current session for a closed session`() {
+    fun `Create a new order with a closed session`() {
         val exception = SessionClosedException(mutableMapOf("id" to 1008))
         val expected = runtimeExceptionHandler.handleSessionClosedException(exception)
         mockMvc

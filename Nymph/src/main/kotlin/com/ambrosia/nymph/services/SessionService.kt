@@ -56,7 +56,7 @@ class SessionService(
             return false
         }
         val total = session.orders.stream()
-            .map { order -> order.orderedItems.stream().map { it.price }.toList().sum() }
+            .map { order -> order.orderItems.stream().map { it.price }.toList().sum() }
             .toList().sum()
         val paySum = session.bills.stream().map { it.amount }.toList().sum()
         return paySum >= total

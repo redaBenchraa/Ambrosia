@@ -18,18 +18,18 @@ import javax.validation.constraints.NotNull
 import javax.validation.constraints.Size
 
 @Entity
-@SQLDelete(sql = "UPDATE ordered_item SET deleted = true WHERE id=?")
+@SQLDelete(sql = "UPDATE ordered_Item SET deleted = true WHERE id=?")
 @Where(clause = "deleted = false")
 class OrderedItem(
-    @field:NotNull(message = "error.orderedItem.name.null")
-    @field:NotBlank(message = "error.orderedItem.name.blank")
-    @field:Size(max = NAME_MAX_SIZE, message = "error.orderedItem.name.size.invalid")
+    @field:NotNull(message = "error.orderItem.name.null")
+    @field:NotBlank(message = "error.orderItem.name.blank")
+    @field:Size(max = NAME_MAX_SIZE, message = "error.orderItem.name.size.invalid")
     @Column(nullable = false)
     var name: String,
     @Column(columnDefinition = "text")
     var description: String? = null,
-    @field:NotNull(message = "error.orderedItem.price.null")
-    @field:Min(0, message = "error.orderedItem.price.negative")
+    @field:NotNull(message = "error.orderItem.price.null")
+    @field:Min(0, message = "error.orderItem.price.negative")
     var price: Double,
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "order_id", nullable = false)

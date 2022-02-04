@@ -31,13 +31,13 @@ class OrderServiceTest {
     private val sessionRepository: SessionRepository = mockk(relaxed = true)
     private val itemRepository: ItemRepository = mockk(relaxed = true)
     private val orderRepository: OrderRepository = mockk(relaxed = true)
-    private val orderedItemRepository: OrderedItemRepository = mockk(relaxed = true)
+    private val orderItemRepository: OrderedItemRepository = mockk(relaxed = true)
     private val orderService = OrderService(businessRepository,
         tableRepository,
         sessionRepository,
         itemRepository,
         orderRepository,
-        orderedItemRepository)
+        orderItemRepository)
 
     @Test
     fun `Create new order`() {
@@ -46,13 +46,13 @@ class OrderServiceTest {
         every { sessionRepository.findById(any()) } returns Optional.of(getSession())
         every { itemRepository.findById(any()) } returns Optional.of(getItem())
         every { orderRepository.save(any()) } returns getOrder()
-        every { orderedItemRepository.saveAll(any<Iterable<OrderedItem>>()) } returns listOf(getOrderedItem())
+        every { orderItemRepository.saveAll(any<Iterable<OrderedItem>>()) } returns listOf(getOrderedItem())
         val addOrderDto = AddOrderDto(items = mutableSetOf(ItemsToOrder(id = 1, description = "description")))
         val result = orderService.createOrder(1, 1, 1, addOrderDto)
         assertNotNull(result)
-        assertEquals(1, result.orderedItems.size)
-        assertEquals("name", result.orderedItems.first().name)
-        assertEquals("description", result.orderedItems.first().description)
+        assertEquals(1, result.orderItems.size)
+        assertEquals("name", result.orderItems.first().name)
+        assertEquals("description", result.orderItems.first().description)
     }
 
     @Test

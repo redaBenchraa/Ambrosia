@@ -204,9 +204,9 @@
         </createTable>
     </changeSet>
     <changeSet author="Alexandre" id="1643668407413-9">
-        <createTable tableName="ordered_item">
+        <createTable tableName="ordered_Item">
             <column name="id" type="BIGINT">
-                <constraints nullable="false" primaryKey="true" primaryKeyName="ordered_item_pkey"/>
+                <constraints nullable="false" primaryKey="true" primaryKeyName="ordered_Item_pkey"/>
             </column>
             <column defaultValueComputed="now()" name="created_at" type="TIMESTAMP WITHOUT TIME ZONE">
                 <constraints nullable="false"/>
@@ -380,7 +380,7 @@
                                  referencedColumnNames="id" referencedTableName="employee" validate="true"/>
     </changeSet>
     <changeSet author="Alexandre" id="1643668407413-27">
-        <addForeignKeyConstraint baseColumnNames="item_id" baseTableName="ordered_item"
+        <addForeignKeyConstraint baseColumnNames="item_id" baseTableName="ordered_Item"
                                  constraintName="fkkbrrod7023f1asceduw3mxdx4" deferrable="false"
                                  initiallyDeferred="false" onDelete="CASCADE" onUpdate="NO ACTION"
                                  referencedColumnNames="id" referencedTableName="item" validate="true"/>
@@ -398,14 +398,14 @@
                                  referencedColumnNames="id" referencedTableName="menu" validate="true"/>
     </changeSet>
     <changeSet author="Alexandre" id="1643668407413-30">
-        <addForeignKeyConstraint baseColumnNames="order_id" baseTableName="ordered_item"
+        <addForeignKeyConstraint baseColumnNames="order_id" baseTableName="ordered_Item"
                                  constraintName="fk51dj38kcdahtjcx8h2be767sr" deferrable="false"
                                  initiallyDeferred="false" onDelete="CASCADE" onUpdate="NO ACTION"
                                  referencedColumnNames="id" referencedTableName="orders" validate="true"/>
     </changeSet>
     <changeSet author="Alexandre" id="1643668407413-31">
         <addUniqueConstraint columnNames="item_id" constraintName="uk_ig5yr45hrggk6ga98wk7p6iex"
-                             tableName="ordered_item"/>
+                             tableName="ordered_Item"/>
     </changeSet>
     <changeSet author="Alexandre" id="1643668407413-32">
         <addForeignKeyConstraint baseColumnNames="session_id" baseTableName="orders"

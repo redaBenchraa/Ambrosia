@@ -4,4 +4,4 @@ import com.ambrosia.nymph.dtos.OrderDto
 import com.ambrosia.nymph.entities.Order
 
 fun Order.toDto(): OrderDto =
-    OrderDto(id, orderedItems = orderedItems.stream().map { it.toDto() }.toList().toMutableSet())
+    OrderDto(id, orderItems = orderItems.stream().map { it.toDto() }.toList().toMutableSet())

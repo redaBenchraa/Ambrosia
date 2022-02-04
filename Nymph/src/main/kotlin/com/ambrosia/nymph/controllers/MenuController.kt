@@ -41,7 +41,7 @@ class MenuController(@Autowired private val menuService: MenuService) {
         @PathVariable("businessId") businessId: Long,
         @PathVariable("menuId") menuId: Long,
     ) {
-        return menuService.deleteMenu(businessId, menuId)
+        menuService.deleteMenu(businessId, menuId)
     }
 
     @PostMapping("{menuId}/items")
