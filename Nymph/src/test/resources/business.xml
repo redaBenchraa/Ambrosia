@@ -78,4 +78,15 @@
             available="true"
             business_id="1000"
     />
+    <orders
+            id="1011"
+            session_id="1009"
+    />
+    <order_item
+            id="1012"
+            order_id="1011"
+            item_id="1004"
+            name="name"
+            price="10.0"
+    />
 </dataset>

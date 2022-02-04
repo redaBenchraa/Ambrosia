@@ -1,9 +1,9 @@
 package com.ambrosia.nymph.mappers
 
 import com.ambrosia.nymph.dtos.OrderedItemDto
-import com.ambrosia.nymph.entities.OrderedItem
+import com.ambrosia.nymph.entities.OrderItem
 
-fun OrderedItem.toDto(): OrderedItemDto = OrderedItemDto(
-    id, name, description, price, item.toDto()
+fun OrderItem.toDto(): OrderedItemDto = OrderedItemDto(
+    id, name, description, price, item?.toDto()
 )
 

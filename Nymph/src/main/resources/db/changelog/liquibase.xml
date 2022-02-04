@@ -2,7 +2,7 @@
 <databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
-    <changeSet author="Alexandre" id="1643668407413-1">
+    <changeSet author="Alexandre" id="1644013037351-1">
         <createTable tableName="bill">
             <column name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="bill_pkey"/>
@@ -14,7 +14,7 @@
             <column defaultValueComputed="now()" name="updated_at" type="TIMESTAMP WITHOUT TIME ZONE">
                 <constraints nullable="false"/>
             </column>
-            <column name="amount" type="FLOAT8" defaultValue="0.0">
+            <column defaultValueNumeric="0.0" name="amount" type="FLOAT8">
                 <constraints nullable="false"/>
             </column>
             <column name="customer_id" type="BIGINT"/>
@@ -22,7 +22,7 @@
             <column name="session_id" type="BIGINT"/>
         </createTable>
     </changeSet>
-    <changeSet author="Alexandre" id="1643668407413-2">
+    <changeSet author="Alexandre" id="1644013037351-2">
         <createTable tableName="business">
             <column name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="business_pkey"/>
@@ -34,14 +34,14 @@
             <column defaultValueComputed="now()" name="updated_at" type="TIMESTAMP WITHOUT TIME ZONE">
                 <constraints nullable="false"/>
             </column>
+            <column defaultValueBoolean="true" name="available" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
             <column name="currency" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
             <column name="description" type="TEXT"/>
             <column name="email" type="VARCHAR(254)">
-                <constraints nullable="false"/>
-            </column>
-            <column defaultValueBoolean="true" name="available" type="BOOLEAN">
                 <constraints nullable="false"/>
             </column>
             <column name="location" type="VARCHAR(255)"/>
@@ -55,7 +55,7 @@
             <column name="slogan" type="VARCHAR(255)"/>
         </createTable>
     </changeSet>
-    <changeSet author="Alexandre" id="1643668407413-3">
+    <changeSet author="Alexandre" id="1644013037351-3">
         <createTable tableName="category">
             <column name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="category_pkey"/>
@@ -77,7 +77,7 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="Alexandre" id="1643668407413-4">
+    <changeSet author="Alexandre" id="1644013037351-4">
         <createTable tableName="customer">
             <column name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="customer_pkey"/>
@@ -95,7 +95,7 @@
             <column name="last_name" type="VARCHAR(255)"/>
         </createTable>
     </changeSet>
-    <changeSet author="Alexandre" id="1643668407413-5">
+    <changeSet author="Alexandre" id="1644013037351-5">
         <createTable tableName="employee">
             <column name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="employee_pkey"/>
@@ -124,7 +124,7 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="Alexandre" id="1643668407413-6">
+    <changeSet author="Alexandre" id="1644013037351-6">
         <createTable tableName="item">
             <column name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="item_pkey"/>
@@ -152,7 +152,7 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="Alexandre" id="1643668407413-7">
+    <changeSet author="Alexandre" id="1644013037351-7">
         <createTable tableName="menu">
             <column name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="menu_pkey"/>
@@ -177,7 +177,7 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="Alexandre" id="1643668407413-8">
+    <changeSet author="Alexandre" id="1644013037351-8">
         <createTable tableName="menu_item">
             <column name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="menu_item_pkey"/>
@@ -203,10 +203,10 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="Alexandre" id="1643668407413-9">
-        <createTable tableName="ordered_Item">
+    <changeSet author="Alexandre" id="1644013037351-9">
+        <createTable tableName="order_item">
             <column name="id" type="BIGINT">
-                <constraints nullable="false" primaryKey="true" primaryKeyName="ordered_Item_pkey"/>
+                <constraints nullable="false" primaryKey="true" primaryKeyName="order_item_pkey"/>
             </column>
             <column defaultValueComputed="now()" name="created_at" type="TIMESTAMP WITHOUT TIME ZONE">
                 <constraints nullable="false"/>
@@ -222,15 +222,13 @@
             <column name="price" type="FLOAT8">
                 <constraints nullable="false"/>
             </column>
-            <column name="item_id" type="BIGINT">
-                <constraints nullable="false"/>
-            </column>
+            <column name="item_id" type="BIGINT"/>
             <column name="order_id" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="Alexandre" id="1643668407413-10">
+    <changeSet author="Alexandre" id="1644013037351-10">
         <createTable tableName="orders">
             <column name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="orders_pkey"/>
@@ -248,7 +246,7 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="Alexandre" id="1643668407413-11">
+    <changeSet author="Alexandre" id="1644013037351-11">
         <createTable tableName="session">
             <column name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="session_pkey"/>
@@ -274,7 +272,7 @@
             <column name="table_id" type="BIGINT"/>
         </createTable>
     </changeSet>
-    <changeSet author="Alexandre" id="1643668407413-12">
+    <changeSet author="Alexandre" id="1644013037351-12">
         <createTable tableName="tables">
             <column name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="tables_pkey"/>
@@ -297,129 +295,125 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="Alexandre" id="1643668407413-13">
+    <changeSet author="Alexandre" id="1644013037351-13">
         <addForeignKeyConstraint baseColumnNames="customer_id" baseTableName="bill"
                                  constraintName="fkcdveik90g4pvk7m249scu73pg" deferrable="false"
                                  initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
                                  referencedColumnNames="id" referencedTableName="customer" validate="true"/>
     </changeSet>
-    <changeSet author="Alexandre" id="1643668407413-14">
+    <changeSet author="Alexandre" id="1644013037351-14">
         <addForeignKeyConstraint baseColumnNames="employee_id" baseTableName="bill"
                                  constraintName="fkle28mnhpamru2e2o22d5u78bu" deferrable="false"
                                  initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
                                  referencedColumnNames="id" referencedTableName="employee" validate="true"/>
     </changeSet>
-    <changeSet author="Alexandre" id="1643668407413-15">
+    <changeSet author="Alexandre" id="1644013037351-15">
         <addForeignKeyConstraint baseColumnNames="session_id" baseTableName="bill"
                                  constraintName="fknpdke1pihy8cr0lddxntf4hl2" deferrable="false"
                                  initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
                                  referencedColumnNames="id" referencedTableName="session" validate="true"/>
     </changeSet>
-    <changeSet author="Alexandre" id="1643668407413-16">
+    <changeSet author="Alexandre" id="1644013037351-16">
         <addForeignKeyConstraint baseColumnNames="business_id" baseTableName="item"
                                  constraintName="fk344xwdic1t2vqof9eue0dytk" deferrable="false"
                                  initiallyDeferred="false" onDelete="CASCADE" onUpdate="NO ACTION"
                                  referencedColumnNames="id" referencedTableName="business" validate="true"/>
     </changeSet>
-    <changeSet author="Alexandre" id="1643668407413-17">
+    <changeSet author="Alexandre" id="1644013037351-17">
         <addForeignKeyConstraint baseColumnNames="business_id" baseTableName="category"
                                  constraintName="fk71sn7wx2leomxa1d3caf9ldi" deferrable="false"
                                  initiallyDeferred="false" onDelete="CASCADE" onUpdate="NO ACTION"
                                  referencedColumnNames="id" referencedTableName="business" validate="true"/>
     </changeSet>
-    <changeSet author="Alexandre" id="1643668407413-18">
+    <changeSet author="Alexandre" id="1644013037351-18">
         <addForeignKeyConstraint baseColumnNames="business_id" baseTableName="session"
                                  constraintName="fk9ccgssjqgalh3j5hef0wo80pp" deferrable="false"
                                  initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
                                  referencedColumnNames="id" referencedTableName="business" validate="true"/>
     </changeSet>
-    <changeSet author="Alexandre" id="1643668407413-19">
+    <changeSet author="Alexandre" id="1644013037351-19">
         <addForeignKeyConstraint baseColumnNames="business_id" baseTableName="employee"
                                  constraintName="fkby2mxoe9cvixkcsckxqom6wft" deferrable="false"
                                  initiallyDeferred="false" onDelete="CASCADE" onUpdate="NO ACTION"
                                  referencedColumnNames="id" referencedTableName="business" validate="true"/>
     </changeSet>
-    <changeSet author="Alexandre" id="1643668407413-20">
+    <changeSet author="Alexandre" id="1644013037351-20">
         <addForeignKeyConstraint baseColumnNames="business_id" baseTableName="tables"
                                  constraintName="fki3ycn9q584hvcxt5pxi18ay8j" deferrable="false"
                                  initiallyDeferred="false" onDelete="CASCADE" onUpdate="NO ACTION"
                                  referencedColumnNames="id" referencedTableName="business" validate="true"/>
     </changeSet>
-    <changeSet author="Alexandre" id="1643668407413-21">
+    <changeSet author="Alexandre" id="1644013037351-21">
         <addForeignKeyConstraint baseColumnNames="business_id" baseTableName="menu"
                                  constraintName="fkni8a5ckufsaltw6t8bhpexwnk" deferrable="false"
                                  initiallyDeferred="false" onDelete="CASCADE" onUpdate="NO ACTION"
                                  referencedColumnNames="id" referencedTableName="business" validate="true"/>
     </changeSet>
-    <changeSet author="Alexandre" id="1643668407413-22">
+    <changeSet author="Alexandre" id="1644013037351-22">
         <addForeignKeyConstraint baseColumnNames="category_id" baseTableName="menu_item"
                                  constraintName="fkfmgn0386uxf8sqtilegkufxk0" deferrable="false"
                                  initiallyDeferred="false" onDelete="CASCADE" onUpdate="NO ACTION"
                                  referencedColumnNames="id" referencedTableName="category" validate="true"/>
     </changeSet>
-    <changeSet author="Alexandre" id="1643668407413-23">
+    <changeSet author="Alexandre" id="1644013037351-23">
         <createIndex indexName="idxdwk6cx0afu8bs9o4t536v1j5v" tableName="customer">
             <column name="email"/>
         </createIndex>
     </changeSet>
-    <changeSet author="Alexandre" id="1643668407413-24">
+    <changeSet author="Alexandre" id="1644013037351-24">
         <addForeignKeyConstraint baseColumnNames="customer_id" baseTableName="orders"
                                  constraintName="fk624gtjin3po807j3vix093tlf" deferrable="false"
                                  initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
                                  referencedColumnNames="id" referencedTableName="customer" validate="true"/>
     </changeSet>
-    <changeSet author="Alexandre" id="1643668407413-25">
+    <changeSet author="Alexandre" id="1644013037351-25">
         <createIndex indexName="idxfopic1oh5oln2khj8eat6ino0" tableName="employee">
             <column name="email"/>
         </createIndex>
     </changeSet>
-    <changeSet author="Alexandre" id="1643668407413-26">
+    <changeSet author="Alexandre" id="1644013037351-26">
         <addForeignKeyConstraint baseColumnNames="employee_id" baseTableName="session"
                                  constraintName="fkqy0tb5v64cqm00ve1a59c8efr" deferrable="false"
                                  initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
                                  referencedColumnNames="id" referencedTableName="employee" validate="true"/>
     </changeSet>
-    <changeSet author="Alexandre" id="1643668407413-27">
-        <addForeignKeyConstraint baseColumnNames="item_id" baseTableName="ordered_Item"
-                                 constraintName="fkkbrrod7023f1asceduw3mxdx4" deferrable="false"
-                                 initiallyDeferred="false" onDelete="CASCADE" onUpdate="NO ACTION"
+    <changeSet author="Alexandre" id="1644013037351-27">
+        <addForeignKeyConstraint baseColumnNames="item_id" baseTableName="order_item"
+                                 constraintName="fkija6hjjiit8dprnmvtvgdp6ru" deferrable="false"
+                                 initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
                                  referencedColumnNames="id" referencedTableName="item" validate="true"/>
     </changeSet>
-    <changeSet author="Alexandre" id="1643668407413-28">
+    <changeSet author="Alexandre" id="1644013037351-28">
         <addForeignKeyConstraint baseColumnNames="item_id" baseTableName="menu_item"
                                  constraintName="fkp1cweu84wcebrd0xbjnkvob5f" deferrable="false"
                                  initiallyDeferred="false" onDelete="CASCADE" onUpdate="NO ACTION"
                                  referencedColumnNames="id" referencedTableName="item" validate="true"/>
     </changeSet>
-    <changeSet author="Alexandre" id="1643668407413-29">
+    <changeSet author="Alexandre" id="1644013037351-29">
         <addForeignKeyConstraint baseColumnNames="menu_id" baseTableName="menu_item"
                                  constraintName="fkcdkmv42yhn6udah6ug8rsymfl" deferrable="false"
                                  initiallyDeferred="false" onDelete="CASCADE" onUpdate="NO ACTION"
                                  referencedColumnNames="id" referencedTableName="menu" validate="true"/>
     </changeSet>
-    <changeSet author="Alexandre" id="1643668407413-30">
-        <addForeignKeyConstraint baseColumnNames="order_id" baseTableName="ordered_Item"
-                                 constraintName="fk51dj38kcdahtjcx8h2be767sr" deferrable="false"
+    <changeSet author="Alexandre" id="1644013037351-30">
+        <addForeignKeyConstraint baseColumnNames="order_id" baseTableName="order_item"
+                                 constraintName="fkt4dc2r9nbvbujrljv3e23iibt" deferrable="false"
                                  initiallyDeferred="false" onDelete="CASCADE" onUpdate="NO ACTION"
                                  referencedColumnNames="id" referencedTableName="orders" validate="true"/>
     </changeSet>
-    <changeSet author="Alexandre" id="1643668407413-31">
-        <addUniqueConstraint columnNames="item_id" constraintName="uk_ig5yr45hrggk6ga98wk7p6iex"
-                             tableName="ordered_Item"/>
-    </changeSet>
-    <changeSet author="Alexandre" id="1643668407413-32">
+    <changeSet author="Alexandre" id="1644013037351-31">
         <addForeignKeyConstraint baseColumnNames="session_id" baseTableName="orders"
                                  constraintName="fkmglefk4r3jewx4sc3f23gt47p" deferrable="false"
                                  initiallyDeferred="false" onDelete="CASCADE" onUpdate="NO ACTION"
                                  referencedColumnNames="id" referencedTableName="session" validate="true"/>
     </changeSet>
-    <changeSet author="Alexandre" id="1643668407413-33">
+    <changeSet author="Alexandre" id="1644013037351-32">
         <addForeignKeyConstraint baseColumnNames="table_id" baseTableName="session"
                                  constraintName="fk1i1ggruvk5n8crddrswq9hsus" deferrable="false"
                                  initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
                                  referencedColumnNames="id" referencedTableName="tables" validate="true"/>
     </changeSet>
-    <changeSet author="Alexandre" id="1643668407413-34">
+    <changeSet author="Alexandre" id="1644013037351-33">
         <createSequence cacheSize="1" cycle="false" dataType="bigint" incrementBy="1" maxValue="9223372036854775807"
                         minValue="1" sequenceName="hibernate_sequence" startValue="1"/>
     </changeSet>

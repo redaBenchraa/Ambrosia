@@ -5,5 +5,5 @@ class OrderedItemDto(
     var name: String,
     var description: String? = null,
     var price: Double,
-    var item: ItemDto,
+    var item: ItemDto?,
 )

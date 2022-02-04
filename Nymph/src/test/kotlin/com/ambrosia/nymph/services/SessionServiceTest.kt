@@ -5,7 +5,7 @@ import com.ambrosia.nymph.entities.Bill
 import com.ambrosia.nymph.entities.Business
 import com.ambrosia.nymph.entities.Item
 import com.ambrosia.nymph.entities.Order
-import com.ambrosia.nymph.entities.OrderedItem
+import com.ambrosia.nymph.entities.OrderItem
 import com.ambrosia.nymph.entities.Session
 import com.ambrosia.nymph.entities.Table
 import com.ambrosia.nymph.exceptions.EntityNotFoundException
@@ -115,7 +115,7 @@ class SessionServiceTest {
     fun `Check if session is paid`() {
         val item = Item(name = "name", price = 10.0, business = getBusiness())
         val order = Order(session = Session(), orderItems = mutableSetOf())
-        val orderItem = OrderedItem(name = "name", price = 10.0, order = order, item = item)
+        val orderItem = OrderItem(name = "name", price = 10.0, order = order, item = item)
         order.orderItems.add(orderItem)
         val session = Session(paid = false, orders = mutableSetOf(order), bills = mutableSetOf(Bill(amount = 10.0)))
         assertTrue(sessionService.checkIfSessionIsPaid(session))
@@ -125,7 +125,7 @@ class SessionServiceTest {
     fun `Check if session is paid when sums are not equal`() {
         val item = Item(name = "name", price = 10.0, business = getBusiness())
         val order = Order(session = Session(), orderItems = mutableSetOf())
-        val orderItem = OrderedItem(name = "name", price = 10.0, order = order, item = item)
+        val orderItem = OrderItem(name = "name", price = 10.0, order = order, item = item)
         order.orderItems.add(orderItem)
         val session = Session(paid = false,
             orders = mutableSetOf(order),

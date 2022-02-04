@@ -20,6 +20,7 @@ import org.springframework.http.HttpStatus.CONFLICT
 import org.springframework.http.HttpStatus.NOT_FOUND
 import org.springframework.http.MediaType.APPLICATION_JSON
 import org.springframework.test.web.servlet.MockMvc
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
@@ -43,7 +44,7 @@ class OrderControllerTest {
     private lateinit var orderService: OrderService
 
     @Test
-    fun `Get new order`() {
+    fun `Create a new order`() {
         val order = getOrder().toDto()
         every { orderService.createOrder(any(), any(), any(), any()) } returns order
         mockMvc
@@ -55,7 +56,7 @@ class OrderControllerTest {
     }
 
     @Test
-    fun `Get current session from a non existing business`() {
+    fun `Create a new order for a non existing business`() {
         val exception = EntityNotFoundException(Business::class.java, mutableMapOf("id" to 1))
         val expected = runtimeExceptionHandler.handleEntityNotFoundException(exception)
         every { orderService.createOrder(any(), any(), any(), any()) } throws exception
@@ -68,7 +69,7 @@ class OrderControllerTest {
     }
 
     @Test
-    fun `Get current session for a closed session`() {
+    fun `Create a new order with a closed session`() {
         val exception = SessionClosedException(mutableMapOf("id" to 1))
         val expected = runtimeExceptionHandler.handleSessionClosedException(exception)
         every { orderService.createOrder(any(), any(), any(), any()) } throws exception
@@ -80,6 +81,76 @@ class OrderControllerTest {
             .andExpect(content().json(objectMapper.writeValueAsString(expected.body)))
     }
 
+    @Test
+    fun `Add items to an order`() {
+        val order = getOrder().toDto()
+        every { orderService.addItemsToOrder(any(), any(), any(), any(), any()) } returns order
+        mockMvc
+            .perform(post("$baseUrl/1").contentType(APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(AddOrderDto())))
+            .andExpect(status().isOk)
+            .andExpect(content().contentType(APPLICATION_JSON))
+            .andExpect(content().json(objectMapper.writeValueAsString(order)))
+    }
+
+    @Test
+    fun `Add items to an order for a non existing business`() {
+        val exception = EntityNotFoundException(Business::class.java, mutableMapOf("id" to 1))
+        val expected = runtimeExceptionHandler.handleEntityNotFoundException(exception)
+        every { orderService.addItemsToOrder(any(), any(), any(), any(), any()) } throws exception
+        mockMvc
+            .perform(post("$baseUrl/1").contentType(APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(AddOrderDto())))
+            .andExpect(status().`is`(NOT_FOUND.value()))
+            .andExpect(content().contentType(APPLICATION_JSON))
+            .andExpect(content().json(objectMapper.writeValueAsString(expected.body)))
+    }
+
+    @Test
+    fun `Add items to an order with a closed session`() {
+        val exception = SessionClosedException(mutableMapOf("id" to 1))
+        val expected = runtimeExceptionHandler.handleSessionClosedException(exception)
+        every { orderService.addItemsToOrder(any(), any(), any(), any(), any()) } throws exception
+        mockMvc
+            .perform(post("$baseUrl/1").contentType(APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(AddOrderDto())))
+            .andExpect(status().`is`(CONFLICT.value()))
+            .andExpect(content().contentType(APPLICATION_JSON))
+            .andExpect(content().json(objectMapper.writeValueAsString(expected.body)))
+    }
+
+
+    @Test
+    fun `Delete item from an order`() {
+        every { orderService.removeItemFromOrder(any(), any(), any(), any(), any()) } returns Unit
+        mockMvc
+            .perform(delete("$baseUrl/1/orderItems/1"))
+            .andExpect(status().isOk)
+    }
+
+    @Test
+    fun `Delete item from an order with a non existing business`() {
+        val exception = EntityNotFoundException(Business::class.java, mutableMapOf("id" to 1))
+        val expected = runtimeExceptionHandler.handleEntityNotFoundException(exception)
+        every { orderService.removeItemFromOrder(any(), any(), any(), any(), any()) } throws exception
+        mockMvc
+            .perform(delete("$baseUrl/1/orderItems/1"))
+            .andExpect(status().`is`(NOT_FOUND.value()))
+            .andExpect(content().contentType(APPLICATION_JSON))
+            .andExpect(content().json(objectMapper.writeValueAsString(expected.body)))
+    }
+
+    @Test
+    fun `Delete item from an order with a closed session`() {
+        val exception = SessionClosedException(mutableMapOf("id" to 1))
+        val expected = runtimeExceptionHandler.handleSessionClosedException(exception)
+        every { orderService.removeItemFromOrder(any(), any(), any(), any(), any()) } throws exception
+        mockMvc
+            .perform(delete("$baseUrl/1/orderItems/1"))
+            .andExpect(status().`is`(CONFLICT.value()))
+            .andExpect(content().contentType(APPLICATION_JSON))
+            .andExpect(content().json(objectMapper.writeValueAsString(expected.body)))
+    }
 
     private fun getOrder(): Order = Order(session = getSession())
 

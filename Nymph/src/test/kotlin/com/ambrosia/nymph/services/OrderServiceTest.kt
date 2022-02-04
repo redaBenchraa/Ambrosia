@@ -5,14 +5,14 @@ import com.ambrosia.nymph.dtos.ItemsToOrder
 import com.ambrosia.nymph.entities.Business
 import com.ambrosia.nymph.entities.Item
 import com.ambrosia.nymph.entities.Order
-import com.ambrosia.nymph.entities.OrderedItem
+import com.ambrosia.nymph.entities.OrderItem
 import com.ambrosia.nymph.entities.Session
 import com.ambrosia.nymph.exceptions.EntityNotFoundException
 import com.ambrosia.nymph.exceptions.SessionClosedException
 import com.ambrosia.nymph.repositories.BusinessRepository
 import com.ambrosia.nymph.repositories.ItemRepository
+import com.ambrosia.nymph.repositories.OrderItemRepository
 import com.ambrosia.nymph.repositories.OrderRepository
-import com.ambrosia.nymph.repositories.OrderedItemRepository
 import com.ambrosia.nymph.repositories.SessionRepository
 import com.ambrosia.nymph.repositories.TableRepository
 import io.mockk.every
@@ -21,6 +21,7 @@ import io.mockk.verify
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
 import java.util.Optional
 
@@ -31,7 +32,7 @@ class OrderServiceTest {
     private val sessionRepository: SessionRepository = mockk(relaxed = true)
     private val itemRepository: ItemRepository = mockk(relaxed = true)
     private val orderRepository: OrderRepository = mockk(relaxed = true)
-    private val orderItemRepository: OrderedItemRepository = mockk(relaxed = true)
+    private val orderItemRepository: OrderItemRepository = mockk(relaxed = true)
     private val orderService = OrderService(businessRepository,
         tableRepository,
         sessionRepository,
@@ -44,9 +45,9 @@ class OrderServiceTest {
         every { businessRepository.existsById(any()) } returns true
         every { tableRepository.existsById(any()) } returns true
         every { sessionRepository.findById(any()) } returns Optional.of(getSession())
-        every { itemRepository.findById(any()) } returns Optional.of(getItem())
         every { orderRepository.save(any()) } returns getOrder()
-        every { orderItemRepository.saveAll(any<Iterable<OrderedItem>>()) } returns listOf(getOrderedItem())
+        every { itemRepository.findById(any()) } returns Optional.of(getItem())
+        every { orderItemRepository.saveAll(any<Iterable<OrderItem>>()) } returns listOf(getOrderedItem())
         val addOrderDto = AddOrderDto(items = mutableSetOf(ItemsToOrder(id = 1, description = "description")))
         val result = orderService.createOrder(1, 1, 1, addOrderDto)
         assertNotNull(result)
@@ -97,10 +98,149 @@ class OrderServiceTest {
         assertThrows<EntityNotFoundException> { orderService.createOrder(1, 1, 1, addOrderDto) }
     }
 
+    @Test
+    fun `Remove order item from order`() {
+        every { businessRepository.existsById(any()) } returns true
+        every { tableRepository.existsById(any()) } returns true
+        every { sessionRepository.findById(any()) } returns Optional.of(getSession())
+        every { orderRepository.existsById(any()) } returns true
+        every { orderItemRepository.existsById(any()) } returns true
+        every { orderItemRepository.deleteById(any()) } returns Unit
+        assertDoesNotThrow { orderService.removeItemFromOrder(1, 1, 1, 1, 1) }
+        verify { orderItemRepository.deleteById(any()) }
+    }
+
+    @Test
+    fun `Remove order item from order from a non existing business`() {
+        every { businessRepository.existsById(any()) } returns false
+        assertThrows<EntityNotFoundException> { orderService.removeItemFromOrder(1, 1, 1, 1, 1) }
+        verify(exactly = 0) { orderItemRepository.deleteById(any()) }
+    }
+
+    @Test
+    fun `Remove order item from order from a non existing table `() {
+        every { businessRepository.existsById(any()) } returns true
+        every { tableRepository.existsById(any()) } returns false
+        assertThrows<EntityNotFoundException> { orderService.removeItemFromOrder(1, 1, 1, 1, 1) }
+        verify(exactly = 0) { orderItemRepository.deleteById(any()) }
+    }
+
+    @Test
+    fun `Remove order item from order from a non existing session`() {
+        every { businessRepository.existsById(any()) } returns true
+        every { tableRepository.existsById(any()) } returns true
+        every { sessionRepository.findById(any()) } returns Optional.empty()
+        assertThrows<EntityNotFoundException> { orderService.removeItemFromOrder(1, 1, 1, 1, 1) }
+        verify(exactly = 0) { orderItemRepository.deleteById(any()) }
+    }
+
+    @Test
+    fun `Remove order item from order from a closed session`() {
+        every { businessRepository.existsById(any()) } returns true
+        every { tableRepository.existsById(any()) } returns true
+        every { sessionRepository.findById(any()) } returns Optional.of(getSession().apply { closed = true })
+        assertThrows<SessionClosedException> { orderService.removeItemFromOrder(1, 1, 1, 1, 1) }
+        verify(exactly = 0) { orderItemRepository.deleteById(any()) }
+    }
+
+    @Test
+    fun `Remove order item from non existing order`() {
+        every { businessRepository.existsById(any()) } returns true
+        every { tableRepository.existsById(any()) } returns true
+        every { sessionRepository.findById(any()) } returns Optional.of(getSession())
+        every { orderRepository.existsById(any()) } returns false
+        assertThrows<EntityNotFoundException> { orderService.removeItemFromOrder(1, 1, 1, 1, 1) }
+        verify(exactly = 0) { orderItemRepository.deleteById(any()) }
+    }
+
+    @Test
+    fun `Remove a non existing order item`() {
+        every { businessRepository.existsById(any()) } returns true
+        every { tableRepository.existsById(any()) } returns true
+        every { sessionRepository.findById(any()) } returns Optional.of(getSession())
+        every { orderRepository.existsById(any()) } returns true
+        every { orderItemRepository.existsById(any()) } returns false
+        assertThrows<EntityNotFoundException> { orderService.removeItemFromOrder(1, 1, 1, 1, 1) }
+        verify(exactly = 0) { orderItemRepository.deleteById(any()) }
+    }
+
+    @Test
+    fun `Add items to order`() {
+        every { businessRepository.existsById(any()) } returns true
+        every { tableRepository.existsById(any()) } returns true
+        every { sessionRepository.findById(any()) } returns Optional.of(getSession())
+        every { itemRepository.findById(any()) } returns Optional.of(getItem())
+        every { orderRepository.findById(any()) } returns Optional.of(getOrder())
+        every { orderItemRepository.saveAll(any<Iterable<OrderItem>>()) } returns listOf(getOrderedItem())
+        val addOrderDto = AddOrderDto(items = mutableSetOf(ItemsToOrder(id = 1, description = "description")))
+        val result = orderService.addItemsToOrder(1, 1, 1, 1, addOrderDto)
+        assertNotNull(result)
+        assertEquals(1, result.orderItems.size)
+        assertEquals("name", result.orderItems.first().name)
+        assertEquals("description", result.orderItems.first().description)
+        verify { orderItemRepository.saveAll(any<Iterable<OrderItem>>()) }
+    }
+
+    @Test
+    fun `Add items to order of a non existing business`() {
+        every { businessRepository.existsById(any()) } returns false
+        assertThrows<EntityNotFoundException> { orderService.addItemsToOrder(1, 1, 1, 1, AddOrderDto()) }
+        verify(exactly = 0) { orderItemRepository.saveAll(any<Iterable<OrderItem>>()) }
+    }
+
+    @Test
+    fun `Add items to order of a non existing table`() {
+        every { businessRepository.existsById(any()) } returns true
+        every { tableRepository.existsById(any()) } returns false
+        assertThrows<EntityNotFoundException> { orderService.addItemsToOrder(1, 1, 1, 1, AddOrderDto()) }
+        verify(exactly = 0) { orderItemRepository.saveAll(any<Iterable<OrderItem>>()) }
+    }
+
+    @Test
+    fun `Add items to order of a non existing session`() {
+        every { businessRepository.existsById(any()) } returns true
+        every { tableRepository.existsById(any()) } returns true
+        every { sessionRepository.findById(any()) } returns Optional.empty()
+        assertThrows<EntityNotFoundException> { orderService.addItemsToOrder(1, 1, 1, 1, AddOrderDto()) }
+        verify(exactly = 0) { orderItemRepository.saveAll(any<Iterable<OrderItem>>()) }
+    }
+
+    @Test
+    fun `Add items to order of a closed session`() {
+        every { businessRepository.existsById(any()) } returns true
+        every { tableRepository.existsById(any()) } returns true
+        every { sessionRepository.findById(any()) } returns Optional.of(getSession().apply { closed = true })
+        assertThrows<SessionClosedException> { orderService.addItemsToOrder(1, 1, 1, 1, AddOrderDto()) }
+        verify(exactly = 0) { orderItemRepository.saveAll(any<Iterable<OrderItem>>()) }
+    }
+
+
+    @Test
+    fun `Add items to order of a non existing order`() {
+        every { businessRepository.existsById(any()) } returns true
+        every { tableRepository.existsById(any()) } returns true
+        every { sessionRepository.findById(any()) } returns Optional.of(getSession())
+        every { orderRepository.findById(any()) } returns Optional.empty()
+        assertThrows<EntityNotFoundException> { orderService.addItemsToOrder(1, 1, 1, 1, AddOrderDto()) }
+        verify(exactly = 0) { orderItemRepository.saveAll(any<Iterable<OrderItem>>()) }
+    }
+
+    @Test
+    fun `Add a non existing item to order`() {
+        every { businessRepository.existsById(any()) } returns true
+        every { tableRepository.existsById(any()) } returns true
+        every { sessionRepository.findById(any()) } returns Optional.of(getSession())
+        every { orderRepository.findById(any()) } returns Optional.of(getOrder())
+        every { itemRepository.findById(any()) } returns Optional.empty()
+        val addOrderDto = AddOrderDto(items = mutableSetOf(ItemsToOrder(id = 1, description = "description")))
+        assertThrows<EntityNotFoundException> { orderService.addItemsToOrder(1, 1, 1, 1, addOrderDto) }
+        verify(exactly = 0) { orderItemRepository.saveAll(any<Iterable<OrderItem>>()) }
+    }
+
     private fun getOrder(): Order = Order(session = getSession())
 
-    private fun getOrderedItem(): OrderedItem =
-        OrderedItem(order = getOrder(), description = "description", name = "name", price = 10.0, item = getItem())
+    private fun getOrderedItem(): OrderItem =
+        OrderItem(order = getOrder(), description = "description", name = "name", price = 10.0, item = getItem())
 
     private fun getSession(): Session =
         Session(approved = true,

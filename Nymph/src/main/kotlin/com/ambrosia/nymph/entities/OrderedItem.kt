@@ -18,9 +18,9 @@ import javax.validation.constraints.NotNull
 import javax.validation.constraints.Size
 
 @Entity
-@SQLDelete(sql = "UPDATE ordered_Item SET deleted = true WHERE id=?")
+@SQLDelete(sql = "UPDATE order_item SET deleted = true WHERE id=?")
 @Where(clause = "deleted = false")
-class OrderedItem(
+class OrderItem(
     @field:NotNull(message = "error.orderItem.name.null")
     @field:NotBlank(message = "error.orderItem.name.blank")
     @field:Size(max = NAME_MAX_SIZE, message = "error.orderItem.name.size.invalid")
@@ -36,9 +36,9 @@ class OrderedItem(
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonManagedReference
     var order: Order,
-    @OneToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "item_id", nullable = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
+    @OneToOne(fetch = FetchType.LAZY, optional = true)
+    @JoinColumn(name = "item_id", nullable = true)
+    @OnDelete(action = OnDeleteAction.NO_ACTION)
     @JsonManagedReference
-    var item: Item,
+    var item: Item?,
 ) : BaseEntity()

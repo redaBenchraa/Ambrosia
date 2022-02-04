@@ -33,8 +33,8 @@ class Order(
         cascade = [CascadeType.ALL],
         fetch = FetchType.LAZY,
         mappedBy = "order",
-        targetEntity = OrderedItem::class
+        targetEntity = OrderItem::class
     )
     @JsonBackReference
-    var orderItems: MutableSet<OrderedItem> = HashSet(),
+    var orderItems: MutableSet<OrderItem> = HashSet(),
 ) : BaseEntity()

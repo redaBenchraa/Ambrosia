@@ -4,6 +4,7 @@ import com.ambrosia.nymph.dtos.AddOrderDto
 import com.ambrosia.nymph.dtos.OrderDto
 import com.ambrosia.nymph.services.OrderService
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -20,7 +21,23 @@ class OrderController(@Autowired private val orderService: OrderService) {
         @PathVariable("tableId") tableId: Long,
         @PathVariable("sessionId") sessionId: Long,
         @Valid @RequestBody addOrderDto: AddOrderDto,
-    ): OrderDto {
-        return orderService.createOrder(businessId, tableId, sessionId, addOrderDto)
-    }
+    ): OrderDto = orderService.createOrder(businessId, tableId, sessionId, addOrderDto)
+
+    @PostMapping("{orderId}")
+    fun addItemsToOrder(
+        @PathVariable("businessId") businessId: Long,
+        @PathVariable("tableId") tableId: Long,
+        @PathVariable("sessionId") sessionId: Long,
+        @PathVariable("orderId") orderId: Long,
+        @Valid @RequestBody addOrderDto: AddOrderDto,
+    ): OrderDto = orderService.addItemsToOrder(businessId, tableId, sessionId, orderId, addOrderDto)
+
+    @DeleteMapping("{orderId}/orderItems/{orderItemId}")
+    fun removeItemFromOrder(
+        @PathVariable("businessId") businessId: Long,
+        @PathVariable("tableId") tableId: Long,
+        @PathVariable("sessionId") sessionId: Long,
+        @PathVariable("orderId") orderId: Long,
+        @PathVariable("orderItemId") orderItemId: Long,
+    ) = orderService.removeItemFromOrder(businessId, tableId, sessionId, orderId, orderItemId)
 }
