@@ -20,6 +20,7 @@ import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
@@ -33,12 +34,14 @@ class OrderServiceTest {
     private val itemRepository: ItemRepository = mockk(relaxed = true)
     private val orderRepository: OrderRepository = mockk(relaxed = true)
     private val orderItemRepository: OrderItemRepository = mockk(relaxed = true)
-    private val orderService = OrderService(businessRepository,
+    private val orderService = OrderService(
+        businessRepository,
         tableRepository,
         sessionRepository,
         itemRepository,
         orderRepository,
-        orderItemRepository)
+        orderItemRepository
+    )
 
     @Test
     fun `Create new order`() {
@@ -237,24 +240,84 @@ class OrderServiceTest {
         verify(exactly = 0) { orderItemRepository.saveAll(any<Iterable<OrderItem>>()) }
     }
 
+    @Test
+    fun `Confirm order`() {
+        every { businessRepository.existsById(any()) } returns true
+        every { tableRepository.existsById(any()) } returns true
+        every { sessionRepository.findById(any()) } returns Optional.of(getSession())
+        every { itemRepository.findById(any()) } returns Optional.of(getItem())
+        every { orderRepository.findById(any()) } returns Optional.of(getOrder())
+        every { orderRepository.save(any()) } returns getOrder().apply { confirmed = true }
+        val result = orderService.confirmOrder(1, 1, 1, 1)
+        assertTrue(result.confirmed)
+        verify { orderRepository.save(any()) }
+    }
+
+    @Test
+    fun `Confirm order of a non existing business`() {
+        every { businessRepository.existsById(any()) } returns false
+        assertThrows<EntityNotFoundException> { orderService.confirmOrder(1, 1, 1, 1) }
+        verify(exactly = 0) { orderRepository.save(any()) }
+    }
+
+    @Test
+    fun `Confirm order of a non existing table`() {
+        every { businessRepository.existsById(any()) } returns true
+        every { tableRepository.existsById(any()) } returns false
+        assertThrows<EntityNotFoundException> { orderService.confirmOrder(1, 1, 1, 1) }
+        verify(exactly = 0) { orderRepository.save(any()) }
+    }
+
+    @Test
+    fun `Confirm order of a non existing session`() {
+        every { businessRepository.existsById(any()) } returns true
+        every { tableRepository.existsById(any()) } returns true
+        every { sessionRepository.findById(any()) } returns Optional.empty()
+        assertThrows<EntityNotFoundException> { orderService.confirmOrder(1, 1, 1, 1) }
+        verify(exactly = 0) { orderRepository.save(any()) }
+    }
+
+    @Test
+    fun `Confirm order of a closed session`() {
+        every { businessRepository.existsById(any()) } returns true
+        every { tableRepository.existsById(any()) } returns true
+        every { sessionRepository.findById(any()) } returns Optional.of(getSession().apply { closed = true })
+        assertThrows<SessionClosedException> { orderService.confirmOrder(1, 1, 1, 1) }
+        verify(exactly = 0) { orderRepository.save(any()) }
+    }
+
+    @Test
+    fun `Confirm order of a non existing order`() {
+        every { businessRepository.existsById(any()) } returns true
+        every { tableRepository.existsById(any()) } returns true
+        every { sessionRepository.findById(any()) } returns Optional.of(getSession())
+        every { orderRepository.findById(any()) } returns Optional.empty()
+        assertThrows<EntityNotFoundException> { orderService.confirmOrder(1, 1, 1, 1) }
+        verify(exactly = 0) { orderRepository.save(any()) }
+    }
+
     private fun getOrder(): Order = Order(session = getSession())
 
     private fun getOrderedItem(): OrderItem =
         OrderItem(order = getOrder(), description = "description", name = "name", price = 10.0, item = getItem())
 
     private fun getSession(): Session =
-        Session(approved = true,
+        Session(
+            approved = true,
             closed = false,
             paid = false,
-            business = getBusiness())
+            business = getBusiness()
+        )
 
     private fun getItem(): Item =
-        Item(name = "name",
+        Item(
+            name = "name",
             description = "description",
             image = "image",
             price = 10.0,
             onlyForMenu = true,
-            business = getBusiness())
+            business = getBusiness()
+        )
 
     private fun getBusiness() = Business(name = "name", email = "email", phoneNumber = "phoneNumber")
 

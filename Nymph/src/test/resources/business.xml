@@ -81,6 +81,7 @@
     <orders
             id="1011"
             session_id="1009"
+            confirmed="false"
     />
     <order_item
             id="1012"

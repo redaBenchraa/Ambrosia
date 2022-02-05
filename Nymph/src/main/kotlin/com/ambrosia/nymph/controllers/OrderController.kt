@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
@@ -40,4 +41,12 @@ class OrderController(@Autowired private val orderService: OrderService) {
         @PathVariable("orderId") orderId: Long,
         @PathVariable("orderItemId") orderItemId: Long,
     ) = orderService.removeItemFromOrder(businessId, tableId, sessionId, orderId, orderItemId)
+
+    @PutMapping("{orderId}")
+    fun confirmOrder(
+        @PathVariable("businessId") businessId: Long,
+        @PathVariable("tableId") tableId: Long,
+        @PathVariable("sessionId") sessionId: Long,
+        @PathVariable("orderId") orderId: Long,
+    ): OrderDto = orderService.confirmOrder(businessId, tableId, sessionId, orderId)
 }

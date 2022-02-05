@@ -72,6 +72,16 @@ class OrderService(
         orderItemRepository.deleteById(orderItemId)
     }
 
+    @Transactional
+    fun confirmOrder(businessId: Long, tableId: Long, sessionId: Long, orderId: Long): OrderDto {
+        fetchSessionWithExistenceValidation(businessId, tableId, sessionId)
+        val order = orderRepository.findById(orderId)
+            .orElseThrow { EntityNotFoundException(Order::class.java, mutableMapOf("id" to orderId)) }
+        order.confirmed = true
+        return orderRepository.save(order).toDto()
+    }
+
+
     private fun buildOrderItems(orderItems: Set<ItemsToOrder>, order: Order): List<OrderItem> {
         return orderItems.stream().map {
             val item = itemRepository.findById(it.id)

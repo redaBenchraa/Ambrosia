@@ -3,6 +3,7 @@ package com.ambrosia.nymph.integration
 import com.ambrosia.nymph.dtos.AddOrderDto
 import com.ambrosia.nymph.dtos.ItemsToOrder
 import com.ambrosia.nymph.entities.Business
+import com.ambrosia.nymph.entities.Order
 import com.ambrosia.nymph.entities.Session
 import com.ambrosia.nymph.entities.Table
 import com.ambrosia.nymph.exceptions.EntityNotFoundException
@@ -16,6 +17,7 @@ import com.github.springtestdbunit.annotation.DatabaseSetup
 import org.hamcrest.Matchers.`is`
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
@@ -28,6 +30,7 @@ import org.springframework.test.context.support.DependencyInjectionTestExecution
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
@@ -66,8 +69,10 @@ class OrderTest {
     @Test
     fun `Create new order`() {
         mockMvc
-            .perform(post(baseUrl).contentType(APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(AddOrderDto(items = mutableSetOf(ItemsToOrder(id = itemId))))))
+            .perform(
+                post(baseUrl).contentType(APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(AddOrderDto(items = mutableSetOf(ItemsToOrder(id = itemId)))))
+            )
             .andExpect(status().isOk)
             .andExpect(content().contentType(APPLICATION_JSON))
             .andExpect(jsonPath("$.orderItems[0].name", `is`("name")))
@@ -81,8 +86,10 @@ class OrderTest {
         val exception = EntityNotFoundException(Business::class.java, mutableMapOf("id" to 1))
         val expected = runtimeExceptionHandler.handleEntityNotFoundException(exception)
         mockMvc
-            .perform(post("/businesses/1/tables/$tableId/sessions/$sessionId/orders").contentType(APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(AddOrderDto())))
+            .perform(
+                post("/businesses/1/tables/$tableId/sessions/$sessionId/orders").contentType(APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(AddOrderDto()))
+            )
             .andExpect(status().`is`(NOT_FOUND.value()))
             .andExpect(content().contentType(APPLICATION_JSON))
             .andExpect(content().json(objectMapper.writeValueAsString(expected.body)))
@@ -93,8 +100,10 @@ class OrderTest {
         val exception = EntityNotFoundException(Table::class.java, mutableMapOf("id" to 1))
         val expected = runtimeExceptionHandler.handleEntityNotFoundException(exception)
         mockMvc
-            .perform(post("/businesses/$businessId/tables/1/sessions/$sessionId/orders").contentType(APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(AddOrderDto())))
+            .perform(
+                post("/businesses/$businessId/tables/1/sessions/$sessionId/orders").contentType(APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(AddOrderDto()))
+            )
             .andExpect(status().`is`(NOT_FOUND.value()))
             .andExpect(content().contentType(APPLICATION_JSON))
             .andExpect(content().json(objectMapper.writeValueAsString(expected.body)))
@@ -105,8 +114,10 @@ class OrderTest {
         val exception = EntityNotFoundException(Session::class.java, mutableMapOf("id" to 1))
         val expected = runtimeExceptionHandler.handleEntityNotFoundException(exception)
         mockMvc
-            .perform(post("/businesses/$businessId/tables/$tableId/sessions/1/orders").contentType(APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(AddOrderDto())))
+            .perform(
+                post("/businesses/$businessId/tables/$tableId/sessions/1/orders").contentType(APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(AddOrderDto()))
+            )
             .andExpect(status().`is`(NOT_FOUND.value()))
             .andExpect(content().contentType(APPLICATION_JSON))
             .andExpect(content().json(objectMapper.writeValueAsString(expected.body)))
@@ -117,8 +128,10 @@ class OrderTest {
         val exception = SessionClosedException(mutableMapOf("id" to 1008))
         val expected = runtimeExceptionHandler.handleSessionClosedException(exception)
         mockMvc
-            .perform(post("/businesses/$businessId/tables/$tableId/sessions/1008/orders").contentType(APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(AddOrderDto())))
+            .perform(
+                post("/businesses/$businessId/tables/$tableId/sessions/1008/orders").contentType(APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(AddOrderDto()))
+            )
             .andExpect(status().`is`(CONFLICT.value()))
             .andExpect(content().contentType(APPLICATION_JSON))
             .andExpect(content().json(objectMapper.writeValueAsString(expected.body)))
@@ -127,8 +140,10 @@ class OrderTest {
     @Test
     fun `Add items to order`() {
         mockMvc
-            .perform(post("$baseUrl/$id").contentType(APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(AddOrderDto(items = mutableSetOf(ItemsToOrder(id = itemId))))))
+            .perform(
+                post("$baseUrl/$id").contentType(APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(AddOrderDto(items = mutableSetOf(ItemsToOrder(id = itemId)))))
+            )
             .andExpect(status().isOk)
             .andExpect(content().contentType(APPLICATION_JSON))
             .andExpect(jsonPath("$.orderItems[0].name", `is`("name")))
@@ -142,8 +157,10 @@ class OrderTest {
         val exception = EntityNotFoundException(Business::class.java, mutableMapOf("id" to 1))
         val expected = runtimeExceptionHandler.handleEntityNotFoundException(exception)
         mockMvc
-            .perform(post("/businesses/1/tables/$tableId/sessions/$sessionId/orders/$id").contentType(APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(AddOrderDto())))
+            .perform(
+                post("/businesses/1/tables/$tableId/sessions/$sessionId/orders/$id").contentType(APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(AddOrderDto()))
+            )
             .andExpect(status().`is`(NOT_FOUND.value()))
             .andExpect(content().contentType(APPLICATION_JSON))
             .andExpect(content().json(objectMapper.writeValueAsString(expected.body)))
@@ -154,9 +171,12 @@ class OrderTest {
         val exception = EntityNotFoundException(Table::class.java, mutableMapOf("id" to 1))
         val expected = runtimeExceptionHandler.handleEntityNotFoundException(exception)
         mockMvc
-            .perform(post("/businesses/$businessId/tables/1/sessions/$sessionId/orders/$id").contentType(
-                APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(AddOrderDto())))
+            .perform(
+                post("/businesses/$businessId/tables/1/sessions/$sessionId/orders/$id").contentType(
+                    APPLICATION_JSON
+                )
+                    .content(objectMapper.writeValueAsString(AddOrderDto()))
+            )
             .andExpect(status().`is`(NOT_FOUND.value()))
             .andExpect(content().contentType(APPLICATION_JSON))
             .andExpect(content().json(objectMapper.writeValueAsString(expected.body)))
@@ -167,8 +187,10 @@ class OrderTest {
         val exception = EntityNotFoundException(Session::class.java, mutableMapOf("id" to 1))
         val expected = runtimeExceptionHandler.handleEntityNotFoundException(exception)
         mockMvc
-            .perform(post("/businesses/$businessId/tables/$tableId/sessions/1/orders/$id").contentType(APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(AddOrderDto())))
+            .perform(
+                post("/businesses/$businessId/tables/$tableId/sessions/1/orders/$id").contentType(APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(AddOrderDto()))
+            )
             .andExpect(status().`is`(NOT_FOUND.value()))
             .andExpect(content().contentType(APPLICATION_JSON))
             .andExpect(content().json(objectMapper.writeValueAsString(expected.body)))
@@ -179,9 +201,12 @@ class OrderTest {
         val exception = SessionClosedException(mutableMapOf("id" to 1008))
         val expected = runtimeExceptionHandler.handleSessionClosedException(exception)
         mockMvc
-            .perform(post("/businesses/$businessId/tables/$tableId/sessions/1008/orders/$id").contentType(
-                APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(AddOrderDto())))
+            .perform(
+                post("/businesses/$businessId/tables/$tableId/sessions/1008/orders/$id").contentType(
+                    APPLICATION_JSON
+                )
+                    .content(objectMapper.writeValueAsString(AddOrderDto()))
+            )
             .andExpect(status().`is`(CONFLICT.value()))
             .andExpect(content().contentType(APPLICATION_JSON))
             .andExpect(content().json(objectMapper.writeValueAsString(expected.body)))
@@ -229,11 +254,12 @@ class OrderTest {
             .andExpect(content().json(objectMapper.writeValueAsString(expected.body)))
     }
 
-    fun `Remove item with a non order`() {
-        val exception = EntityNotFoundException(Session::class.java, mutableMapOf("id" to 1))
+    @Test
+    fun `Remove item with a non existing order`() {
+        val exception = EntityNotFoundException(Order::class.java, mutableMapOf("id" to 1))
         val expected = runtimeExceptionHandler.handleEntityNotFoundException(exception)
         mockMvc
-            .perform(delete("$baseUrl/1/items/$orderItemId"))
+            .perform(delete("$baseUrl/1/items/1"))
             .andExpect(status().`is`(NOT_FOUND.value()))
             .andExpect(content().contentType(APPLICATION_JSON))
             .andExpect(content().json(objectMapper.writeValueAsString(expected.body)))
@@ -245,6 +271,73 @@ class OrderTest {
         val expected = runtimeExceptionHandler.handleSessionClosedException(exception)
         mockMvc
             .perform(delete("/businesses/$businessId/tables/$tableId/sessions/1008/orders/$id/items/$orderItemId"))
+            .andExpect(status().`is`(CONFLICT.value()))
+            .andExpect(content().contentType(APPLICATION_JSON))
+            .andExpect(content().json(objectMapper.writeValueAsString(expected.body)))
+    }
+
+    @Test
+    fun `Confirm order`() {
+        mockMvc
+            .perform(
+                put("$baseUrl/$id").contentType(APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(AddOrderDto(items = mutableSetOf(ItemsToOrder(id = itemId)))))
+            )
+            .andExpect(status().isOk)
+            .andExpect(content().contentType(APPLICATION_JSON))
+            .andExpect(jsonPath("$.orderItems[0].name", `is`("name")))
+        val result = orderRepository.findById(id)
+        assertTrue(result.isPresent)
+        assertTrue(result.get().confirmed)
+    }
+
+    @Test
+    fun `Confirm order with a non existing business`() {
+        val exception = EntityNotFoundException(Business::class.java, mutableMapOf("id" to 1))
+        val expected = runtimeExceptionHandler.handleEntityNotFoundException(exception)
+        mockMvc
+            .perform(
+                put("/businesses/1/tables/$tableId/sessions/$sessionId/orders/$id").contentType(APPLICATION_JSON)
+            )
+            .andExpect(status().`is`(NOT_FOUND.value()))
+            .andExpect(content().contentType(APPLICATION_JSON))
+            .andExpect(content().json(objectMapper.writeValueAsString(expected.body)))
+    }
+
+    @Test
+    fun `Confirm order with a non existing table`() {
+        val exception = EntityNotFoundException(Table::class.java, mutableMapOf("id" to 1))
+        val expected = runtimeExceptionHandler.handleEntityNotFoundException(exception)
+        mockMvc
+            .perform(
+                put("/businesses/$businessId/tables/1/sessions/$sessionId/orders/$id").contentType(APPLICATION_JSON)
+            )
+            .andExpect(status().`is`(NOT_FOUND.value()))
+            .andExpect(content().contentType(APPLICATION_JSON))
+            .andExpect(content().json(objectMapper.writeValueAsString(expected.body)))
+    }
+
+    @Test
+    fun `Confirm order with a non existing session`() {
+        val exception = EntityNotFoundException(Session::class.java, mutableMapOf("id" to 1))
+        val expected = runtimeExceptionHandler.handleEntityNotFoundException(exception)
+        mockMvc
+            .perform(
+                put("/businesses/$businessId/tables/$tableId/sessions/1/orders/$id").contentType(APPLICATION_JSON)
+            )
+            .andExpect(status().`is`(NOT_FOUND.value()))
+            .andExpect(content().contentType(APPLICATION_JSON))
+            .andExpect(content().json(objectMapper.writeValueAsString(expected.body)))
+    }
+
+    @Test
+    fun `Confirm order with a closed session`() {
+        val exception = SessionClosedException(mutableMapOf("id" to 1008))
+        val expected = runtimeExceptionHandler.handleSessionClosedException(exception)
+        mockMvc
+            .perform(
+                put("/businesses/$businessId/tables/$tableId/sessions/1008/orders/$id").contentType(APPLICATION_JSON)
+            )
             .andExpect(status().`is`(CONFLICT.value()))
             .andExpect(content().contentType(APPLICATION_JSON))
             .andExpect(content().json(objectMapper.writeValueAsString(expected.body)))
