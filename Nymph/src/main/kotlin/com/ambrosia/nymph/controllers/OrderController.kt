@@ -42,11 +42,19 @@ class OrderController(@Autowired private val orderService: OrderService) {
         @PathVariable("orderItemId") orderItemId: Long,
     ) = orderService.removeItemFromOrder(businessId, tableId, sessionId, orderId, orderItemId)
 
-    @PutMapping("{orderId}")
+    @PutMapping("{orderId}/confirm")
     fun confirmOrder(
         @PathVariable("businessId") businessId: Long,
         @PathVariable("tableId") tableId: Long,
         @PathVariable("sessionId") sessionId: Long,
         @PathVariable("orderId") orderId: Long,
     ): OrderDto = orderService.confirmOrder(businessId, tableId, sessionId, orderId)
+
+    @PutMapping("{orderId}/approve")
+    fun approveOrder(
+        @PathVariable("businessId") businessId: Long,
+        @PathVariable("tableId") tableId: Long,
+        @PathVariable("sessionId") sessionId: Long,
+        @PathVariable("orderId") orderId: Long,
+    ): OrderDto = orderService.approveOrder(businessId, tableId, sessionId, orderId)
 }

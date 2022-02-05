@@ -296,6 +296,62 @@ class OrderServiceTest {
         verify(exactly = 0) { orderRepository.save(any()) }
     }
 
+    @Test
+    fun `Approve order`() {
+        every { businessRepository.existsById(any()) } returns true
+        every { tableRepository.existsById(any()) } returns true
+        every { sessionRepository.findById(any()) } returns Optional.of(getSession())
+        every { itemRepository.findById(any()) } returns Optional.of(getItem())
+        every { orderRepository.findById(any()) } returns Optional.of(getOrder())
+        every { orderRepository.save(any()) } returns getOrder().apply { approved = true }
+        val result = orderService.approveOrder(1, 1, 1, 1)
+        assertTrue(result.approved)
+        verify { orderRepository.save(any()) }
+    }
+
+    @Test
+    fun `Approve order of a non existing business`() {
+        every { businessRepository.existsById(any()) } returns false
+        assertThrows<EntityNotFoundException> { orderService.approveOrder(1, 1, 1, 1) }
+        verify(exactly = 0) { orderRepository.save(any()) }
+    }
+
+    @Test
+    fun `Approve order of a non existing table`() {
+        every { businessRepository.existsById(any()) } returns true
+        every { tableRepository.existsById(any()) } returns false
+        assertThrows<EntityNotFoundException> { orderService.approveOrder(1, 1, 1, 1) }
+        verify(exactly = 0) { orderRepository.save(any()) }
+    }
+
+    @Test
+    fun `Approve order of a non existing session`() {
+        every { businessRepository.existsById(any()) } returns true
+        every { tableRepository.existsById(any()) } returns true
+        every { sessionRepository.findById(any()) } returns Optional.empty()
+        assertThrows<EntityNotFoundException> { orderService.approveOrder(1, 1, 1, 1) }
+        verify(exactly = 0) { orderRepository.save(any()) }
+    }
+
+    @Test
+    fun `Approve order of a closed session`() {
+        every { businessRepository.existsById(any()) } returns true
+        every { tableRepository.existsById(any()) } returns true
+        every { sessionRepository.findById(any()) } returns Optional.of(getSession().apply { closed = true })
+        assertThrows<SessionClosedException> { orderService.approveOrder(1, 1, 1, 1) }
+        verify(exactly = 0) { orderRepository.save(any()) }
+    }
+
+    @Test
+    fun `Approve order of a non existing order`() {
+        every { businessRepository.existsById(any()) } returns true
+        every { tableRepository.existsById(any()) } returns true
+        every { sessionRepository.findById(any()) } returns Optional.of(getSession())
+        every { orderRepository.findById(any()) } returns Optional.empty()
+        assertThrows<EntityNotFoundException> { orderService.approveOrder(1, 1, 1, 1) }
+        verify(exactly = 0) { orderRepository.save(any()) }
+    }
+
     private fun getOrder(): Order = Order(session = getSession())
 
     private fun getOrderedItem(): OrderItem =

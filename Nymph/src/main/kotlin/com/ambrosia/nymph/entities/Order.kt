@@ -22,6 +22,8 @@ import javax.persistence.Table
 class Order(
     @Column(columnDefinition = "boolean default false", nullable = false)
     var confirmed: Boolean = false,
+    @Column(columnDefinition = "boolean default false", nullable = false)
+    var approved: Boolean = false,
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "session_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)

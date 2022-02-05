@@ -170,7 +170,7 @@ class OrderControllerTest {
         val order = getOrder().toDto()
         every { orderService.confirmOrder(any(), any(), any(), any()) } returns order
         mockMvc
-            .perform(put("$baseUrl/1"))
+            .perform(put("$baseUrl/1/confirm"))
             .andExpect(status().isOk)
             .andExpect(content().contentType(APPLICATION_JSON))
             .andExpect(content().json(objectMapper.writeValueAsString(order)))
@@ -182,7 +182,7 @@ class OrderControllerTest {
         val expected = runtimeExceptionHandler.handleEntityNotFoundException(exception)
         every { orderService.confirmOrder(any(), any(), any(), any()) } throws exception
         mockMvc
-            .perform(put("$baseUrl/1"))
+            .perform(put("$baseUrl/1/confirm"))
             .andExpect(status().`is`(NOT_FOUND.value()))
             .andExpect(content().contentType(APPLICATION_JSON))
             .andExpect(content().json(objectMapper.writeValueAsString(expected.body)))
@@ -194,7 +194,42 @@ class OrderControllerTest {
         val expected = runtimeExceptionHandler.handleSessionClosedException(exception)
         every { orderService.confirmOrder(any(), any(), any(), any()) } throws exception
         mockMvc
-            .perform(put("$baseUrl/1"))
+            .perform(put("$baseUrl/1/confirm"))
+            .andExpect(status().`is`(CONFLICT.value()))
+            .andExpect(content().contentType(APPLICATION_JSON))
+            .andExpect(content().json(objectMapper.writeValueAsString(expected.body)))
+    }
+
+    @Test
+    fun `Approve order`() {
+        val order = getOrder().toDto()
+        every { orderService.approveOrder(any(), any(), any(), any()) } returns order
+        mockMvc
+            .perform(put("$baseUrl/1/approve"))
+            .andExpect(status().isOk)
+            .andExpect(content().contentType(APPLICATION_JSON))
+            .andExpect(content().json(objectMapper.writeValueAsString(order)))
+    }
+
+    @Test
+    fun `Approve order of a non existing business`() {
+        val exception = EntityNotFoundException(Business::class.java, mutableMapOf("id" to 1))
+        val expected = runtimeExceptionHandler.handleEntityNotFoundException(exception)
+        every { orderService.approveOrder(any(), any(), any(), any()) } throws exception
+        mockMvc
+            .perform(put("$baseUrl/1/approve"))
+            .andExpect(status().`is`(NOT_FOUND.value()))
+            .andExpect(content().contentType(APPLICATION_JSON))
+            .andExpect(content().json(objectMapper.writeValueAsString(expected.body)))
+    }
+
+    @Test
+    fun `Approve order of a closed session`() {
+        val exception = SessionClosedException(mutableMapOf("id" to 1))
+        val expected = runtimeExceptionHandler.handleSessionClosedException(exception)
+        every { orderService.approveOrder(any(), any(), any(), any()) } throws exception
+        mockMvc
+            .perform(put("$baseUrl/1/approve"))
             .andExpect(status().`is`(CONFLICT.value()))
             .andExpect(content().contentType(APPLICATION_JSON))
             .andExpect(content().json(objectMapper.writeValueAsString(expected.body)))

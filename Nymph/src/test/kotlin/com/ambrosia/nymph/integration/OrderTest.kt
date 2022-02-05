@@ -280,9 +280,7 @@ class OrderTest {
     fun `Confirm order`() {
         val content = objectMapper.writeValueAsString(AddOrderDto(items = mutableSetOf(ItemsToOrder(id = itemId))))
         mockMvc
-            .perform(
-                put("$baseUrl/$id").contentType(APPLICATION_JSON).content(content)
-            )
+            .perform(put("$baseUrl/$id/confirm").contentType(APPLICATION_JSON).content(content))
             .andExpect(status().isOk)
             .andExpect(content().contentType(APPLICATION_JSON))
             .andExpect(jsonPath("$.orderItems[0].name", `is`("name")))
@@ -297,7 +295,8 @@ class OrderTest {
         val expected = runtimeExceptionHandler.handleEntityNotFoundException(exception)
         mockMvc
             .perform(
-                put("/businesses/1/tables/$tableId/sessions/$sessionId/orders/$id").contentType(APPLICATION_JSON)
+                put("/businesses/1/tables/$tableId/sessions/$sessionId/orders/$id/approve")
+                    .contentType(APPLICATION_JSON)
             )
             .andExpect(status().`is`(NOT_FOUND.value()))
             .andExpect(content().contentType(APPLICATION_JSON))
@@ -310,7 +309,8 @@ class OrderTest {
         val expected = runtimeExceptionHandler.handleEntityNotFoundException(exception)
         mockMvc
             .perform(
-                put("/businesses/$businessId/tables/1/sessions/$sessionId/orders/$id").contentType(APPLICATION_JSON)
+                put("/businesses/$businessId/tables/1/sessions/$sessionId/orders/$id/approve")
+                    .contentType(APPLICATION_JSON)
             )
             .andExpect(status().`is`(NOT_FOUND.value()))
             .andExpect(content().contentType(APPLICATION_JSON))
@@ -323,7 +323,8 @@ class OrderTest {
         val expected = runtimeExceptionHandler.handleEntityNotFoundException(exception)
         mockMvc
             .perform(
-                put("/businesses/$businessId/tables/$tableId/sessions/1/orders/$id").contentType(APPLICATION_JSON)
+                put("/businesses/$businessId/tables/$tableId/sessions/1/orders/$id/approve")
+                    .contentType(APPLICATION_JSON)
             )
             .andExpect(status().`is`(NOT_FOUND.value()))
             .andExpect(content().contentType(APPLICATION_JSON))
@@ -336,7 +337,79 @@ class OrderTest {
         val expected = runtimeExceptionHandler.handleSessionClosedException(exception)
         mockMvc
             .perform(
-                put("/businesses/$businessId/tables/$tableId/sessions/1008/orders/$id").contentType(APPLICATION_JSON)
+                put("/businesses/$businessId/tables/$tableId/sessions/1008/orders/$id/approve")
+                    .contentType(APPLICATION_JSON)
+            )
+            .andExpect(status().`is`(CONFLICT.value()))
+            .andExpect(content().contentType(APPLICATION_JSON))
+            .andExpect(content().json(objectMapper.writeValueAsString(expected.body)))
+    }
+
+    @Test
+    fun `Approve order`() {
+        val content = objectMapper.writeValueAsString(AddOrderDto(items = mutableSetOf(ItemsToOrder(id = itemId))))
+        mockMvc
+            .perform(
+                put("$baseUrl/$id/approve").contentType(APPLICATION_JSON).content(content)
+            )
+            .andExpect(status().isOk)
+            .andExpect(content().contentType(APPLICATION_JSON))
+            .andExpect(jsonPath("$.orderItems[0].name", `is`("name")))
+        val result = orderRepository.findById(id)
+        assertTrue(result.isPresent)
+        assertTrue(result.get().approved)
+    }
+
+    @Test
+    fun `Approve order with a non existing business`() {
+        val exception = EntityNotFoundException(Business::class.java, mutableMapOf("id" to 1))
+        val expected = runtimeExceptionHandler.handleEntityNotFoundException(exception)
+        mockMvc
+            .perform(
+                put("/businesses/1/tables/$tableId/sessions/$sessionId/orders/$id/approve")
+                    .contentType(APPLICATION_JSON)
+            )
+            .andExpect(status().`is`(NOT_FOUND.value()))
+            .andExpect(content().contentType(APPLICATION_JSON))
+            .andExpect(content().json(objectMapper.writeValueAsString(expected.body)))
+    }
+
+    @Test
+    fun `Approve order with a non existing table`() {
+        val exception = EntityNotFoundException(Table::class.java, mutableMapOf("id" to 1))
+        val expected = runtimeExceptionHandler.handleEntityNotFoundException(exception)
+        mockMvc
+            .perform(
+                put("/businesses/$businessId/tables/1/sessions/$sessionId/orders/$id/approve")
+                    .contentType(APPLICATION_JSON)
+            )
+            .andExpect(status().`is`(NOT_FOUND.value()))
+            .andExpect(content().contentType(APPLICATION_JSON))
+            .andExpect(content().json(objectMapper.writeValueAsString(expected.body)))
+    }
+
+    @Test
+    fun `Approve order with a non existing session`() {
+        val exception = EntityNotFoundException(Session::class.java, mutableMapOf("id" to 1))
+        val expected = runtimeExceptionHandler.handleEntityNotFoundException(exception)
+        mockMvc
+            .perform(
+                put("/businesses/$businessId/tables/$tableId/sessions/1/orders/$id/approve")
+                    .contentType(APPLICATION_JSON)
+            )
+            .andExpect(status().`is`(NOT_FOUND.value()))
+            .andExpect(content().contentType(APPLICATION_JSON))
+            .andExpect(content().json(objectMapper.writeValueAsString(expected.body)))
+    }
+
+    @Test
+    fun `Approve order with a closed session`() {
+        val exception = SessionClosedException(mutableMapOf("id" to 1008))
+        val expected = runtimeExceptionHandler.handleSessionClosedException(exception)
+        mockMvc
+            .perform(
+                put("/businesses/$businessId/tables/$tableId/sessions/1008/orders/$id/approve")
+                    .contentType(APPLICATION_JSON)
             )
             .andExpect(status().`is`(CONFLICT.value()))
             .andExpect(content().contentType(APPLICATION_JSON))
