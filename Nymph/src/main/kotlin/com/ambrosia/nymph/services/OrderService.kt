@@ -81,7 +81,6 @@ class OrderService(
         return orderRepository.save(order).toDto()
     }
 
-
     private fun buildOrderItems(orderItems: Set<ItemsToOrder>, order: Order): List<OrderItem> {
         return orderItems.stream().map {
             val item = itemRepository.findById(it.id)

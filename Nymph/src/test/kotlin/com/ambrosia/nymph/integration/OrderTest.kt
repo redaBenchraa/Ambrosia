@@ -68,10 +68,10 @@ class OrderTest {
 
     @Test
     fun `Create new order`() {
+        val content = objectMapper.writeValueAsString(AddOrderDto(items = mutableSetOf(ItemsToOrder(id = itemId))))
         mockMvc
             .perform(
-                post(baseUrl).contentType(APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsString(AddOrderDto(items = mutableSetOf(ItemsToOrder(id = itemId)))))
+                post(baseUrl).contentType(APPLICATION_JSON).content(content)
             )
             .andExpect(status().isOk)
             .andExpect(content().contentType(APPLICATION_JSON))
@@ -139,10 +139,10 @@ class OrderTest {
 
     @Test
     fun `Add items to order`() {
+        val content = objectMapper.writeValueAsString(AddOrderDto(items = mutableSetOf(ItemsToOrder(id = itemId))))
         mockMvc
             .perform(
-                post("$baseUrl/$id").contentType(APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsString(AddOrderDto(items = mutableSetOf(ItemsToOrder(id = itemId)))))
+                post("$baseUrl/$id").contentType(APPLICATION_JSON).content(content)
             )
             .andExpect(status().isOk)
             .andExpect(content().contentType(APPLICATION_JSON))
@@ -278,10 +278,10 @@ class OrderTest {
 
     @Test
     fun `Confirm order`() {
+        val content = objectMapper.writeValueAsString(AddOrderDto(items = mutableSetOf(ItemsToOrder(id = itemId))))
         mockMvc
             .perform(
-                put("$baseUrl/$id").contentType(APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsString(AddOrderDto(items = mutableSetOf(ItemsToOrder(id = itemId)))))
+                put("$baseUrl/$id").contentType(APPLICATION_JSON).content(content)
             )
             .andExpect(status().isOk)
             .andExpect(content().contentType(APPLICATION_JSON))
