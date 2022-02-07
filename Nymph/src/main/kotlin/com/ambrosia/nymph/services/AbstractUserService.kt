@@ -27,4 +27,3 @@ abstract class AbstractUserService(
     abstract fun updateRoles(user: KeycloakUser)
     abstract fun deleteKeycloakUser(user: KeycloakUser)
 }
-

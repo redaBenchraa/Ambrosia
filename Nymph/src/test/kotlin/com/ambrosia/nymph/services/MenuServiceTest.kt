@@ -52,7 +52,7 @@ class MenuServiceTest {
 
     @Test
     fun `Edit a menu`() {
-        every { businessRepository.findById(any()) } returns Optional.of(getBusiness())
+        every { businessRepository.existsById(any()) } returns true
         every { menuRepository.findById(any()) } returns Optional.of(getMenu())
         every { menuRepository.save(any()) } returns getMenu()
         val menuDto = getMenu().toDto().apply {
@@ -67,7 +67,7 @@ class MenuServiceTest {
         assertEquals("new image", result.image)
         assertEquals(42.0, result.price)
         verify {
-            businessRepository.findById(any())
+            businessRepository.existsById(any())
             menuRepository.findById(any())
             menuRepository.save(any())
         }
@@ -75,7 +75,7 @@ class MenuServiceTest {
 
     @Test
     fun `Edit a menu with null values`() {
-        every { businessRepository.findById(any()) } returns Optional.of(getBusiness())
+        every { businessRepository.existsById(any()) } returns true
         every { menuRepository.findById(any()) } returns Optional.of(getMenu())
         every { menuRepository.save(any()) } returns getMenu()
         val menuDto = getMenu().toDto().apply {
@@ -90,7 +90,7 @@ class MenuServiceTest {
         assertEquals("image", result.image)
         assertEquals(10.0, result.price)
         verify {
-            businessRepository.findById(any())
+            businessRepository.existsById(any())
             menuRepository.findById(any())
             menuRepository.save(any())
         }
@@ -99,20 +99,20 @@ class MenuServiceTest {
 
     @Test
     fun `Edit a menu from a non existing business`() {
-        every { businessRepository.findById(any()) } returns Optional.empty()
+        every { businessRepository.existsById(any()) } returns false
         assertThrows<EntityNotFoundException> { menuService.editMenu(1, 1, getMenu().toDto()) }
     }
 
     @Test
     fun `Edit a non existing menu`() {
-        every { businessRepository.findById(any()) } returns Optional.of(getBusiness())
+        every { businessRepository.existsById(any()) } returns true
         every { menuRepository.findById(any()) } returns Optional.empty()
         assertThrows<EntityNotFoundException> { menuService.editMenu(1, 1, getMenu().toDto()) }
     }
 
     @Test
     fun `Remove a menu`() {
-        every { businessRepository.findById(any()) } returns Optional.of(getBusiness())
+        every { businessRepository.existsById(any()) } returns true
         every { menuRepository.findById(any()) } returns Optional.of(getMenu())
         every { menuRepository.delete(any()) } returns Unit
         menuService.deleteMenu(1, 1)
@@ -121,13 +121,13 @@ class MenuServiceTest {
 
     @Test
     fun `Remove a menu from a non existing business`() {
-        every { businessRepository.findById(any()) } returns Optional.empty()
+        every { businessRepository.existsById(any()) } returns false
         assertThrows<EntityNotFoundException> { menuService.deleteMenu(1, 1) }
     }
 
     @Test
     fun `Add an item to a menu`() {
-        every { businessRepository.findById(any()) } returns Optional.of(getBusiness())
+        every { businessRepository.existsById(any()) } returns true
         every { menuRepository.findById(any()) } returns Optional.of(getMenu())
         every { categoryRepository.findById(any()) } returns Optional.of(getCategory())
         every { itemRepository.findById(any()) } returns Optional.of(getItem())
@@ -138,7 +138,7 @@ class MenuServiceTest {
 
     @Test
     fun `Add an item to a menu to a non existing business`() {
-        every { businessRepository.findById(any()) } returns Optional.empty()
+        every { businessRepository.existsById(any()) } returns false
         assertThrows<EntityNotFoundException> {
             menuService.addItemToMenu(1, 1, AddMenuItemDto(itemId = 1, categoryId = 1, extra = 10.0))
         }
@@ -146,7 +146,7 @@ class MenuServiceTest {
 
     @Test
     fun `Add an item to a menu to a non existing menu`() {
-        every { businessRepository.findById(any()) } returns Optional.of(getBusiness())
+        every { businessRepository.existsById(any()) } returns true
         every { menuRepository.findById(any()) } returns Optional.empty()
         assertThrows<EntityNotFoundException> {
             menuService.addItemToMenu(1, 1, AddMenuItemDto(itemId = 1, categoryId = 1, extra = 10.0))
@@ -155,7 +155,7 @@ class MenuServiceTest {
 
     @Test
     fun `Add an item to a menu to a non existing category`() {
-        every { businessRepository.findById(any()) } returns Optional.of(getBusiness())
+        every { businessRepository.existsById(any()) } returns true
         every { menuRepository.findById(any()) } returns Optional.of(getMenu())
         every { categoryRepository.findById(any()) } returns Optional.empty()
         assertThrows<EntityNotFoundException> {
@@ -165,7 +165,7 @@ class MenuServiceTest {
 
     @Test
     fun `Add a non existing item to a menu`() {
-        every { businessRepository.findById(any()) } returns Optional.of(getBusiness())
+        every { businessRepository.existsById(any()) } returns true
         every { menuRepository.findById(any()) } returns Optional.of(getMenu())
         every { categoryRepository.findById(any()) } returns Optional.of(getCategory())
         every { itemRepository.findById(any()) } returns Optional.empty()
@@ -176,7 +176,7 @@ class MenuServiceTest {
 
     @Test
     fun `Remove an item from a menu`() {
-        every { businessRepository.findById(any()) } returns Optional.of(getBusiness())
+        every { businessRepository.existsById(any()) } returns true
         every { menuRepository.findById(any()) } returns Optional.of(getMenu())
         every { menuItemRepository.findById(any()) } returns Optional.of(getMenuItem())
         every { menuItemRepository.delete(any()) } returns Unit
@@ -186,13 +186,13 @@ class MenuServiceTest {
 
     @Test
     fun `Remove an item to a menu from a non existing business`() {
-        every { businessRepository.findById(any()) } returns Optional.empty()
+        every { businessRepository.existsById(any()) } returns false
         assertThrows<EntityNotFoundException> { menuService.deleteMenuItem(1, 1, 1) }
     }
 
     @Test
     fun `Remove an item to a menu from a non existing menu`() {
-        every { businessRepository.findById(any()) } returns Optional.of(getBusiness())
+        every { businessRepository.existsById(any()) } returns true
         every { menuRepository.findById(any()) } returns Optional.empty()
         assertThrows<EntityNotFoundException> { menuService.deleteMenuItem(1, 1, 1) }
     }
@@ -200,7 +200,7 @@ class MenuServiceTest {
 
     @Test
     fun `Remove a non existing item from a menu`() {
-        every { businessRepository.findById(any()) } returns Optional.of(getBusiness())
+        every { businessRepository.existsById(any()) } returns true
         every { menuRepository.findById(any()) } returns Optional.of(getMenu())
         every { menuItemRepository.findById(any()) } returns Optional.empty()
         assertThrows<EntityNotFoundException> { menuService.deleteMenuItem(1, 1, 1) }
@@ -208,7 +208,7 @@ class MenuServiceTest {
 
     @Test
     fun `Edit extra for a menu`() {
-        every { businessRepository.findById(any()) } returns Optional.of(getBusiness())
+        every { businessRepository.existsById(any()) } returns true
         every { menuRepository.findById(any()) } returns Optional.of(getMenu())
         every { menuItemRepository.findById(any()) } returns Optional.of(getMenuItem())
         every { menuItemRepository.save(any()) } returns getMenuItem()
@@ -218,20 +218,20 @@ class MenuServiceTest {
 
     @Test
     fun `Edit extra for a menu with a non existing business`() {
-        every { businessRepository.findById(any()) } returns Optional.empty()
+        every { businessRepository.existsById(any()) } returns false
         assertThrows<EntityNotFoundException> { menuService.editMenuItemExtra(1, 1, 1, EditMenuItemDto(extra = 10.0)) }
     }
 
     @Test
     fun `Edit extra for a non existing menu`() {
-        every { businessRepository.findById(any()) } returns Optional.of(getBusiness())
+        every { businessRepository.existsById(any()) } returns true
         every { menuRepository.findById(any()) } returns Optional.empty()
         assertThrows<EntityNotFoundException> { menuService.editMenuItemExtra(1, 1, 1, EditMenuItemDto(extra = 10.0)) }
     }
 
     @Test
     fun `Edit extra for a non existing item`() {
-        every { businessRepository.findById(any()) } returns Optional.of(getBusiness())
+        every { businessRepository.existsById(any()) } returns true
         every { menuRepository.findById(any()) } returns Optional.of(getMenu())
         every { menuItemRepository.findById(any()) } returns Optional.empty()
         assertThrows<EntityNotFoundException> { menuService.editMenuItemExtra(1, 1, 1, EditMenuItemDto(extra = 10.0)) }
@@ -239,7 +239,7 @@ class MenuServiceTest {
 
     @Test
     fun `Get business menus`() {
-        every { businessRepository.findById(any()) } returns Optional.of(getBusiness())
+        every { businessRepository.existsById(any()) } returns true
         every { menuRepository.findByBusinessId(any()) } returns mutableListOf(getMenu())
         val result = menuService.getMenus(1)
         Assertions.assertNotNull(result)
@@ -249,24 +249,21 @@ class MenuServiceTest {
 
     @Test
     fun `Get items from a non existing business`() {
-        every { businessRepository.findById(any()) } returns Optional.empty()
+        every { businessRepository.existsById(any()) } returns false
         assertThrows<EntityNotFoundException> { menuService.getMenus(1) }
     }
-
-    private fun getBusiness(): Business =
-        Business(name = "name", email = "email", phoneNumber = "phoneNumber")
 
     private fun getMenuItem(): MenuItem =
         MenuItem(extra = 10.0, menu = getMenu(), category = getCategory(), item = getItem())
 
-    private fun getItem(): Item = Item(name = "name", price = 10.0, business = Business("name", "phone", "email"))
+    private fun getItem(): Item = Item(name = "name", price = 10.0, business = getBusiness())
 
-    private fun getCategory(): Category = Category(name = "name", business = Business("name", "phone", "email"))
+    private fun getCategory(): Category = Category(name = "name", business = getBusiness())
 
-    private fun getMenu(): Menu = Menu(name = "name",
-        price = 10.0,
-        image = "image",
-        description = "description",
-        business = Business("name", "phone", "email")
-    )
+    private fun getMenu(): Menu =
+        Menu(name = "name", price = 10.0, image = "image", description = "description", business = getBusiness())
+
+    private fun getBusiness(): Business =
+        Business(name = "name", email = "email", phoneNumber = "phoneNumber")
+
 }

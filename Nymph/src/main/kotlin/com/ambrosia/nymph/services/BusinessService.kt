@@ -40,7 +40,7 @@ class BusinessService(
         businessRegistrationDto.logo?.let { business.logo = it }
         businessRegistrationDto.location?.let { business.location = it }
         businessRegistrationDto.currency?.let { business.currency = it }
-        businessRegistrationDto.isAvailable?.let { business.isAvailable = it }
+        businessRegistrationDto.available?.let { business.available = it }
         businessRepository.save(business)
         return business.toDto()
     }

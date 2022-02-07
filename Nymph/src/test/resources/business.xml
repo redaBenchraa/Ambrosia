@@ -26,7 +26,7 @@
     <tables
             id="1003"
             number="1"
-            is_available="true"
+            available="true"
             business_id="1000"
     />
     <item
@@ -59,14 +59,35 @@
             business_id="1000"
             table_id="1003"
             employee_id="1001"
-            is_paid="false"
-            is_approved="false"
-            is_closed="false"
+            paid="true"
+            approved="true"
+            closed="true"
+    />
+    <session
+            id="1009"
+            business_id="1000"
+            table_id="1003"
+            employee_id="1001"
+            paid="false"
+            approved="false"
+            closed="false"
     />
     <tables
-            id="1009"
+            id="1010"
             number="2"
-            is_available="true"
+            available="true"
             business_id="1000"
+    />
+    <orders
+            id="1011"
+            session_id="1009"
+            status="0"
+    />
+    <order_item
+            id="1012"
+            order_id="1011"
+            item_id="1004"
+            name="name"
+            price="10.0"
     />
 </dataset>

@@ -128,5 +128,5 @@ class TableTest {
             .andExpect(content().json(objectMapper.writeValueAsString(expected.body)))
     }
 
-    private fun getTable() = Table(number = 1, isAvailable = true, business = Business("name", "phoneNumber", "email"))
+    private fun getTable() = Table(number = 1, available = true, business = Business("name", "phoneNumber", "email"))
 }

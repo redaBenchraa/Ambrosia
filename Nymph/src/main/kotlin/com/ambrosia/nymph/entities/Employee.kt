@@ -15,28 +15,18 @@ import javax.persistence.Index
 import javax.persistence.JoinColumn
 import javax.persistence.ManyToOne
 import javax.persistence.Table
-import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotNull
-import javax.validation.constraints.Size
 
 @Entity
-@Table(indexes = [
-    Index(columnList = "email")
-])
+@Table(indexes = [Index(columnList = "email")])
 @SQLDelete(sql = "UPDATE employee SET deleted = true WHERE id=?")
 @Where(clause = "deleted = false")
 class Employee(
-    @field:NotNull(message = "error.employee.firstName.null")
-    @field:NotBlank(message = "error.employee.firstName.blank")
-    @field:Size(max = NAME_MAX_SIZE, message = "error.employee.firstName.size.invalid")
+    @Column(nullable = false, length = NAME_MAX_SIZE)
     var firstName: String,
-    @field:NotNull(message = "error.employee.lastName.null")
-    @field:NotBlank(message = "error.employee.lastName.blank")
-    @field:Size(max = NAME_MAX_SIZE, message = "error.employee.lastName.size.invalid")
+    @Column(nullable = false, length = NAME_MAX_SIZE)
     var lastName: String,
-    @field:NotNull(message = "error.employee.email.null")
-    @field:NotBlank(message = "error.employee.email.blank")
-    @field:Size(max = EMAIL_MAX_SIZE, message = "error.employee.email.size.invalid")
+    @Column(nullable = false, length = EMAIL_MAX_SIZE)
     var email: String,
     @Column(nullable = false)
     @field:NotNull(message = "error.employee.position.null")

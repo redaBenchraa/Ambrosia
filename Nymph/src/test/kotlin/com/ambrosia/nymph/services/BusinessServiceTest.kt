@@ -52,7 +52,7 @@ class BusinessServiceTest {
                 logo = "new logo"
                 location = "new location"
                 currency = Currency.USD.name
-                isAvailable = false
+                available = false
             })
         assertEquals("new name", result.name)
         assertEquals("new phoneNumber", result.phoneNumber)
@@ -62,7 +62,7 @@ class BusinessServiceTest {
         assertEquals("new logo", result.logo)
         assertEquals("new location", result.location)
         assertEquals(Currency.USD.name, result.currency)
-        assertEquals(false, result.isAvailable)
+        assertEquals(false, result.available)
         verify {
             businessRepository.findById(any())
             businessRepository.save(any())
@@ -83,7 +83,7 @@ class BusinessServiceTest {
                 logo = null
                 location = null
                 currency = null
-                isAvailable = null
+                available = null
             })
         assertEquals(getBusiness().name, result.name)
         assertEquals(getBusiness().phoneNumber, result.phoneNumber)
@@ -93,7 +93,7 @@ class BusinessServiceTest {
         assertEquals(getBusiness().logo, result.logo)
         assertEquals(getBusiness().location, result.location)
         assertEquals(Currency.EUR.name, result.currency)
-        assertEquals(true, result.isAvailable)
+        assertEquals(true, result.available)
         verify {
             businessRepository.findById(any())
             businessRepository.save(any())
@@ -142,7 +142,7 @@ class BusinessServiceTest {
             logo = "logo",
             location = "location",
             currency = "EUR",
-            isAvailable = true
+            available = true
         ).apply { id = 1 }
 
     private fun getEmployee(): Employee =

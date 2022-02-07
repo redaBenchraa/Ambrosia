@@ -2,7 +2,6 @@ package com.ambrosia.nymph.entities
 
 import com.fasterxml.jackson.annotation.JsonBackReference
 import com.fasterxml.jackson.annotation.JsonManagedReference
-import org.hibernate.annotations.ColumnDefault
 import org.hibernate.annotations.OnDelete
 import org.hibernate.annotations.OnDeleteAction
 import org.hibernate.annotations.SQLDelete
@@ -15,7 +14,6 @@ import javax.persistence.JoinColumn
 import javax.persistence.ManyToOne
 import javax.persistence.OneToMany
 import javax.persistence.Table
-import javax.validation.constraints.NotNull
 
 @Entity
 @Table(name = "tables")
@@ -23,11 +21,9 @@ import javax.validation.constraints.NotNull
 @Where(clause = "deleted = false")
 class Table(
     @Column(nullable = false)
-    @field:NotNull(message = "error.table.number.null")
     var number: Int,
-    @field:NotNull(message = "error.table.isAvailable.null")
-    @ColumnDefault("true")
-    var isAvailable: Boolean = true,
+    @Column(columnDefinition = "boolean default true", nullable = false)
+    var available: Boolean = true,
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "business_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)

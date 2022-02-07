@@ -13,7 +13,8 @@ fun Employee.toRegistrationEmployeeDto(): EmployeeRegistrationDto =
     EmployeeRegistrationDto(id, firstName, lastName, email, position)
 
 fun EmployeeRegistrationDto.toEntity(business: Business): Employee =
-    Employee(firstName ?: UNDEFINED_VALUE,
+    Employee(
+        firstName ?: UNDEFINED_VALUE,
         lastName ?: UNDEFINED_VALUE,
         email ?: UNDEFINED_VALUE,
         position,

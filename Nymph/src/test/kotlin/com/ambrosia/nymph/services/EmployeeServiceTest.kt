@@ -74,7 +74,7 @@ class EmployeeServiceTest {
 
     @Test
     fun `Edit an employee`() {
-        every { businessRepository.findById(any()) } returns Optional.of(getBusiness())
+        every { businessRepository.existsById(any()) } returns true
         every { employeeRepository.findById(any()) } returns Optional.of(getEmployee())
         every { employeeRepository.save(any()) } returns getEmployee()
         val employee = getEmployee().toDto().apply {
@@ -85,7 +85,7 @@ class EmployeeServiceTest {
         assertEquals("new firstName", result.firstName)
         assertEquals("new lastName", result.lastName)
         verify {
-            businessRepository.findById(any())
+            businessRepository.existsById(any())
             employeeRepository.findById(any())
             employeeRepository.save(any())
         }
@@ -93,7 +93,7 @@ class EmployeeServiceTest {
 
     @Test
     fun `Edit an employee with null values`() {
-        every { businessRepository.findById(any()) } returns Optional.of(getBusiness())
+        every { businessRepository.existsById(any()) } returns true
         every { employeeRepository.findById(any()) } returns Optional.of(getEmployee())
         every { employeeRepository.save(any()) } returns getEmployee()
         val employee = getEmployee().toDto().apply {
@@ -104,7 +104,7 @@ class EmployeeServiceTest {
         assertEquals("firstName", result.firstName)
         assertEquals("lastName", result.lastName)
         verify {
-            businessRepository.findById(any())
+            businessRepository.existsById(any())
             employeeRepository.findById(any())
             employeeRepository.save(any())
         }
@@ -112,14 +112,14 @@ class EmployeeServiceTest {
 
     @Test
     fun `Edit an employee email`() {
-        every { businessRepository.findById(any()) } returns Optional.of(getBusiness())
+        every { businessRepository.existsById(any()) } returns true
         every { employeeRepository.findById(any()) } returns Optional.of(getEmployee())
         every { userService.updateEmail(any()) } returns Unit
         every { employeeRepository.save(any()) } returns getEmployee()
         val result = employeeService.editEmployeeEmail(1, 1, EditEmailDto(email = "email2@email.com"))
         assertEquals("email2@email.com", result.email)
         verify {
-            businessRepository.findById(any())
+            businessRepository.existsById(any())
             employeeRepository.findById(any())
             userService.updateEmail(any())
             employeeRepository.save(any())
@@ -128,14 +128,14 @@ class EmployeeServiceTest {
 
     @Test
     fun `Edit an employee position`() {
-        every { businessRepository.findById(any()) } returns Optional.of(getBusiness())
+        every { businessRepository.existsById(any()) } returns true
         every { employeeRepository.findById(any()) } returns Optional.of(getEmployee())
         every { userService.updateRoles(any()) } returns Unit
         every { employeeRepository.save(any()) } returns getEmployee()
         val result = employeeService.editEmployeePosition(1, 1, EditPositionDto(position = EMPLOYEE))
         assertEquals(EMPLOYEE, result.position)
         verify {
-            businessRepository.findById(any())
+            businessRepository.existsById(any())
             employeeRepository.findById(any())
             userService.updateRoles(any())
             employeeRepository.save(any())
@@ -144,7 +144,7 @@ class EmployeeServiceTest {
 
     @Test
     fun `Edit an employee from a non existing business`() {
-        every { businessRepository.findById(any()) } returns Optional.empty()
+        every { businessRepository.existsById(any()) } returns false
         assertThrows<EntityNotFoundException> {
             employeeService.editEmployee(1, 1, getEmployee().toDto())
         }
@@ -152,7 +152,7 @@ class EmployeeServiceTest {
 
     @Test
     fun `Edit a non existing employee`() {
-        every { businessRepository.findById(any()) } returns Optional.of(getBusiness())
+        every { businessRepository.existsById(any()) } returns true
         every { employeeRepository.findById(any()) } returns Optional.empty()
         assertThrows<EntityNotFoundException> {
             employeeService.editEmployee(1, 1, getEmployee().toDto())
@@ -161,7 +161,7 @@ class EmployeeServiceTest {
 
     @Test
     fun `Remove an employee`() {
-        every { businessRepository.findById(any()) } returns Optional.of(getBusiness())
+        every { businessRepository.existsById(any()) } returns true
         every { employeeRepository.findById(any()) } returns Optional.of(getEmployee())
         every { employeeRepository.delete(any()) } returns Unit
         employeeService.deleteEmployee(1, 1)
@@ -170,13 +170,13 @@ class EmployeeServiceTest {
 
     @Test
     fun `Remove an employee from a non existing business`() {
-        every { businessRepository.findById(any()) } returns Optional.empty()
+        every { businessRepository.existsById(any()) } returns false
         assertThrows<EntityNotFoundException> { employeeService.deleteEmployee(1, 1) }
     }
 
     @Test
     fun `Get business employees`() {
-        every { businessRepository.findById(any()) } returns Optional.of(getBusiness())
+        every { businessRepository.existsById(any()) } returns true
         every { employeeRepository.findByBusinessId(any()) } returns mutableListOf(getEmployee())
         val result = employeeService.getEmployees(1)
         assertNotNull(result)
@@ -186,7 +186,7 @@ class EmployeeServiceTest {
 
     @Test
     fun `Get employees from a non existing business`() {
-        every { businessRepository.findById(any()) } returns Optional.empty()
+        every { businessRepository.existsById(any()) } returns false
         assertThrows<EntityNotFoundException> { employeeService.getEmployees(1) }
     }
 

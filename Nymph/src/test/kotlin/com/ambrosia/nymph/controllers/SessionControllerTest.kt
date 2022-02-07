@@ -213,5 +213,5 @@ class SessionControllerTest {
             .andExpect(content().json(objectMapper.writeValueAsString(expected.body)))
     }
 
-    private fun getSession() = Session(isPaid = false, isClosed = false, isApproved = true)
+    private fun getSession() = Session(paid = false, closed = false, approved = true)
 }

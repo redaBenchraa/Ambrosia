@@ -12,9 +12,7 @@ import javax.persistence.OneToMany
 import javax.persistence.Table
 
 @Entity
-@Table(indexes = [
-    Index(columnList = "email")
-])
+@Table(indexes = [Index(columnList = "email")])
 @SQLDelete(sql = "UPDATE customer SET deleted = true WHERE id=?")
 @Where(clause = "deleted = false")
 class Customer(

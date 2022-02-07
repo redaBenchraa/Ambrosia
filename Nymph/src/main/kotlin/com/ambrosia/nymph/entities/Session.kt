@@ -14,21 +14,17 @@ import javax.persistence.FetchType
 import javax.persistence.JoinColumn
 import javax.persistence.ManyToOne
 import javax.persistence.OneToMany
-import javax.validation.constraints.NotNull
 
 @Entity
 @SQLDelete(sql = "UPDATE session SET deleted = true WHERE id=?")
 @Where(clause = "deleted = false")
 data class Session(
-    @Column(nullable = false)
-    @field:NotNull(message = "error.session.isPaid.null")
-    var isPaid: Boolean = false,
-    @Column(nullable = false)
-    @field:NotNull(message = "error.session.isClosed.null")
-    var isClosed: Boolean = false,
-    @Column(nullable = false)
-    @field:NotNull(message = "error.session.isApproved.null")
-    var isApproved: Boolean = true,
+    @Column(columnDefinition = "boolean default false", nullable = false)
+    var paid: Boolean = false,
+    @Column(columnDefinition = "boolean default false", nullable = false)
+    var closed: Boolean = false,
+    @Column(columnDefinition = "boolean default true", nullable = false)
+    var approved: Boolean = true,
     @ManyToOne(fetch = FetchType.LAZY, optional = true)
     @JoinColumn(name = "business_id", nullable = true)
     @OnDelete(action = OnDeleteAction.NO_ACTION)

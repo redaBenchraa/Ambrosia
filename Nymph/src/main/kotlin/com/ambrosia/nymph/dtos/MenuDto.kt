@@ -2,7 +2,6 @@ package com.ambrosia.nymph.dtos
 
 import com.ambrosia.nymph.constants.DEFAULT_DOUBLE_VALUE
 import com.ambrosia.nymph.constants.NAME_MAX_SIZE
-import com.ambrosia.nymph.constants.PRICE_MIN
 import javax.validation.constraints.Min
 import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotNull
@@ -17,7 +16,7 @@ data class MenuDto(
     var description: String?,
     var image: String?,
     @field:NotNull(message = "error.menu.price.null")
-    @field:Min(PRICE_MIN, message = "error.menu.price.negative")
+    @field:Min(DEFAULT_DOUBLE_VALUE.toLong(), message = "error.menu.price.negative")
     var price: Double?,
     var categories: MutableSet<MenuCategory> = HashSet(),
 )

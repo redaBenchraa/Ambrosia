@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository
 
 @Repository
 interface SessionRepository : JpaRepository<Session, Long> {
-    fun findFirstByTableIdOrderByUpdatedAtDesc(tableId: Long): Session?
+    fun findFirstByTableIdOrderByUpdatedAtDescIdDesc(tableId: Long): Session?
 }

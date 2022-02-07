@@ -39,18 +39,18 @@ class TableServiceTest {
 
     @Test
     fun `Edit a table`() {
-        every { businessRepository.findById(any()) } returns Optional.of(getBusiness())
+        every { businessRepository.existsById(any()) } returns true
         every { tableRepository.findById(any()) } returns Optional.of(getTable())
         every { tableRepository.save(any()) } returns getTable()
         val tableDto = getTable().toDto().apply {
             number = 42
-            isAvailable = false
+            available = false
         }
         val result = tableService.editTable(1, 4, tableDto)
         assertEquals(42, result.number)
-        assertEquals(false, result.isAvailable)
+        assertEquals(false, result.available)
         verify {
-            businessRepository.findById(any())
+            businessRepository.existsById(any())
             tableRepository.findById(any())
             tableRepository.save(any())
         }
@@ -58,18 +58,18 @@ class TableServiceTest {
 
     @Test
     fun `Edit a table with null values`() {
-        every { businessRepository.findById(any()) } returns Optional.of(getBusiness())
+        every { businessRepository.existsById(any()) } returns true
         every { tableRepository.findById(any()) } returns Optional.of(getTable())
         every { tableRepository.save(any()) } returns getTable()
         val tableDto = getTable().toDto().apply {
             number = null
-            isAvailable = null
+            available = null
         }
         val result = tableService.editTable(1, 4, tableDto)
         assertEquals(1, result.number)
-        assertEquals(true, result.isAvailable)
+        assertEquals(true, result.available)
         verify {
-            businessRepository.findById(any())
+            businessRepository.existsById(any())
             tableRepository.findById(any())
             tableRepository.save(any())
         }
@@ -77,7 +77,7 @@ class TableServiceTest {
 
     @Test
     fun `Edit a table from a non existing business`() {
-        every { businessRepository.findById(any()) } returns Optional.empty()
+        every { businessRepository.existsById(any()) } returns false
         assertThrows<EntityNotFoundException> {
             tableService.editTable(1, 1, getTable().toDto())
         }
@@ -85,7 +85,7 @@ class TableServiceTest {
 
     @Test
     fun `Edit a non existing table`() {
-        every { businessRepository.findById(any()) } returns Optional.of(getBusiness())
+        every { businessRepository.existsById(any()) } returns true
         every { tableRepository.findById(any()) } returns Optional.empty()
         assertThrows<EntityNotFoundException> {
             tableService.editTable(1, 1, getTable().toDto())
@@ -94,7 +94,7 @@ class TableServiceTest {
 
     @Test
     fun `Remove a table`() {
-        every { businessRepository.findById(any()) } returns Optional.of(getBusiness())
+        every { businessRepository.existsById(any()) } returns true
         every { tableRepository.findById(any()) } returns Optional.of(getTable())
         every { tableRepository.delete(any()) } returns Unit
         tableService.deleteTable(1, 1)
@@ -103,12 +103,12 @@ class TableServiceTest {
 
     @Test
     fun `Remove a table from a non existing business`() {
-        every { businessRepository.findById(any()) } returns Optional.empty()
+        every { businessRepository.existsById(any()) } returns false
         assertThrows<EntityNotFoundException> { tableService.deleteTable(1, 1) }
     }
 
+    private fun getTable(): Table = Table(number = 1, available = true, business = getBusiness())
+
     private fun getBusiness(): Business =
         Business(name = "name", currency = "EUR", email = "email", phoneNumber = "phoneNumber")
-
-    private fun getTable(): Table = Table(number = 1, isAvailable = true, business = Business("name", "phone", "email"))
 }

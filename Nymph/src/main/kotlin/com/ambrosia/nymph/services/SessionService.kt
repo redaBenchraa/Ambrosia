@@ -21,13 +21,14 @@ class SessionService(
 ) {
     @Transactional
     fun getCurrentSession(businessId: Long, tableId: Long): SessionDto {
-        businessRepository.findById(businessId)
-            .orElseThrow { EntityNotFoundException(Business::class.java, mutableMapOf("id" to businessId)) }
+        if (!businessRepository.existsById(businessId)) {
+            throw EntityNotFoundException(Business::class.java, mutableMapOf("id" to businessId))
+        }
         val table = tableRepository.findById(tableId)
             .orElseThrow { EntityNotFoundException(Table::class.java, mutableMapOf("id" to tableId)) }
-        val lastSession = sessionRepository.findFirstByTableIdOrderByUpdatedAtDesc(tableId)
-        if (lastSession == null || lastSession.isClosed || lastSession.isPaid) {
-            val newSession = Session(table = table, isPaid = false, isClosed = false, isApproved = false)
+        val lastSession = sessionRepository.findFirstByTableIdOrderByUpdatedAtDescIdDesc(tableId)
+        if (lastSession == null || lastSession.closed || lastSession.paid) {
+            val newSession = Session(table = table, paid = false, closed = false, approved = false)
             return sessionRepository.save(newSession).toDto()
         }
         return lastSession.toDto()
@@ -35,15 +36,17 @@ class SessionService(
 
     @Transactional
     fun editSession(businessId: Long, tableId: Long, sessionId: Long, sessionDto: SessionDto): SessionDto {
-        businessRepository.findById(businessId)
-            .orElseThrow { EntityNotFoundException(Business::class.java, mutableMapOf("id" to businessId)) }
-        tableRepository.findById(tableId)
-            .orElseThrow { EntityNotFoundException(Table::class.java, mutableMapOf("id" to tableId)) }
+        if (!businessRepository.existsById(businessId)) {
+            throw EntityNotFoundException(Business::class.java, mutableMapOf("id" to businessId))
+        }
+        if (!tableRepository.existsById(tableId)) {
+            throw EntityNotFoundException(Table::class.java, mutableMapOf("id" to tableId))
+        }
         val session = sessionRepository.findById(sessionId)
             .orElseThrow { EntityNotFoundException(Session::class.java, mutableMapOf("id" to sessionId)) }
-        sessionDto.isApproved?.let { session.isApproved = it }
-        sessionDto.isClosed?.let { session.isClosed = it }
-        sessionDto.isPaid?.let { session.isPaid = it }
+        sessionDto.isApproved?.let { session.approved = it }
+        sessionDto.isClosed?.let { session.closed = it }
+        sessionDto.isPaid?.let { session.paid = it }
         sessionRepository.save(session)
         return session.toDto()
     }
@@ -53,7 +56,7 @@ class SessionService(
             return false
         }
         val total = session.orders.stream()
-            .map { order -> order.orderedItem.stream().map { it.price }.toList().sum() }
+            .map { order -> order.orderItems.stream().map { it.price }.toList().sum() }
             .toList().sum()
         val paySum = session.bills.stream().map { it.amount }.toList().sum()
         return paySum >= total

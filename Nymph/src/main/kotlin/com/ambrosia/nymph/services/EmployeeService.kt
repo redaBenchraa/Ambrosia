@@ -34,8 +34,9 @@ class EmployeeService(
 
     @Transactional
     fun editEmployeeEmail(businessId: Long, employeeId: Long, editEmailDto: EditEmailDto): EmployeeDto {
-        businessRepository.findById(businessId)
-            .orElseThrow { EntityNotFoundException(Business::class.java, mutableMapOf("id" to businessId)) }
+        if (!businessRepository.existsById(businessId)) {
+            throw EntityNotFoundException(Business::class.java, mutableMapOf("id" to businessId))
+        }
         val employee = employeeRepository.findById(employeeId)
             .orElseThrow { EntityNotFoundException(Employee::class.java, mutableMapOf("id" to employeeId)) }
         editEmailDto.email?.let {
@@ -48,8 +49,9 @@ class EmployeeService(
 
     @Transactional
     fun editEmployeePosition(businessId: Long, employeeId: Long, editPositionDto: EditPositionDto): EmployeeDto {
-        businessRepository.findById(businessId)
-            .orElseThrow { EntityNotFoundException(Business::class.java, mutableMapOf("id" to businessId)) }
+        if (!businessRepository.existsById(businessId)) {
+            throw EntityNotFoundException(Business::class.java, mutableMapOf("id" to businessId))
+        }
         val employee = employeeRepository.findById(employeeId)
             .orElseThrow { EntityNotFoundException(Employee::class.java, mutableMapOf("id" to employeeId)) }
         val keycloakUser = employee.toDto().apply { position = editPositionDto.position }.toKeyCloakUser()
@@ -61,8 +63,9 @@ class EmployeeService(
 
     @Transactional
     fun editEmployee(businessId: Long, employeeId: Long, employeeDto: EmployeeDto): EmployeeDto {
-        businessRepository.findById(businessId)
-            .orElseThrow { EntityNotFoundException(Business::class.java, mutableMapOf("id" to businessId)) }
+        if (!businessRepository.existsById(businessId)) {
+            throw EntityNotFoundException(Business::class.java, mutableMapOf("id" to businessId))
+        }
         val employee = employeeRepository.findById(employeeId)
             .orElseThrow { EntityNotFoundException(Employee::class.java, mutableMapOf("id" to employeeId)) }
         employeeDto.firstName?.let { employee.firstName = it }
@@ -73,8 +76,9 @@ class EmployeeService(
 
     @Transactional
     fun deleteEmployee(businessId: Long, employeeId: Long) {
-        businessRepository.findById(businessId)
-            .orElseThrow { EntityNotFoundException(Business::class.java, mutableMapOf("id" to businessId)) }
+        if (!businessRepository.existsById(businessId)) {
+            throw EntityNotFoundException(Business::class.java, mutableMapOf("id" to businessId))
+        }
         val employee = employeeRepository.findById(employeeId)
             .orElseThrow { EntityNotFoundException(Employee::class.java, mutableMapOf("id" to employeeId)) }
         employeeRepository.delete(employee)
@@ -82,8 +86,9 @@ class EmployeeService(
 
     @Transactional
     fun getEmployees(businessId: Long): List<EmployeeDto> {
-        businessRepository.findById(businessId)
-            .orElseThrow { EntityNotFoundException(Business::class.java, mutableMapOf("id" to businessId)) }
+        if (!businessRepository.existsById(businessId)) {
+            throw EntityNotFoundException(Business::class.java, mutableMapOf("id" to businessId))
+        }
         return employeeRepository.findByBusinessId(businessId).stream().map { it.toDto() }.toList()
     }
 }
