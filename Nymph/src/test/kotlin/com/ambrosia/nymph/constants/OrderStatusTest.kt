@@ -5,7 +5,7 @@ import com.ambrosia.nymph.constants.OrderStatus.CANCELED
 import com.ambrosia.nymph.constants.OrderStatus.CONFIRMED
 import com.ambrosia.nymph.constants.OrderStatus.DELIVERED
 import com.ambrosia.nymph.constants.OrderStatus.DRAFT
-import com.ambrosia.nymph.constants.OrderStatus.IN_PROGRESS
+import com.ambrosia.nymph.constants.OrderStatus.ONGOING
 import com.ambrosia.nymph.constants.OrderStatus.REJECTED
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -21,7 +21,7 @@ class OrderStatusTest {
         assertFalse(status.canChangeStatusTo(APPROVED))
         assertFalse(status.canChangeStatusTo(REJECTED))
         assertTrue(status.canChangeStatusTo(CANCELED))
-        assertFalse(status.canChangeStatusTo(IN_PROGRESS))
+        assertFalse(status.canChangeStatusTo(ONGOING))
         assertFalse(status.canChangeStatusTo(DELIVERED))
     }
 
@@ -33,7 +33,7 @@ class OrderStatusTest {
         assertTrue(status.canChangeStatusTo(APPROVED))
         assertTrue(status.canChangeStatusTo(REJECTED))
         assertTrue(status.canChangeStatusTo(CANCELED))
-        assertFalse(status.canChangeStatusTo(IN_PROGRESS))
+        assertFalse(status.canChangeStatusTo(ONGOING))
         assertFalse(status.canChangeStatusTo(DELIVERED))
     }
 
@@ -45,7 +45,7 @@ class OrderStatusTest {
         assertFalse(status.canChangeStatusTo(APPROVED))
         assertTrue(status.canChangeStatusTo(REJECTED))
         assertFalse(status.canChangeStatusTo(CANCELED))
-        assertTrue(status.canChangeStatusTo(IN_PROGRESS))
+        assertTrue(status.canChangeStatusTo(ONGOING))
         assertFalse(status.canChangeStatusTo(DELIVERED))
     }
 
@@ -57,7 +57,7 @@ class OrderStatusTest {
         assertTrue(status.canChangeStatusTo(APPROVED))
         assertFalse(status.canChangeStatusTo(REJECTED))
         assertFalse(status.canChangeStatusTo(CANCELED))
-        assertFalse(status.canChangeStatusTo(IN_PROGRESS))
+        assertFalse(status.canChangeStatusTo(ONGOING))
         assertFalse(status.canChangeStatusTo(DELIVERED))
     }
 
@@ -69,19 +69,19 @@ class OrderStatusTest {
         assertFalse(status.canChangeStatusTo(APPROVED))
         assertFalse(status.canChangeStatusTo(REJECTED))
         assertFalse(status.canChangeStatusTo(CANCELED))
-        assertFalse(status.canChangeStatusTo(IN_PROGRESS))
+        assertFalse(status.canChangeStatusTo(ONGOING))
         assertFalse(status.canChangeStatusTo(DELIVERED))
     }
 
     @Test
-    fun `In progress status`() {
-        val status = IN_PROGRESS
+    fun `Ongoing status`() {
+        val status = ONGOING
         assertFalse(status.canChangeStatusTo(DRAFT))
         assertFalse(status.canChangeStatusTo(CONFIRMED))
         assertFalse(status.canChangeStatusTo(APPROVED))
         assertFalse(status.canChangeStatusTo(REJECTED))
         assertFalse(status.canChangeStatusTo(CANCELED))
-        assertFalse(status.canChangeStatusTo(IN_PROGRESS))
+        assertFalse(status.canChangeStatusTo(ONGOING))
         assertTrue(status.canChangeStatusTo(DELIVERED))
     }
 
@@ -93,7 +93,7 @@ class OrderStatusTest {
         assertFalse(status.canChangeStatusTo(APPROVED))
         assertFalse(status.canChangeStatusTo(REJECTED))
         assertFalse(status.canChangeStatusTo(CANCELED))
-        assertFalse(status.canChangeStatusTo(IN_PROGRESS))
+        assertFalse(status.canChangeStatusTo(ONGOING))
         assertFalse(status.canChangeStatusTo(DELIVERED))
     }
 

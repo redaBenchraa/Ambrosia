@@ -1,7 +1,11 @@
 package com.ambrosia.nymph.integration
 
 import com.ambrosia.nymph.constants.OrderStatus.APPROVED
+import com.ambrosia.nymph.constants.OrderStatus.CANCELED
 import com.ambrosia.nymph.constants.OrderStatus.CONFIRMED
+import com.ambrosia.nymph.constants.OrderStatus.DELIVERED
+import com.ambrosia.nymph.constants.OrderStatus.ONGOING
+import com.ambrosia.nymph.constants.OrderStatus.REJECTED
 import com.ambrosia.nymph.dtos.AddOrderDto
 import com.ambrosia.nymph.dtos.ItemsToOrder
 import com.ambrosia.nymph.entities.Business
@@ -50,6 +54,7 @@ class OrderTest {
     private final val businessId: Long = 1000
     private final val tableId: Long = 1003
     private final val sessionId: Long = 1009
+    private final val closedSessionId: Long = 1008
     private final val itemId: Long = 1004
     private val baseUrl = "/businesses/$businessId/tables/$tableId/sessions/$sessionId/orders"
 
@@ -279,9 +284,9 @@ class OrderTest {
     }
 
     @Test
-    fun `Confirm order`() {
+    fun `Update order status to confirmed`() {
         mockMvc
-            .perform(put("$baseUrl/$id/confirm").contentType(APPLICATION_JSON))
+            .perform(put("$baseUrl/$id/update-status/confirmed").contentType(APPLICATION_JSON))
             .andExpect(status().isOk)
             .andExpect(content().contentType(APPLICATION_JSON))
             .andExpect(jsonPath("$.orderItems[0].name", `is`("name")))
@@ -291,67 +296,10 @@ class OrderTest {
     }
 
     @Test
-    fun `Confirm order with a non existing business`() {
-        val exception = EntityNotFoundException(Business::class.java, mutableMapOf("id" to 1))
-        val expected = runtimeExceptionHandler.handleEntityNotFoundException(exception)
+    fun `Update order status to approved`() {
+        mockMvc.perform(put("$baseUrl/$id/update-status/confirmed").contentType(APPLICATION_JSON))
         mockMvc
-            .perform(
-                put("/businesses/1/tables/$tableId/sessions/$sessionId/orders/$id/approve")
-                    .contentType(APPLICATION_JSON)
-            )
-            .andExpect(status().`is`(NOT_FOUND.value()))
-            .andExpect(content().contentType(APPLICATION_JSON))
-            .andExpect(content().json(objectMapper.writeValueAsString(expected.body)))
-    }
-
-    @Test
-    fun `Confirm order with a non existing table`() {
-        val exception = EntityNotFoundException(Table::class.java, mutableMapOf("id" to 1))
-        val expected = runtimeExceptionHandler.handleEntityNotFoundException(exception)
-        mockMvc
-            .perform(
-                put("/businesses/$businessId/tables/1/sessions/$sessionId/orders/$id/approve")
-                    .contentType(APPLICATION_JSON)
-            )
-            .andExpect(status().`is`(NOT_FOUND.value()))
-            .andExpect(content().contentType(APPLICATION_JSON))
-            .andExpect(content().json(objectMapper.writeValueAsString(expected.body)))
-    }
-
-    @Test
-    fun `Confirm order with a non existing session`() {
-        val exception = EntityNotFoundException(Session::class.java, mutableMapOf("id" to 1))
-        val expected = runtimeExceptionHandler.handleEntityNotFoundException(exception)
-        mockMvc
-            .perform(
-                put("/businesses/$businessId/tables/$tableId/sessions/1/orders/$id/approve")
-                    .contentType(APPLICATION_JSON)
-            )
-            .andExpect(status().`is`(NOT_FOUND.value()))
-            .andExpect(content().contentType(APPLICATION_JSON))
-            .andExpect(content().json(objectMapper.writeValueAsString(expected.body)))
-    }
-
-    @Test
-    fun `Confirm order with a closed session`() {
-        val exception = SessionClosedException(mutableMapOf("id" to 1008))
-        val expected = runtimeExceptionHandler.handleSessionClosedException(exception)
-        mockMvc
-            .perform(
-                put("/businesses/$businessId/tables/$tableId/sessions/1008/orders/$id/approve")
-                    .contentType(APPLICATION_JSON)
-            )
-            .andExpect(status().`is`(CONFLICT.value()))
-            .andExpect(content().contentType(APPLICATION_JSON))
-            .andExpect(content().json(objectMapper.writeValueAsString(expected.body)))
-    }
-
-    @Test
-    fun `Approve order`() {
-        mockMvc
-            .perform(put("$baseUrl/$id/confirm").contentType(APPLICATION_JSON))
-        mockMvc
-            .perform(put("$baseUrl/$id/approve").contentType(APPLICATION_JSON))
+            .perform(put("$baseUrl/$id/update-status/approved").contentType(APPLICATION_JSON))
             .andExpect(status().isOk)
             .andExpect(content().contentType(APPLICATION_JSON))
             .andExpect(jsonPath("$.orderItems[0].name", `is`("name")))
@@ -361,12 +309,67 @@ class OrderTest {
     }
 
     @Test
-    fun `Approve order with a non existing business`() {
+    fun `Update order status to canceled`() {
+        mockMvc
+            .perform(put("$baseUrl/$id/update-status/canceled").contentType(APPLICATION_JSON))
+            .andExpect(status().isOk)
+            .andExpect(content().contentType(APPLICATION_JSON))
+            .andExpect(jsonPath("$.orderItems[0].name", `is`("name")))
+        val result = orderRepository.findById(id)
+        assertTrue(result.isPresent)
+        assertEquals(CANCELED, result.get().status)
+    }
+
+    @Test
+    fun `Update order status to rejected`() {
+        mockMvc.perform(put("$baseUrl/$id/update-status/confirmed").contentType(APPLICATION_JSON))
+        mockMvc
+            .perform(put("$baseUrl/$id/update-status/rejected").contentType(APPLICATION_JSON))
+            .andExpect(status().isOk)
+            .andExpect(content().contentType(APPLICATION_JSON))
+            .andExpect(jsonPath("$.orderItems[0].name", `is`("name")))
+        val result = orderRepository.findById(id)
+        assertTrue(result.isPresent)
+        assertEquals(REJECTED, result.get().status)
+    }
+
+
+    @Test
+    fun `Update order status to ongoing`() {
+        mockMvc.perform(put("$baseUrl/$id/update-status/confirmed").contentType(APPLICATION_JSON))
+        mockMvc.perform(put("$baseUrl/$id/update-status/approved").contentType(APPLICATION_JSON))
+        mockMvc
+            .perform(put("$baseUrl/$id/update-status/ongoing").contentType(APPLICATION_JSON))
+            .andExpect(status().isOk)
+            .andExpect(content().contentType(APPLICATION_JSON))
+            .andExpect(jsonPath("$.orderItems[0].name", `is`("name")))
+        val result = orderRepository.findById(id)
+        assertTrue(result.isPresent)
+        assertEquals(ONGOING, result.get().status)
+    }
+
+    @Test
+    fun `Update order status to delivered`() {
+        mockMvc.perform(put("$baseUrl/$id/update-status/confirmed").contentType(APPLICATION_JSON))
+        mockMvc.perform(put("$baseUrl/$id/update-status/approved").contentType(APPLICATION_JSON))
+        mockMvc.perform(put("$baseUrl/$id/update-status/ongoing").contentType(APPLICATION_JSON))
+        mockMvc
+            .perform(put("$baseUrl/$id/update-status/delivered").contentType(APPLICATION_JSON))
+            .andExpect(status().isOk)
+            .andExpect(content().contentType(APPLICATION_JSON))
+            .andExpect(jsonPath("$.orderItems[0].name", `is`("name")))
+        val result = orderRepository.findById(id)
+        assertTrue(result.isPresent)
+        assertEquals(DELIVERED, result.get().status)
+    }
+
+    @Test
+    fun `Update order status with a non existing business`() {
         val exception = EntityNotFoundException(Business::class.java, mutableMapOf("id" to 1))
         val expected = runtimeExceptionHandler.handleEntityNotFoundException(exception)
         mockMvc
             .perform(
-                put("/businesses/1/tables/$tableId/sessions/$sessionId/orders/$id/approve")
+                put("/businesses/1/tables/$tableId/sessions/$sessionId/orders/$id/update-status/confirmed")
                     .contentType(APPLICATION_JSON)
             )
             .andExpect(status().`is`(NOT_FOUND.value()))
@@ -375,12 +378,12 @@ class OrderTest {
     }
 
     @Test
-    fun `Approve order with a non existing table`() {
+    fun `Update order status with a non existing table`() {
         val exception = EntityNotFoundException(Table::class.java, mutableMapOf("id" to 1))
         val expected = runtimeExceptionHandler.handleEntityNotFoundException(exception)
         mockMvc
             .perform(
-                put("/businesses/$businessId/tables/1/sessions/$sessionId/orders/$id/approve")
+                put("/businesses/$businessId/tables/1/sessions/$sessionId/orders/$id/update-status/confirmed")
                     .contentType(APPLICATION_JSON)
             )
             .andExpect(status().`is`(NOT_FOUND.value()))
@@ -389,12 +392,12 @@ class OrderTest {
     }
 
     @Test
-    fun `Approve order with a non existing session`() {
+    fun `Update order status with a non existing session`() {
         val exception = EntityNotFoundException(Session::class.java, mutableMapOf("id" to 1))
         val expected = runtimeExceptionHandler.handleEntityNotFoundException(exception)
         mockMvc
             .perform(
-                put("/businesses/$businessId/tables/$tableId/sessions/1/orders/$id/approve")
+                put("/businesses/$businessId/tables/$tableId/sessions/1/orders/$id/update-status/confirmed")
                     .contentType(APPLICATION_JSON)
             )
             .andExpect(status().`is`(NOT_FOUND.value()))
@@ -403,12 +406,12 @@ class OrderTest {
     }
 
     @Test
-    fun `Approve order with a closed session`() {
+    fun `Update order status with a closed session`() {
         val exception = SessionClosedException(mutableMapOf("id" to 1008))
         val expected = runtimeExceptionHandler.handleSessionClosedException(exception)
         mockMvc
             .perform(
-                put("/businesses/$businessId/tables/$tableId/sessions/1008/orders/$id/approve")
+                put("/businesses/$businessId/tables/$tableId/sessions/$closedSessionId/orders/$id/update-status/confirmed")
                     .contentType(APPLICATION_JSON)
             )
             .andExpect(status().`is`(CONFLICT.value()))

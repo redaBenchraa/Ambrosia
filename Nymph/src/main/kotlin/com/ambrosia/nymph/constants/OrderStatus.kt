@@ -5,18 +5,18 @@ import com.ambrosia.nymph.constants.OrderStatus.CANCELED
 import com.ambrosia.nymph.constants.OrderStatus.CONFIRMED
 import com.ambrosia.nymph.constants.OrderStatus.DELIVERED
 import com.ambrosia.nymph.constants.OrderStatus.DRAFT
-import com.ambrosia.nymph.constants.OrderStatus.IN_PROGRESS
+import com.ambrosia.nymph.constants.OrderStatus.ONGOING
 import com.ambrosia.nymph.constants.OrderStatus.REJECTED
 
-enum class OrderStatus { DRAFT, CONFIRMED, APPROVED, REJECTED, CANCELED, IN_PROGRESS, DELIVERED }
+enum class OrderStatus { DRAFT, CONFIRMED, APPROVED, REJECTED, CANCELED, ONGOING, DELIVERED }
 
 val orderStatusWorkflow = mapOf(
     DRAFT to listOf(CONFIRMED, CANCELED),
     CONFIRMED to listOf(APPROVED, REJECTED, CANCELED),
-    APPROVED to listOf(IN_PROGRESS, REJECTED),
+    APPROVED to listOf(ONGOING, REJECTED),
     REJECTED to listOf(APPROVED),
     CANCELED to listOf(),
-    IN_PROGRESS to listOf(DELIVERED),
+    ONGOING to listOf(DELIVERED),
     DELIVERED to listOf()
 )
 

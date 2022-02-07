@@ -166,70 +166,90 @@ class OrderControllerTest {
     }
 
     @Test
-    fun `Confirm order`() {
+    fun `Update order status to confirmed`() {
         val order = getOrder().toDto()
         every { orderService.updateOrderStatus(any(), any(), any(), any(), any()) } returns order
         mockMvc
-            .perform(put("$baseUrl/1/confirm"))
+            .perform(put("$baseUrl/1/update-status/confirmed"))
             .andExpect(status().isOk)
             .andExpect(content().contentType(APPLICATION_JSON))
             .andExpect(content().json(objectMapper.writeValueAsString(order)))
     }
 
     @Test
-    fun `Confirm order of a non existing business`() {
-        val exception = EntityNotFoundException(Business::class.java, mutableMapOf("id" to 1))
-        val expected = runtimeExceptionHandler.handleEntityNotFoundException(exception)
-        every { orderService.updateOrderStatus(any(), any(), any(), any(), any()) } throws exception
-        mockMvc
-            .perform(put("$baseUrl/1/confirm"))
-            .andExpect(status().`is`(NOT_FOUND.value()))
-            .andExpect(content().contentType(APPLICATION_JSON))
-            .andExpect(content().json(objectMapper.writeValueAsString(expected.body)))
-    }
-
-    @Test
-    fun `Confirm order of a closed session`() {
-        val exception = SessionClosedException(mutableMapOf("id" to 1))
-        val expected = runtimeExceptionHandler.handleSessionClosedException(exception)
-        every { orderService.updateOrderStatus(any(), any(), any(), any(), any()) } throws exception
-        mockMvc
-            .perform(put("$baseUrl/1/confirm"))
-            .andExpect(status().`is`(CONFLICT.value()))
-            .andExpect(content().contentType(APPLICATION_JSON))
-            .andExpect(content().json(objectMapper.writeValueAsString(expected.body)))
-    }
-
-    @Test
-    fun `Approve order`() {
+    fun `Update order status to approved`() {
         val order = getOrder().toDto()
         every { orderService.updateOrderStatus(any(), any(), any(), any(), any()) } returns order
         mockMvc
-            .perform(put("$baseUrl/1/approve"))
+            .perform(put("$baseUrl/1/update-status/approved"))
             .andExpect(status().isOk)
             .andExpect(content().contentType(APPLICATION_JSON))
             .andExpect(content().json(objectMapper.writeValueAsString(order)))
     }
 
     @Test
-    fun `Approve order of a non existing business`() {
+    fun `Update order status to rejected`() {
+        val order = getOrder().toDto()
+        every { orderService.updateOrderStatus(any(), any(), any(), any(), any()) } returns order
+        mockMvc
+            .perform(put("$baseUrl/1/update-status/rejected"))
+            .andExpect(status().isOk)
+            .andExpect(content().contentType(APPLICATION_JSON))
+            .andExpect(content().json(objectMapper.writeValueAsString(order)))
+    }
+
+    @Test
+    fun `Update order status to canceled`() {
+        val order = getOrder().toDto()
+        every { orderService.updateOrderStatus(any(), any(), any(), any(), any()) } returns order
+        mockMvc
+            .perform(put("$baseUrl/1/update-status/canceled"))
+            .andExpect(status().isOk)
+            .andExpect(content().contentType(APPLICATION_JSON))
+            .andExpect(content().json(objectMapper.writeValueAsString(order)))
+    }
+
+    @Test
+    fun `Update order status to delivered`() {
+        val order = getOrder().toDto()
+        every { orderService.updateOrderStatus(any(), any(), any(), any(), any()) } returns order
+        mockMvc
+            .perform(put("$baseUrl/1/update-status/delivered"))
+            .andExpect(status().isOk)
+            .andExpect(content().contentType(APPLICATION_JSON))
+            .andExpect(content().json(objectMapper.writeValueAsString(order)))
+    }
+
+    @Test
+    fun `Update order status to ongoing`() {
+        val order = getOrder().toDto()
+        every { orderService.updateOrderStatus(any(), any(), any(), any(), any()) } returns order
+        mockMvc
+            .perform(put("$baseUrl/1/update-status/ongoing"))
+            .andExpect(status().isOk)
+            .andExpect(content().contentType(APPLICATION_JSON))
+            .andExpect(content().json(objectMapper.writeValueAsString(order)))
+    }
+
+    @Test
+    fun `Update order status of a non existing business`() {
         val exception = EntityNotFoundException(Business::class.java, mutableMapOf("id" to 1))
         val expected = runtimeExceptionHandler.handleEntityNotFoundException(exception)
         every { orderService.updateOrderStatus(any(), any(), any(), any(), any()) } throws exception
         mockMvc
-            .perform(put("$baseUrl/1/approve"))
+            .perform(put("$baseUrl/1/update-status/confirmed"))
             .andExpect(status().`is`(NOT_FOUND.value()))
             .andExpect(content().contentType(APPLICATION_JSON))
             .andExpect(content().json(objectMapper.writeValueAsString(expected.body)))
     }
 
     @Test
-    fun `Approve order of a closed session`() {
+    fun `Update order status of a closed session`() {
         val exception = SessionClosedException(mutableMapOf("id" to 1))
         val expected = runtimeExceptionHandler.handleSessionClosedException(exception)
         every { orderService.updateOrderStatus(any(), any(), any(), any(), any()) } throws exception
         mockMvc
-            .perform(put("$baseUrl/1/approve"))
+            .perform(put("$baseUrl/1/update-status/confirmed"))
             .andExpect(status().`is`(CONFLICT.value()))
             .andExpect(content().contentType(APPLICATION_JSON))
             .andExpect(content().json(objectMapper.writeValueAsString(expected.body)))

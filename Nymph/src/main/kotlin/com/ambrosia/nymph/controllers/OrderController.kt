@@ -1,7 +1,6 @@
 package com.ambrosia.nymph.controllers
 
-import com.ambrosia.nymph.constants.OrderStatus.APPROVED
-import com.ambrosia.nymph.constants.OrderStatus.CONFIRMED
+import com.ambrosia.nymph.constants.OrderStatus
 import com.ambrosia.nymph.dtos.AddOrderDto
 import com.ambrosia.nymph.dtos.OrderDto
 import com.ambrosia.nymph.services.OrderService
@@ -44,20 +43,12 @@ class OrderController(@Autowired private val orderService: OrderService) {
         @PathVariable("orderItemId") orderItemId: Long,
     ) = orderService.removeItemFromOrder(businessId, tableId, sessionId, orderId, orderItemId)
 
-    @PutMapping("{orderId}/confirm")
-    fun confirmOrder(
+    @PutMapping("{orderId}/update-status/{status}")
+    fun updateOrderStatus(
         @PathVariable("businessId") businessId: Long,
         @PathVariable("tableId") tableId: Long,
         @PathVariable("sessionId") sessionId: Long,
         @PathVariable("orderId") orderId: Long,
-    ): OrderDto = orderService.updateOrderStatus(businessId, tableId, sessionId, orderId, CONFIRMED)
-
-    @PutMapping("{orderId}/approve")
-    fun approveOrder(
-        @PathVariable("businessId") businessId: Long,
-        @PathVariable("tableId") tableId: Long,
-        @PathVariable("sessionId") sessionId: Long,
-        @PathVariable("orderId") orderId: Long,
-    ): OrderDto = orderService.updateOrderStatus(businessId, tableId, sessionId, orderId, APPROVED)
-
+        @PathVariable("status") status: OrderStatus,
+    ): OrderDto = orderService.updateOrderStatus(businessId, tableId, sessionId, orderId, status)
 }
