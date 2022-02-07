@@ -12,10 +12,12 @@ import com.ambrosia.nymph.services.OrderService
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.every
+import io.mockk.mockk
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.http.HttpStatus
 import org.springframework.http.HttpStatus.CONFLICT
 import org.springframework.http.HttpStatus.NOT_FOUND
 import org.springframework.http.MediaType.APPLICATION_JSON
@@ -25,6 +27,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException
 
 @SpringBootTest
 @AutoConfigureMockMvc(addFilters = false)
@@ -251,6 +254,17 @@ class OrderControllerTest {
         mockMvc
             .perform(put("$baseUrl/1/update-status/confirmed"))
             .andExpect(status().`is`(CONFLICT.value()))
+            .andExpect(content().contentType(APPLICATION_JSON))
+            .andExpect(content().json(objectMapper.writeValueAsString(expected.body)))
+    }
+
+    @Test
+    fun `Update order with invalid status `() {
+        val exception = mockk<MethodArgumentTypeMismatchException>()
+        val expected = runtimeExceptionHandler.handleMethodArgumentTypeMismatchException(exception)
+        mockMvc
+            .perform(put("$baseUrl/1/update-status/invalid"))
+            .andExpect(status().`is`(HttpStatus.BAD_REQUEST.value()))
             .andExpect(content().contentType(APPLICATION_JSON))
             .andExpect(content().json(objectMapper.writeValueAsString(expected.body)))
     }

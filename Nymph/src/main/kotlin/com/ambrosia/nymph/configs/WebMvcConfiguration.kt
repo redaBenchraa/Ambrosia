@@ -10,9 +10,8 @@ import java.util.Locale
 import java.util.Objects.isNull
 import javax.servlet.http.HttpServletRequest
 
-
 @Configuration
-class CustomLocaleResolver : AcceptHeaderLocaleResolver(), WebMvcConfigurer {
+class WebMvcConfiguration : AcceptHeaderLocaleResolver(), WebMvcConfigurer {
     final var locales = listOf(Locale("en"), Locale("fr"))
 
     override fun addFormatters(registry: FormatterRegistry) {
@@ -32,4 +31,3 @@ class CustomLocaleResolver : AcceptHeaderLocaleResolver(), WebMvcConfigurer {
         setUseCodeAsDefaultMessage(true)
     }
 }
-

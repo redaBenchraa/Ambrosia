@@ -54,7 +54,6 @@ class OrderTest {
     private final val businessId: Long = 1000
     private final val tableId: Long = 1003
     private final val sessionId: Long = 1009
-    private final val closedSessionId: Long = 1008
     private final val itemId: Long = 1004
     private val baseUrl = "/businesses/$businessId/tables/$tableId/sessions/$sessionId/orders"
 
@@ -411,7 +410,7 @@ class OrderTest {
         val expected = runtimeExceptionHandler.handleSessionClosedException(exception)
         mockMvc
             .perform(
-                put("/businesses/$businessId/tables/$tableId/sessions/$closedSessionId/orders/$id/update-status/confirmed")
+                put("/businesses/$businessId/tables/$tableId/sessions/1008/orders/$id/update-status/confirmed")
                     .contentType(APPLICATION_JSON)
             )
             .andExpect(status().`is`(CONFLICT.value()))

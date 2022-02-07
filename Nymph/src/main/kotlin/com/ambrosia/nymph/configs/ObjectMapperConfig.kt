@@ -13,8 +13,7 @@ import org.zalando.problem.violations.ConstraintViolationProblemModule
 private const val REFLECTION_CACHE_SIZE = 512
 
 @Configuration
-class ObjectMapperConfiguration {
-
+class ObjectMapperConfig {
     @Bean
     fun objectMapper(): ObjectMapper = ObjectMapper()
         .registerModules(

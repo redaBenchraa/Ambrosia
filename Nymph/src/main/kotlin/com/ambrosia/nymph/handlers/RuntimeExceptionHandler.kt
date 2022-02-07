@@ -1,5 +1,6 @@
 package com.ambrosia.nymph.handlers
 
+import com.ambrosia.nymph.constants.CONVERISON
 import com.ambrosia.nymph.constants.ENTITY_ALREADY_EXITS
 import com.ambrosia.nymph.constants.ENTITY_NOT_FOUND
 import com.ambrosia.nymph.constants.KEYCLOAK
@@ -9,7 +10,6 @@ import com.ambrosia.nymph.constants.VIOLATIONS
 import com.ambrosia.nymph.exceptions.EntityAlreadyExistsException
 import com.ambrosia.nymph.exceptions.EntityNotFoundException
 import com.ambrosia.nymph.exceptions.KeycloakException
-import com.ambrosia.nymph.exceptions.OrderStatusConversionFailedException
 import com.ambrosia.nymph.exceptions.OrderWorkflowException
 import com.ambrosia.nymph.exceptions.SessionClosedException
 import com.ambrosia.nymph.utils.Translator
@@ -20,13 +20,13 @@ import org.springframework.validation.FieldError
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.ResponseStatus
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException
 import org.zalando.problem.Problem
 import org.zalando.problem.Status
 import org.zalando.problem.spring.web.advice.ProblemHandling
 import org.zalando.problem.spring.web.advice.security.SecurityAdviceTrait
 import org.zalando.problem.violations.Violation
 import java.net.URI
-
 
 @ControllerAdvice
 class RuntimeExceptionHandler : ProblemHandling, SecurityAdviceTrait {
@@ -134,19 +134,21 @@ class RuntimeExceptionHandler : ProblemHandling, SecurityAdviceTrait {
             )
     }
 
-    @ExceptionHandler(OrderStatusConversionFailedException::class)
-    fun handleOrderStatusConversionFailedException(ex: OrderStatusConversionFailedException): ResponseEntity<Problem> {
-        return ResponseEntity.status(HttpStatus.CONFLICT)
+    @ExceptionHandler(MethodArgumentTypeMismatchException::class)
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    fun handleMethodArgumentTypeMismatchException(ex: MethodArgumentTypeMismatchException): ResponseEntity<Problem> {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
             .body(
                 Problem.builder()
-                    .withType(URI.create(ORDER_WORKFLOW))
+                    .withType(URI.create(CONVERISON))
                     .withTitle(translator.toLocale("error.orderStatusConversion"))
-                    .withStatus(Status.CONFLICT)
+                    .withStatus(Status.BAD_REQUEST)
                     .withDetail(
-                        String.format(translator.toLocale("error.orderStatusConversionDetails"), ex.status)
+                        String.format(
+                            translator.toLocale("error.orderStatusConversionDetails")
+                        )
                     )
                     .build()
             )
     }
-
 }
