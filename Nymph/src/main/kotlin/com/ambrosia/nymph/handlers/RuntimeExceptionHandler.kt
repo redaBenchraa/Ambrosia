@@ -145,7 +145,7 @@ class RuntimeExceptionHandler : ProblemHandling, SecurityAdviceTrait {
                     .withStatus(Status.BAD_REQUEST)
                     .withDetail(
                         String.format(
-                            translator.toLocale("error.orderStatusConversionDetails")
+                            translator.toLocale("error.orderStatusConversionDetails"), ex.name
                         )
                     )
                     .build()

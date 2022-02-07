@@ -261,6 +261,7 @@ class OrderControllerTest {
     @Test
     fun `Update order with invalid status `() {
         val exception = mockk<MethodArgumentTypeMismatchException>()
+        every { exception.name } returns "name"
         val expected = runtimeExceptionHandler.handleMethodArgumentTypeMismatchException(exception)
         mockMvc
             .perform(put("$baseUrl/1/update-status/invalid"))
