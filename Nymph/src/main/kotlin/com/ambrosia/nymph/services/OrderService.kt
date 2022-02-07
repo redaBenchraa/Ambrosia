@@ -1,5 +1,7 @@
 package com.ambrosia.nymph.services
 
+import com.ambrosia.nymph.constants.OrderStatus
+import com.ambrosia.nymph.constants.canChangeStatusTo
 import com.ambrosia.nymph.dtos.AddOrderDto
 import com.ambrosia.nymph.dtos.ItemsToOrder
 import com.ambrosia.nymph.dtos.OrderDto
@@ -10,6 +12,7 @@ import com.ambrosia.nymph.entities.OrderItem
 import com.ambrosia.nymph.entities.Session
 import com.ambrosia.nymph.entities.Table
 import com.ambrosia.nymph.exceptions.EntityNotFoundException
+import com.ambrosia.nymph.exceptions.OrderWorkflowException
 import com.ambrosia.nymph.exceptions.SessionClosedException
 import com.ambrosia.nymph.mappers.toDto
 import com.ambrosia.nymph.repositories.BusinessRepository
@@ -73,20 +76,20 @@ class OrderService(
     }
 
     @Transactional
-    fun confirmOrder(businessId: Long, tableId: Long, sessionId: Long, orderId: Long): OrderDto {
+    fun updateOrderStatus(
+        businessId: Long,
+        tableId: Long,
+        sessionId: Long,
+        orderId: Long,
+        status: OrderStatus
+    ): OrderDto {
         fetchSessionWithExistenceValidation(businessId, tableId, sessionId)
         val order = orderRepository.findById(orderId)
             .orElseThrow { EntityNotFoundException(Order::class.java, mutableMapOf("id" to orderId)) }
-        order.confirmed = true
-        return orderRepository.save(order).toDto()
-    }
-
-    @Transactional
-    fun approveOrder(businessId: Long, tableId: Long, sessionId: Long, orderId: Long): OrderDto {
-        fetchSessionWithExistenceValidation(businessId, tableId, sessionId)
-        val order = orderRepository.findById(orderId)
-            .orElseThrow { EntityNotFoundException(Order::class.java, mutableMapOf("id" to orderId)) }
-        order.approved = true
+        if (!order.status.canChangeStatusTo(status)) {
+            throw OrderWorkflowException(order.status, status, mutableMapOf("id" to orderId))
+        }
+        order.status = status
         return orderRepository.save(order).toDto()
     }
 

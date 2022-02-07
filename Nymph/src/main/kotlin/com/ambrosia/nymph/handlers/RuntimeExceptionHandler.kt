@@ -5,10 +5,10 @@ import com.ambrosia.nymph.constants.ENTITY_NOT_FOUND
 import com.ambrosia.nymph.constants.KEYCLOAK
 import com.ambrosia.nymph.constants.SESSION_CLOSED
 import com.ambrosia.nymph.constants.VIOLATIONS
-import com.ambrosia.nymph.entities.Session
 import com.ambrosia.nymph.exceptions.EntityAlreadyExistsException
 import com.ambrosia.nymph.exceptions.EntityNotFoundException
 import com.ambrosia.nymph.exceptions.KeycloakException
+import com.ambrosia.nymph.exceptions.OrderWorkflowException
 import com.ambrosia.nymph.exceptions.SessionClosedException
 import com.ambrosia.nymph.utils.Translator
 import org.springframework.beans.factory.annotation.Autowired
@@ -58,26 +58,6 @@ class RuntimeExceptionHandler : ProblemHandling, SecurityAdviceTrait {
             )
     }
 
-    @ExceptionHandler(SessionClosedException::class)
-    @ResponseStatus(value = HttpStatus.CONFLICT)
-    fun handleSessionClosedException(ex: SessionClosedException): ResponseEntity<Problem> {
-        return ResponseEntity.status(HttpStatus.CONFLICT)
-            .body(
-                Problem.builder()
-                    .withType(URI.create(SESSION_CLOSED))
-                    .withTitle(translator.toLocale("error.sessionIsClosed"))
-                    .withStatus(Status.CONFLICT)
-                    .withDetail(
-                        String.format(
-                            translator.toLocale("error.sessionIsClosedDetails"),
-                            Session::class.java.simpleName,
-                            ex.parameters.toString()
-                        )
-                    )
-                    .build()
-            )
-    }
-
     @ExceptionHandler(EntityAlreadyExistsException::class)
     @ResponseStatus(value = HttpStatus.CONFLICT)
     fun handleEntityAlreadyExistsException(ex: EntityAlreadyExistsException): ResponseEntity<Problem> {
@@ -110,4 +90,45 @@ class RuntimeExceptionHandler : ProblemHandling, SecurityAdviceTrait {
                     .build()
             )
     }
+
+    @ExceptionHandler(SessionClosedException::class)
+    @ResponseStatus(value = HttpStatus.CONFLICT)
+    fun handleSessionClosedException(ex: SessionClosedException): ResponseEntity<Problem> {
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+            .body(
+                Problem.builder()
+                    .withType(URI.create(SESSION_CLOSED))
+                    .withTitle(translator.toLocale("error.sessionIsClosed"))
+                    .withStatus(Status.CONFLICT)
+                    .withDetail(
+                        String.format(
+                            translator.toLocale("error.sessionIsClosedDetails"),
+                            ex.parameters.toString()
+                        )
+                    )
+                    .build()
+            )
+    }
+
+    @ExceptionHandler(OrderWorkflowException::class)
+    @ResponseStatus(value = HttpStatus.CONFLICT)
+    fun handleOrderWorkflowException(ex: OrderWorkflowException): ResponseEntity<Problem> {
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+            .body(
+                Problem.builder()
+                    .withType(URI.create(SESSION_CLOSED))
+                    .withTitle(translator.toLocale("error.OrderWorkflow"))
+                    .withStatus(Status.CONFLICT)
+                    .withDetail(
+                        String.format(
+                            translator.toLocale("error.OrderWorkflowDetails"),
+                            ex.initialOrderStatus,
+                            ex.orderStatus,
+                            ex.parameters.toString()
+                        )
+                    )
+                    .build()
+            )
+    }
+
 }

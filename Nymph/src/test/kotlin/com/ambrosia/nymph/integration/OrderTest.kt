@@ -1,5 +1,7 @@
 package com.ambrosia.nymph.integration
 
+import com.ambrosia.nymph.constants.OrderStatus.APPROVED
+import com.ambrosia.nymph.constants.OrderStatus.CONFIRMED
 import com.ambrosia.nymph.dtos.AddOrderDto
 import com.ambrosia.nymph.dtos.ItemsToOrder
 import com.ambrosia.nymph.entities.Business
@@ -278,15 +280,14 @@ class OrderTest {
 
     @Test
     fun `Confirm order`() {
-        val content = objectMapper.writeValueAsString(AddOrderDto(items = mutableSetOf(ItemsToOrder(id = itemId))))
         mockMvc
-            .perform(put("$baseUrl/$id/confirm").contentType(APPLICATION_JSON).content(content))
+            .perform(put("$baseUrl/$id/confirm").contentType(APPLICATION_JSON))
             .andExpect(status().isOk)
             .andExpect(content().contentType(APPLICATION_JSON))
             .andExpect(jsonPath("$.orderItems[0].name", `is`("name")))
         val result = orderRepository.findById(id)
         assertTrue(result.isPresent)
-        assertTrue(result.get().confirmed)
+        assertEquals(CONFIRMED, result.get().status)
     }
 
     @Test
@@ -347,17 +348,16 @@ class OrderTest {
 
     @Test
     fun `Approve order`() {
-        val content = objectMapper.writeValueAsString(AddOrderDto(items = mutableSetOf(ItemsToOrder(id = itemId))))
         mockMvc
-            .perform(
-                put("$baseUrl/$id/approve").contentType(APPLICATION_JSON).content(content)
-            )
+            .perform(put("$baseUrl/$id/confirm").contentType(APPLICATION_JSON))
+        mockMvc
+            .perform(put("$baseUrl/$id/approve").contentType(APPLICATION_JSON))
             .andExpect(status().isOk)
             .andExpect(content().contentType(APPLICATION_JSON))
             .andExpect(jsonPath("$.orderItems[0].name", `is`("name")))
         val result = orderRepository.findById(id)
         assertTrue(result.isPresent)
-        assertTrue(result.get().approved)
+        assertEquals(APPROVED, result.get().status)
     }
 
     @Test

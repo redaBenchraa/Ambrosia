@@ -168,7 +168,7 @@ class OrderControllerTest {
     @Test
     fun `Confirm order`() {
         val order = getOrder().toDto()
-        every { orderService.confirmOrder(any(), any(), any(), any()) } returns order
+        every { orderService.updateOrderStatus(any(), any(), any(), any(), any()) } returns order
         mockMvc
             .perform(put("$baseUrl/1/confirm"))
             .andExpect(status().isOk)
@@ -180,7 +180,7 @@ class OrderControllerTest {
     fun `Confirm order of a non existing business`() {
         val exception = EntityNotFoundException(Business::class.java, mutableMapOf("id" to 1))
         val expected = runtimeExceptionHandler.handleEntityNotFoundException(exception)
-        every { orderService.confirmOrder(any(), any(), any(), any()) } throws exception
+        every { orderService.updateOrderStatus(any(), any(), any(), any(), any()) } throws exception
         mockMvc
             .perform(put("$baseUrl/1/confirm"))
             .andExpect(status().`is`(NOT_FOUND.value()))
@@ -192,7 +192,7 @@ class OrderControllerTest {
     fun `Confirm order of a closed session`() {
         val exception = SessionClosedException(mutableMapOf("id" to 1))
         val expected = runtimeExceptionHandler.handleSessionClosedException(exception)
-        every { orderService.confirmOrder(any(), any(), any(), any()) } throws exception
+        every { orderService.updateOrderStatus(any(), any(), any(), any(), any()) } throws exception
         mockMvc
             .perform(put("$baseUrl/1/confirm"))
             .andExpect(status().`is`(CONFLICT.value()))
@@ -203,7 +203,7 @@ class OrderControllerTest {
     @Test
     fun `Approve order`() {
         val order = getOrder().toDto()
-        every { orderService.approveOrder(any(), any(), any(), any()) } returns order
+        every { orderService.updateOrderStatus(any(), any(), any(), any(), any()) } returns order
         mockMvc
             .perform(put("$baseUrl/1/approve"))
             .andExpect(status().isOk)
@@ -215,7 +215,7 @@ class OrderControllerTest {
     fun `Approve order of a non existing business`() {
         val exception = EntityNotFoundException(Business::class.java, mutableMapOf("id" to 1))
         val expected = runtimeExceptionHandler.handleEntityNotFoundException(exception)
-        every { orderService.approveOrder(any(), any(), any(), any()) } throws exception
+        every { orderService.updateOrderStatus(any(), any(), any(), any(), any()) } throws exception
         mockMvc
             .perform(put("$baseUrl/1/approve"))
             .andExpect(status().`is`(NOT_FOUND.value()))
@@ -227,7 +227,7 @@ class OrderControllerTest {
     fun `Approve order of a closed session`() {
         val exception = SessionClosedException(mutableMapOf("id" to 1))
         val expected = runtimeExceptionHandler.handleSessionClosedException(exception)
-        every { orderService.approveOrder(any(), any(), any(), any()) } throws exception
+        every { orderService.updateOrderStatus(any(), any(), any(), any(), any()) } throws exception
         mockMvc
             .perform(put("$baseUrl/1/approve"))
             .andExpect(status().`is`(CONFLICT.value()))

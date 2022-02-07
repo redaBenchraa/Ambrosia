@@ -81,8 +81,7 @@
     <orders
             id="1011"
             session_id="1009"
-            confirmed="false"
-            approved="false"
+            status="0"
     />
     <order_item
             id="1012"

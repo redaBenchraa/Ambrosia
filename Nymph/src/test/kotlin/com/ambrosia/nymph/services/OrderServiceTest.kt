@@ -1,5 +1,8 @@
 package com.ambrosia.nymph.services
 
+import com.ambrosia.nymph.constants.OrderStatus.APPROVED
+import com.ambrosia.nymph.constants.OrderStatus.CONFIRMED
+import com.ambrosia.nymph.constants.OrderStatus.DRAFT
 import com.ambrosia.nymph.dtos.AddOrderDto
 import com.ambrosia.nymph.dtos.ItemsToOrder
 import com.ambrosia.nymph.entities.Business
@@ -8,6 +11,7 @@ import com.ambrosia.nymph.entities.Order
 import com.ambrosia.nymph.entities.OrderItem
 import com.ambrosia.nymph.entities.Session
 import com.ambrosia.nymph.exceptions.EntityNotFoundException
+import com.ambrosia.nymph.exceptions.OrderWorkflowException
 import com.ambrosia.nymph.exceptions.SessionClosedException
 import com.ambrosia.nymph.repositories.BusinessRepository
 import com.ambrosia.nymph.repositories.ItemRepository
@@ -20,7 +24,6 @@ import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
-import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
@@ -247,16 +250,16 @@ class OrderServiceTest {
         every { sessionRepository.findById(any()) } returns Optional.of(getSession())
         every { itemRepository.findById(any()) } returns Optional.of(getItem())
         every { orderRepository.findById(any()) } returns Optional.of(getOrder())
-        every { orderRepository.save(any()) } returns getOrder().apply { confirmed = true }
-        val result = orderService.confirmOrder(1, 1, 1, 1)
-        assertTrue(result.confirmed)
+        every { orderRepository.save(any()) } returns getOrder().apply { status = CONFIRMED }
+        val result = orderService.updateOrderStatus(1, 1, 1, 1, CONFIRMED)
+        assertEquals(CONFIRMED, result.status)
         verify { orderRepository.save(any()) }
     }
 
     @Test
     fun `Confirm order of a non existing business`() {
         every { businessRepository.existsById(any()) } returns false
-        assertThrows<EntityNotFoundException> { orderService.confirmOrder(1, 1, 1, 1) }
+        assertThrows<EntityNotFoundException> { orderService.updateOrderStatus(1, 1, 1, 1, CONFIRMED) }
         verify(exactly = 0) { orderRepository.save(any()) }
     }
 
@@ -264,7 +267,7 @@ class OrderServiceTest {
     fun `Confirm order of a non existing table`() {
         every { businessRepository.existsById(any()) } returns true
         every { tableRepository.existsById(any()) } returns false
-        assertThrows<EntityNotFoundException> { orderService.confirmOrder(1, 1, 1, 1) }
+        assertThrows<EntityNotFoundException> { orderService.updateOrderStatus(1, 1, 1, 1, CONFIRMED) }
         verify(exactly = 0) { orderRepository.save(any()) }
     }
 
@@ -273,7 +276,7 @@ class OrderServiceTest {
         every { businessRepository.existsById(any()) } returns true
         every { tableRepository.existsById(any()) } returns true
         every { sessionRepository.findById(any()) } returns Optional.empty()
-        assertThrows<EntityNotFoundException> { orderService.confirmOrder(1, 1, 1, 1) }
+        assertThrows<EntityNotFoundException> { orderService.updateOrderStatus(1, 1, 1, 1, CONFIRMED) }
         verify(exactly = 0) { orderRepository.save(any()) }
     }
 
@@ -282,7 +285,7 @@ class OrderServiceTest {
         every { businessRepository.existsById(any()) } returns true
         every { tableRepository.existsById(any()) } returns true
         every { sessionRepository.findById(any()) } returns Optional.of(getSession().apply { closed = true })
-        assertThrows<SessionClosedException> { orderService.confirmOrder(1, 1, 1, 1) }
+        assertThrows<SessionClosedException> { orderService.updateOrderStatus(1, 1, 1, 1, CONFIRMED) }
         verify(exactly = 0) { orderRepository.save(any()) }
     }
 
@@ -292,7 +295,7 @@ class OrderServiceTest {
         every { tableRepository.existsById(any()) } returns true
         every { sessionRepository.findById(any()) } returns Optional.of(getSession())
         every { orderRepository.findById(any()) } returns Optional.empty()
-        assertThrows<EntityNotFoundException> { orderService.confirmOrder(1, 1, 1, 1) }
+        assertThrows<EntityNotFoundException> { orderService.updateOrderStatus(1, 1, 1, 1, CONFIRMED) }
         verify(exactly = 0) { orderRepository.save(any()) }
     }
 
@@ -302,17 +305,28 @@ class OrderServiceTest {
         every { tableRepository.existsById(any()) } returns true
         every { sessionRepository.findById(any()) } returns Optional.of(getSession())
         every { itemRepository.findById(any()) } returns Optional.of(getItem())
-        every { orderRepository.findById(any()) } returns Optional.of(getOrder())
-        every { orderRepository.save(any()) } returns getOrder().apply { approved = true }
-        val result = orderService.approveOrder(1, 1, 1, 1)
-        assertTrue(result.approved)
+        every { orderRepository.findById(any()) } returns Optional.of(getOrder().apply { status = CONFIRMED })
+        every { orderRepository.save(any()) } returns getOrder().apply { status = APPROVED }
+        val result = orderService.updateOrderStatus(1, 1, 1, 1, APPROVED)
+        assertEquals(APPROVED, result.status)
         verify { orderRepository.save(any()) }
+    }
+
+    @Test
+    fun `Approve draft order`() {
+        every { businessRepository.existsById(any()) } returns true
+        every { tableRepository.existsById(any()) } returns true
+        every { sessionRepository.findById(any()) } returns Optional.of(getSession())
+        every { itemRepository.findById(any()) } returns Optional.of(getItem())
+        every { orderRepository.findById(any()) } returns Optional.of(getOrder().apply { status = DRAFT })
+        assertThrows<OrderWorkflowException> { orderService.updateOrderStatus(1, 1, 1, 1, APPROVED) }
+        verify(exactly = 0) { orderRepository.save(any()) }
     }
 
     @Test
     fun `Approve order of a non existing business`() {
         every { businessRepository.existsById(any()) } returns false
-        assertThrows<EntityNotFoundException> { orderService.approveOrder(1, 1, 1, 1) }
+        assertThrows<EntityNotFoundException> { orderService.updateOrderStatus(1, 1, 1, 1, APPROVED) }
         verify(exactly = 0) { orderRepository.save(any()) }
     }
 
@@ -320,7 +334,7 @@ class OrderServiceTest {
     fun `Approve order of a non existing table`() {
         every { businessRepository.existsById(any()) } returns true
         every { tableRepository.existsById(any()) } returns false
-        assertThrows<EntityNotFoundException> { orderService.approveOrder(1, 1, 1, 1) }
+        assertThrows<EntityNotFoundException> { orderService.updateOrderStatus(1, 1, 1, 1, APPROVED) }
         verify(exactly = 0) { orderRepository.save(any()) }
     }
 
@@ -329,7 +343,7 @@ class OrderServiceTest {
         every { businessRepository.existsById(any()) } returns true
         every { tableRepository.existsById(any()) } returns true
         every { sessionRepository.findById(any()) } returns Optional.empty()
-        assertThrows<EntityNotFoundException> { orderService.approveOrder(1, 1, 1, 1) }
+        assertThrows<EntityNotFoundException> { orderService.updateOrderStatus(1, 1, 1, 1, APPROVED) }
         verify(exactly = 0) { orderRepository.save(any()) }
     }
 
@@ -338,7 +352,7 @@ class OrderServiceTest {
         every { businessRepository.existsById(any()) } returns true
         every { tableRepository.existsById(any()) } returns true
         every { sessionRepository.findById(any()) } returns Optional.of(getSession().apply { closed = true })
-        assertThrows<SessionClosedException> { orderService.approveOrder(1, 1, 1, 1) }
+        assertThrows<SessionClosedException> { orderService.updateOrderStatus(1, 1, 1, 1, APPROVED) }
         verify(exactly = 0) { orderRepository.save(any()) }
     }
 
@@ -348,7 +362,7 @@ class OrderServiceTest {
         every { tableRepository.existsById(any()) } returns true
         every { sessionRepository.findById(any()) } returns Optional.of(getSession())
         every { orderRepository.findById(any()) } returns Optional.empty()
-        assertThrows<EntityNotFoundException> { orderService.approveOrder(1, 1, 1, 1) }
+        assertThrows<EntityNotFoundException> { orderService.updateOrderStatus(1, 1, 1, 1, APPROVED) }
         verify(exactly = 0) { orderRepository.save(any()) }
     }
 

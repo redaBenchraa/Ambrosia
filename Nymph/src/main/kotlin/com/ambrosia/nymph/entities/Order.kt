@@ -1,5 +1,6 @@
 package com.ambrosia.nymph.entities
 
+import com.ambrosia.nymph.constants.OrderStatus
 import com.fasterxml.jackson.annotation.JsonBackReference
 import com.fasterxml.jackson.annotation.JsonManagedReference
 import org.hibernate.annotations.OnDelete
@@ -20,10 +21,8 @@ import javax.persistence.Table
 @SQLDelete(sql = "UPDATE orders SET deleted = true WHERE id=?")
 @Where(clause = "deleted = false")
 class Order(
-    @Column(columnDefinition = "boolean default false", nullable = false)
-    var confirmed: Boolean = false,
-    @Column(columnDefinition = "boolean default false", nullable = false)
-    var approved: Boolean = false,
+    @Column(nullable = false)
+    var status: OrderStatus = OrderStatus.DRAFT,
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "session_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
