@@ -49,8 +49,7 @@ class MockUserServiceTest {
             firstName = "firstName",
             lastName = "lastName",
             email = "email",
-            roles =
-            Arrays.stream(roles)
+            roles = Arrays.stream(roles)
                 .map { obj: Enum<*> -> obj.name }
                 .collect(Collectors.toList()))
     }

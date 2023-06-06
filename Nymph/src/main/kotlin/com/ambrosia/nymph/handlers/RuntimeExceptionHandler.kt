@@ -1,6 +1,6 @@
 package com.ambrosia.nymph.handlers
 
-import com.ambrosia.nymph.constants.CONVERISON
+import com.ambrosia.nymph.constants.CONVERSION
 import com.ambrosia.nymph.constants.ENTITY_ALREADY_EXITS
 import com.ambrosia.nymph.constants.ENTITY_NOT_FOUND
 import com.ambrosia.nymph.constants.KEYCLOAK
@@ -140,7 +140,7 @@ class RuntimeExceptionHandler : ProblemHandling, SecurityAdviceTrait {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
             .body(
                 Problem.builder()
-                    .withType(URI.create(CONVERISON))
+                    .withType(URI.create(CONVERSION))
                     .withTitle(translator.toLocale("error.orderStatusConversion"))
                     .withStatus(Status.BAD_REQUEST)
                     .withDetail(

@@ -7,11 +7,10 @@ spring:
     change-log: classpath:db/changelog/liquibase.xml
     enabled: true
   datasource:
-    continue-on-error: false
     password: ${POSTGRES_PASSWORD:postgres}
     url: jdbc:postgresql://${POSTGRES_URL:localhost:5432/postgres}
     username: ${POSTGRES_USERNAME:postgres}
-    driverClassName=: org.postgresql.Driver
+    driverClassName: org.postgresql.Driver
   jpa:
     hibernate:
       ddl-auto: validate

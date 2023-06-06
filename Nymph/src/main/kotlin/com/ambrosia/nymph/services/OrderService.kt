@@ -9,6 +9,7 @@ import com.ambrosia.nymph.entities.Business
 import com.ambrosia.nymph.entities.Item
 import com.ambrosia.nymph.entities.Order
 import com.ambrosia.nymph.entities.OrderItem
+import com.ambrosia.nymph.entities.OrderMenu
 import com.ambrosia.nymph.entities.Session
 import com.ambrosia.nymph.entities.Table
 import com.ambrosia.nymph.exceptions.EntityNotFoundException
@@ -102,7 +103,8 @@ class OrderService(
                 item = item,
                 name = item.name,
                 price = item.price,
-                description = it.description ?: item.description
+                description = it.description ?: item.description,
+                orderMenu = null
             )
         }.toList()
     }

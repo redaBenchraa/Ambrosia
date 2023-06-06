@@ -369,7 +369,10 @@ class OrderServiceTest {
     private fun getOrder(): Order = Order(session = getSession())
 
     private fun getOrderedItem(): OrderItem =
-        OrderItem(order = getOrder(), description = "description", name = "name", price = 10.0, item = getItem())
+        OrderItem(
+            order = getOrder(), description = "description", name = "name", price = 10.0, item = getItem(),
+            orderMenu = null
+        )
 
     private fun getSession(): Session =
         Session(

@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletRequest
 
 @Configuration
 class WebMvcConfiguration : AcceptHeaderLocaleResolver(), WebMvcConfigurer {
-    final var locales = listOf(Locale("en"), Locale("fr"))
+    private final var locales = listOf(Locale("en"), Locale("fr"))
 
     override fun addFormatters(registry: FormatterRegistry) {
         registry.addConverter(StringToEnumConverter())

@@ -6,7 +6,7 @@ const val ENTITY_ALREADY_EXITS = "http://www.ambrosia.com/api/enitity-already-ex
 const val KEYCLOAK = "http://www.ambrosia.com/api/keycloak"
 const val SESSION_CLOSED = "http://www.ambrosia.com/api/session-closed"
 const val ORDER_WORKFLOW = "http://www.ambrosia.com/api/order-workflow"
-const val CONVERISON = "http://www.ambrosia.com/api/conversion"
+const val CONVERSION = "http://www.ambrosia.com/api/conversion"
 
 const val NAME_MAX_SIZE = 48
 const val EMAIL_MAX_SIZE = 254
